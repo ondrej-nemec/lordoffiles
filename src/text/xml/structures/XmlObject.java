@@ -1,4 +1,4 @@
-package textinput.structures;
+package text.xml.structures;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,4 +1,4 @@
-package textoutput;
+package text.xml;
 
 import java.io.BufferedWriter;
 import java.util.List;
@@ -14,7 +14,7 @@ import javax.xml.stream.XMLStreamWriter;
 import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter;
 
 import exceptions.FileCouldNotBeClosedException;
-import textinput.structures.XmlObject;
+import text.xml.structures.XmlObject;
 
 public class XmlCreator {
 
