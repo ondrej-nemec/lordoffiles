@@ -102,9 +102,9 @@ public class XmlCreator {
 	 * @param value
 	 * @throws XMLStreamException
 	 */
-	private void writeValue(XMLStreamWriter out, Optional<String> value) throws XMLStreamException{
+	private void writeValue(XMLStreamWriter out, String value) throws XMLStreamException{
 		if(!value.equals(Optional.empty()))
-			out.writeCharacters(value.get());
+			out.writeCharacters(value);
 	}
 	
 	/**
@@ -115,11 +115,11 @@ public class XmlCreator {
 	 */
 	private void writeAtribute(
 			XMLStreamWriter out,
-			final Optional<Map<String, String>> attributes) throws XMLStreamException{
+			final Map<String, String> attributes) throws XMLStreamException{
 		if(!attributes.equals(Optional.empty())){
-			Set<String> set = attributes.get().keySet();
+			Set<String> set = attributes.keySet();
 			for (String key : set) {
-				out.writeAttribute(key, attributes.get().get(key));
+				out.writeAttribute(key, attributes.get(key));
 			}
 		}
 	}
@@ -130,10 +130,10 @@ public class XmlCreator {
 	 * @param references
 	 * @throws XMLStreamException
 	 */
-	private void writeReferences(XMLStreamWriter out, Optional<List<XmlObject>> references) throws XMLStreamException{
+	private void writeReferences(XMLStreamWriter out, List<XmlObject> references) throws XMLStreamException{
 		if(!references.equals(Optional.empty()))
-			for(int i = 0; i<references.get().size();i++){
-				writeLevel(out, references.get().get(i));
+			for(int i = 0; i<references.size();i++){
+				writeLevel(out, references.get(i));
 			}
 	}
 	

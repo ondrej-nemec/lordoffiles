@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 import javax.xml.stream.XMLInputFactory;
@@ -80,13 +79,13 @@ public class XmlLoader extends InputTextBuffer{
 	 */
 	private XmlObject readLevel(XMLStreamReader in) throws XMLStreamException{
 		String name = in.getName().getLocalPart();
-		Optional<Map<String, String>> attributes = readAttributes(in);
-		Optional<String> value = Optional.empty();
-		Optional<List<XmlObject>> references = Optional.empty();
+		Map<String, String> attributes = readAttributes(in);
+		String value = "";
+		List<XmlObject> references = new ArrayList<>();
 		while(in.hasNext() && in.getEventType()!=XMLStreamConstants.END_ELEMENT){
 			in.next();
 			if(in.getEventType() == XMLStreamConstants.CHARACTERS){
-				value = Optional.of(in.getText());
+				value = in.getText();
 			}else if(in.getEventType() == XMLStreamConstants.START_ELEMENT){
 				references=readReferences(in, name);
 			}
@@ -100,9 +99,9 @@ public class XmlLoader extends InputTextBuffer{
 	 * @param in
 	 * @return
 	 */
-	private Optional<Map<String, String>> readAttributes(XMLStreamReader in){
+	private Map<String, String> readAttributes(XMLStreamReader in){
 		if(in.getAttributeCount() == 0)
-			return Optional.empty();
+			return new HashMap<>();
 		Map<String, String> aux = new HashMap<>();
 		for(int i = 0; i<in.getAttributeCount(); i++){
 			aux.put(
@@ -110,8 +109,7 @@ public class XmlLoader extends InputTextBuffer{
 					in.getAttributeValue(i)
 					);
 		}
-		
-		return Optional.of(aux);
+		return aux;
 	}
 	
 	/**
@@ -121,7 +119,7 @@ public class XmlLoader extends InputTextBuffer{
 	 * @return
 	 * @throws XMLStreamException 
 	 */
-	private Optional<List<XmlObject>> readReferences(XMLStreamReader in, String name) throws XMLStreamException {
+	private List<XmlObject> readReferences(XMLStreamReader in, String name) throws XMLStreamException {
 		List<XmlObject> result = new ArrayList<>();
 		while(in.getEventType() != XMLStreamConstants.END_ELEMENT || in.getName().getLocalPart() != name){
 			if(in.getEventType() == XMLStreamConstants.START_ELEMENT ){
@@ -130,7 +128,7 @@ public class XmlLoader extends InputTextBuffer{
 				in.next();
 			}
 		}
-		return Optional.of(result);
+		return result;
 	}
 
 	
