@@ -112,14 +112,12 @@ public class XmlObject implements Serializable {
 		if(!value.equals(Optional.empty()))
 			aux +=value.get();
 		aux += "]";
-		//atributy
-		aux += " {";
+		//atributes
 		if(!attributes.equals(Optional.empty()))
-			for(int i = 0; i<attributes.get().size();i++){
-				aux += attributes.get().get(i) + ",";
-			}
-		aux += "}";
-		//reference
+			aux += attributes.get().toString();
+		else
+		 aux += "{}";
+		//references
 		if(!references.equals(Optional.empty()))
 			for(int i = 0; i<references.get().size();i++){
 				aux +="\n\t" +references.get().get(i).toString();

@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -116,9 +117,9 @@ public class XmlCreator {
 			XMLStreamWriter out,
 			final Optional<Map<String, String>> attributes) throws XMLStreamException{
 		if(!attributes.equals(Optional.empty())){
-			for(int i = 0; i<attributes.get().size();i++){
-				//TODO
-				out.writeAttribute(attributes.get().get(i), attributes.get().get(i));
+			Set<String> set = attributes.get().keySet();
+			for (String key : set) {
+				out.writeAttribute(key, attributes.get().get(key));
 			}
 		}
 	}
