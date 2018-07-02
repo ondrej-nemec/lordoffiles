@@ -106,14 +106,18 @@ public class XmlObject implements Serializable {
 	
 	@Override
 	public String toString() {
-		String aux ="";
+		return toString("");
+	}
+	
+	public String toString(String tab){
+		String aux =tab;
 		aux += name;
 		//value
 		aux += " [" + value + "]";
 		//atributes
 		aux += attributes.toString();//references
 		for(int i = 0; i<references.size();i++){
-			aux +="\n\t" +references.get(i).toString();
+			aux +="\n" + tab + references.get(i).toString(tab + "\t");
 		}
 		return aux;
 	}
