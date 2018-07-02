@@ -76,10 +76,9 @@ public class SoundPlayer extends Thread {
 			clip.start();
 		else if(stream != null)
 			playing();
-		
 	}
 	//TODO pretaceni
-	// mark, skip, reset,
+	// mark, skip, reset, loop
 	
 	
 	/**********************************************************/
