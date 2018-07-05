@@ -23,8 +23,12 @@ public class PlainTextLoader extends InputTextBuffer{
 	public String readAsOneString(final BufferedReader br) throws IOException{
 		String result = "";
 		String line = br.readLine();
+		if(line != null){
+			result+= line;
+			line = br.readLine();
+		}
 		while(line!=null){
-			result+= line + "\n";
+			result+= "\n" + line;
 			line = br.readLine();
 		}
 		return result;
