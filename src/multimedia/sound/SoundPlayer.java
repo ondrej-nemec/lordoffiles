@@ -1,4 +1,4 @@
-package multimedia;
+package multimedia.sound;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,10 +17,11 @@ import exceptions.FileCouldNotBeClosedException;
 import exceptions.NoSourceWasGiven;
 import exceptions.SomeSoundActualyRun;
 
-public class SoundPlayer extends Thread {
+public class SoundPlayer{
 
 	AudioInputStream stream = null;
 	Clip clip = null;
+	
 	
 	public AudioInputStream getStream(){
 		return stream;
