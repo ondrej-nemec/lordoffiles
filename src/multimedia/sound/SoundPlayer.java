@@ -14,11 +14,11 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 import exceptions.FileCouldNotBeClosedException;
-import exceptions.NoSourceWasGiven;
+import exceptions.NoSourceWasGivenException;
 import exceptions.SomeSoundActualyRun;
 
 public class SoundPlayer{
-
+	
 	AudioInputStream stream = null;
 	Clip clip = null;
 	
@@ -55,6 +55,10 @@ public class SoundPlayer{
 	/******************/
 	public void soundStop() throws FileCouldNotBeClosedException{
 		soundPause();
+		if(clip != null){
+			clip.close();
+			clip.flush();
+		}
 		clip = null;
 		stream = null;
 	}
@@ -72,15 +76,65 @@ public class SoundPlayer{
 	
 	public void soundPlay() throws LineUnavailableException, IOException{
 		if(stream == null)
-			throw new NoSourceWasGiven();
+			throw new NoSourceWasGivenException();
 		if(clip != null)
 			clip.start();
 		else if(stream != null)
 			playing();
 	}
-	//TODO pretaceni
-	// mark, skip, reset, loop
 	
+	/**
+	 * 
+	 * @param count ouf loop, 0 - stop looping, -x, infinity
+	 */
+	public void soundLoop(int count){
+		if(clip != null){
+			if(count < 0)
+				clip.loop(Clip.LOOP_CONTINUOUSLY);
+			else
+				clip.loop(count);
+		}
+	}
+	
+	
+	/*******  *******/
+	public void soundBack(long positionFromStart){
+		soundSetPosition(soundGetPosition() - positionFromStart);
+	}
+	
+	public void soundFoward(long positionFromStart){
+		soundSetPosition(soundGetPosition() + positionFromStart);
+	}
+
+	
+	public long soundGetPosition(){
+		if(clip == null)
+			throw new NoSourceWasGivenException();
+		return clip.getMicrosecondPosition();
+		
+		
+	}
+	
+	public void soundSetPosition(long microSecond){
+		if(clip == null)
+			throw new NoSourceWasGivenException();
+		clip.setMicrosecondPosition(microSecond);
+	}
+	
+	public long soundDuration(){
+		if(clip == null)
+			throw new NoSourceWasGivenException();
+		return clip.getMicrosecondLength();
+	}
+	
+	/****** *******/
+	public static int toSecond(long microsecond){
+		return (int)(microsecond/1000000.0);
+	}
+	
+	public static long toMicrosecond(int second){
+		return (long)(second*1000000);
+	}
 	
 	/**********************************************************/
 	
@@ -101,5 +155,9 @@ public class SoundPlayer{
 	protected void finalize() throws Throwable {
 		soundStop();
 		super.finalize();
+	}
+	
+	public void clipStatistic(){
+		
 	}
 }
