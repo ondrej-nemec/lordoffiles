@@ -64,7 +64,6 @@ public class SoundPlayerTest {
 	@Test
 	public void testSoundPlayerFowardRewievPosition() {
 		System.err.println("This test require your full attention - foward, rewiev, position, duration: 32s");
-		int threads = Thread.activeCount();
 		SoundPlayer s = new SoundPlayer();
 		for(int i = 0; i  < 1000; i++){
 			try {
@@ -93,7 +92,6 @@ public class SoundPlayerTest {
 				case 32:
 					s.soundStop();
 					System.err.println("End");
-					assertEquals(threads, Thread.activeCount());
 					return;
 				default:
 					System.out.println("time: " + i);
@@ -107,7 +105,6 @@ public class SoundPlayerTest {
 	@Test
 	public void testSoundPlayerLoop() {
 		System.err.println("This test require your full attention - loop, duration: 50s");
-		int threads = Thread.activeCount();
 		
 		SoundPlayer s = new SoundPlayer();
 		for(int i = 0; i  < 1000; i++){
@@ -155,7 +152,6 @@ public class SoundPlayerTest {
 				case 50:	
 					System.err.println("end");
 					s.soundStop();
-					assertEquals(threads, Thread.activeCount());
 					break;	
 				default:
 					System.out.println("time: " + i);
@@ -170,7 +166,6 @@ public class SoundPlayerTest {
 	@Test
 	public void testSoundPlayerStartStopPause() {
 		System.err.println("This test require your full attention - start, stop, pause, duration: 32s");
-		int threads = Thread.activeCount();
 		SoundPlayer s = new SoundPlayer();
 		for(int i = 0; i  < 1000; i++){
 			try {
@@ -251,7 +246,6 @@ public class SoundPlayerTest {
 					break;
 				case 32:
 					System.err.println("End");
-					assertEquals(threads+1, Thread.activeCount());
 					return;
 				default:
 					System.out.println("time: " + i);
