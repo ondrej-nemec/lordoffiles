@@ -9,7 +9,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.junit.Test;
 
-import exceptions.FileCouldNotBeClosedException;
 import exceptions.NoSourceWasGivenException;
 import exceptions.SomeSoundActualyRun;
 
@@ -41,29 +40,25 @@ public class SoundPlayerTest {
 	
 	@Test
 	public void testSoundStatus(){
-		System.err.println("This test not require your attention - status - but duration: <3, 4>s");
+		System.err.println("This test not require your attention - status - but duration: <2, 4>s");
 		SoundPlayer s = new SoundPlayer();
-		assertEquals(SoundPlayer.NO_SOURCE, s.status());
 		try {
+			assertEquals(SoundPlayer.NO_SOURCE, s.status());
+			
 			s.setStream(getClass().getResourceAsStream(path));
 			assertEquals(SoundPlayer.NOT_STARTED_YET, s.status());
-		} catch (UnsupportedAudioFileException e) {e.printStackTrace();
-		} catch (IOException e) {e.printStackTrace();}
-		try {
+			
 			s.soundPlay();
-			try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
+			Thread.sleep(500);
 			assertEquals(SoundPlayer.PLAYING, s.status());
-		} catch (LineUnavailableException e) {e.printStackTrace();
-		} catch (IOException e) {e.printStackTrace();}
-		try {
+			
 			s.soundPause();
-			try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
+			Thread.sleep(500);
 			assertEquals(SoundPlayer.PAUSE, s.status());
-		} catch (FileCouldNotBeClosedException e) {e.printStackTrace();}
-		s.soundSetPosition(SoundPlayer.toMicrosecond(200));
-		try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
-		assertEquals(SoundPlayer.ENDED, s.status());
-		
+			
+			s.soundSetPosition(SoundPlayer.toMicrosecond(200));
+			assertEquals(SoundPlayer.ENDED, s.status());
+		} catch (Exception e) {e.printStackTrace();}
 	}
 	
 	@Test
@@ -72,47 +67,40 @@ public class SoundPlayerTest {
 		int threads = Thread.activeCount();
 		SoundPlayer s = new SoundPlayer();
 		for(int i = 0; i  < 1000; i++){
-			switch (i) {
-			case 0:
-				System.out.println("time " + i + " sound start");
-				try {
-					s.setStream(getClass().getResourceAsStream(path));
-					s.soundPlay();
-				} catch (LineUnavailableException e1) {e1.printStackTrace();
-				} catch (IOException e1) {e1.printStackTrace();
-				} catch (UnsupportedAudioFileException e) {e.printStackTrace();}
-				break;
-			case 6:
-				System.out.println("time " + i + " fowart for 60s");
-				s.soundFoward(SoundPlayer.toMicrosecond(15));
-				break;
-			case 15:
-				System.out.println("time " + i + " rewiev for 30s ");
-				s.soundBack(SoundPlayer.toMicrosecond(10));
-				break;
-			case 20:
-				System.out.println("time " + i + " rewiev for 100s - play from start");
-				s.soundBack(SoundPlayer.toMicrosecond(100));
-				break;
-			case 25:
-				System.out.println("time " + i + " foward for 300s - sound ends");
-				s.soundFoward(SoundPlayer.toMicrosecond(300));
-				break;
-			case 32:
-				try {
-					s.soundStop();
-				} catch (FileCouldNotBeClosedException e1) {e1.printStackTrace();}
-				System.err.println("End");
-				assertEquals(threads, Thread.activeCount());
-				return;
-			default:
-				System.out.println("time: " + i);
-				break;
-			}
-			
 			try {
+				switch (i) {
+				case 0:
+					System.out.println("time " + i + " sound start");
+					
+						s.setStream(getClass().getResourceAsStream(path));
+						s.soundPlay();
+				case 6:
+					System.out.println("time " + i + " fowart for 60s");
+					s.soundFoward(SoundPlayer.toMicrosecond(15));
+					break;
+				case 15:
+					System.out.println("time " + i + " rewiev for 30s ");
+					s.soundBack(SoundPlayer.toMicrosecond(10));
+					break;
+				case 20:
+					System.out.println("time " + i + " rewiev for 100s - play from start");
+					s.soundBack(SoundPlayer.toMicrosecond(100));
+					break;
+				case 25:
+					System.out.println("time " + i + " foward for 300s - sound ends");
+					s.soundFoward(SoundPlayer.toMicrosecond(300));
+					break;
+				case 32:
+					s.soundStop();
+					System.err.println("End");
+					assertEquals(threads, Thread.activeCount());
+					return;
+				default:
+					System.out.println("time: " + i);
+					break;
+				}
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {e.printStackTrace();}
+			} catch (Exception e) {e.printStackTrace();}
 		}
 	}
 	
@@ -123,68 +111,58 @@ public class SoundPlayerTest {
 		
 		SoundPlayer s = new SoundPlayer();
 		for(int i = 0; i  < 1000; i++){
-			switch (i) {
-			case 0:
-				System.out.println("time " + i + " sound start");
-				try {
+			try {
+				switch (i) {
+				case 0:
+					System.out.println("time " + i + " sound start");
 					s.setStream(getClass().getResourceAsStream(path));
 					s.soundPlay();
-				} catch (LineUnavailableException e1) {e1.printStackTrace();
-				} catch (IOException e1) {e1.printStackTrace();
-				} catch (UnsupportedAudioFileException e) {e.printStackTrace();}
-				break;
-			case 1:	
-				System.out.println("time " + i + " loop1 added");
-				s.soundLoop(1);
-				break;
-			case 5:
-				System.out.println("time " + i + " skipped nearly to end");
-				s.soundSetPosition(SoundPlayer.toMicrosecond(180));
-				break;
-			case 15:
-				System.out.println("time " + i + " now the second is playing");
-				break;
-			case 17:
-				System.out.println("time " + i + " skipped nearly to end");
-				s.soundSetPosition(SoundPlayer.toMicrosecond(180));
-				break;
-			case 25:
-				System.out.println("time " + i + " now the second is stopped");
-				break;
-			case 30:
-				System.out.println("time " + i + " sound start");
-				try {
+					break;
+				case 1:	
+					System.out.println("time " + i + " loop1 added");
+					s.soundLoop(1);
+					break;
+				case 5:
+					System.out.println("time " + i + " skipped nearly to end");
+					s.soundSetPosition(SoundPlayer.toMicrosecond(180));
+					break;
+				case 15:
+					System.out.println("time " + i + " now the second is playing");
+					break;
+				case 17:
+					System.out.println("time " + i + " skipped nearly to end");
+					s.soundSetPosition(SoundPlayer.toMicrosecond(180));
+					break;
+				case 25:
+					System.out.println("time " + i + " now the second is stopped");
+					break;
+				case 30:
+					System.out.println("time " + i + " sound start");
 					s.soundPlay();
-				} catch (LineUnavailableException e1) {e1.printStackTrace();
-				} catch (IOException e1) {e1.printStackTrace();}
-				break;
-			case 31:	
-				System.out.println("time " + i + " loop8 added");
-				s.soundLoop(8);
-				break;
-			case 36:	
-				System.out.println("time " + i + " loop stopped");
-				s.soundLoop(0);
-				break;
-			case 38:
-				System.out.println("time " + i + " skipped nearly to end");
-				s.soundSetPosition(SoundPlayer.toMicrosecond(180));
-				break;
-			case 50:	
-				System.err.println("end");
-				try {
+					break;
+				case 31:	
+					System.out.println("time " + i + " loop8 added");
+					s.soundLoop(8);
+					break;
+				case 36:	
+					System.out.println("time " + i + " loop stopped");
+					s.soundLoop(0);
+					break;
+				case 38:
+					System.out.println("time " + i + " skipped nearly to end");
+					s.soundSetPosition(SoundPlayer.toMicrosecond(180));
+					break;
+				case 50:	
+					System.err.println("end");
 					s.soundStop();
-				} catch (FileCouldNotBeClosedException e1) {e1.printStackTrace();}
-				assertEquals(threads, Thread.activeCount());
-				break;	
-			default:
-				System.out.println("time: " + i);
-				break;
-			}
-			
-			try {
+					assertEquals(threads, Thread.activeCount());
+					break;	
+				default:
+					System.out.println("time: " + i);
+					break;
+				}
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {e.printStackTrace();}
+			} catch (Exception e) {e.printStackTrace();}
 		}
 	}
 	
@@ -195,115 +173,92 @@ public class SoundPlayerTest {
 		int threads = Thread.activeCount();
 		SoundPlayer s = new SoundPlayer();
 		for(int i = 0; i  < 1000; i++){
-			switch (i) {
-			case 0:
-				System.err.println("Start");
-				break;
-			case 1:
-				System.out.println("time " + i + ": stopMusic - nothing happend" );
-				try {
-					s.soundStop();
-				} catch (FileCouldNotBeClosedException e1) {e1.printStackTrace();}
-				
-				break;
-			case 2:
-				System.out.println("time " + i + ": pause - nothing happend" );
-				try {
-					s.soundPause();
-				} catch (FileCouldNotBeClosedException e1) {e1.printStackTrace();}
-				break;
-			case 3:
-				System.out.println("time " + i + ": play - nothing happend" );
-				try{
-					s.soundPlay();
-				}catch(Exception e){
-					assertEquals(NoSourceWasGivenException.class, e.getClass());
-					if(e instanceof NoSourceWasGivenException)
-						System.err.println("NoSourceWasGiven");
-					else
-						e.printStackTrace();
-				}
-				break;	
-			case 5:
-				System.out.println("time " + i + ": setStream, play - music start" );
-				try {
-					s.setStream(getClass().getResourceAsStream(path));
-					s.soundPlay();
-				} catch (LineUnavailableException e1) {e1.printStackTrace();
-				} catch (IOException e1) {e1.printStackTrace();
-				} catch (UnsupportedAudioFileException e) {e.printStackTrace();}
-				break;	
-			case 6:
-				System.out.println("time " + i + ": setStream, play - nothing happend" );
-				try{
-					s.setStream(getClass().getResourceAsStream(path));
-					s.soundPlay();
-				}catch(Exception e){
-					assertEquals(SomeSoundActualyRun.class, e.getClass());
-					if(e instanceof SomeSoundActualyRun)
-						System.err.println("SomeSoundActualyRun");
-					else
-						e.printStackTrace();
-				}
-				break;	
-			case 8:
-				System.out.println("time " + i + ": stopMusic - music stop" );
-				try {
-					s.soundStop();
-				} catch (FileCouldNotBeClosedException e1) {e1.printStackTrace();}
-				break;	
-			case 10:
-				System.out.println("time " + i + ": play - nothing happend" );
-				try{
-					s.soundPlay();
-				}catch(Exception e){
-					assertEquals(NoSourceWasGivenException.class, e.getClass());
-					if(e instanceof NoSourceWasGivenException)
-						System.err.println("NoSourceWasGiven");
-					else
-						e.printStackTrace();
-				}
-				break;
-			case 13:
-				System.out.println("time " + i + ": setStream, play - music start" );
-				try {
-					s.setStream(getClass().getResourceAsStream(path));
-					s.soundPlay();
-				} catch (LineUnavailableException e1) {e1.printStackTrace();
-				}catch(Exception e){e.printStackTrace();}
-				break;	
-			case 20:
-				System.out.println("time " + i + ": pause - music stop" );
-				try {
-					s.soundPause();
-				} catch (FileCouldNotBeClosedException e1) {e1.printStackTrace();}
-				break;	
-			case 25:
-				System.out.println("time " + i + ": play - music start, where was stopped" );
-				try {
-					s.soundPlay();
-				} catch (LineUnavailableException e1) {e1.printStackTrace();
-				} catch (IOException e1) {e1.printStackTrace();}
-				break;
-			case 30:
-				System.out.println("time " + i + ": stopMusic - music stop" );
-				try {
-					s.soundStop();
-				} catch (FileCouldNotBeClosedException e1) {e1.printStackTrace();}
-				break;
-				
-			case 32:
-				System.err.println("End");
-				assertEquals(threads+1, Thread.activeCount());
-				return;
-			default:
-				System.out.println("time: " + i);
-				break;
-			}
-			
 			try {
+				switch (i) {
+				case 0:
+					System.err.println("Start");
+					break;
+				case 1:
+					System.out.println("time " + i + ": stopMusic - nothing happend" );
+					s.soundStop();
+					break;
+				case 2:
+					System.out.println("time " + i + ": pause - nothing happend" );
+					s.soundPause();
+					break;
+				case 3:
+					System.out.println("time " + i + ": play - nothing happend" );
+					try{
+						s.soundPlay();
+					}catch(Exception e){
+						assertEquals(NoSourceWasGivenException.class, e.getClass());
+						if(e instanceof NoSourceWasGivenException)
+							System.err.println("NoSourceWasGiven");
+						else
+							e.printStackTrace();
+					}
+					break;	
+				case 5:
+					System.out.println("time " + i + ": setStream, play - music start" );
+					s.setStream(getClass().getResourceAsStream(path));
+					s.soundPlay();
+					break;	
+				case 6:
+					System.out.println("time " + i + ": setStream, play - nothing happend" );
+					try{
+						s.setStream(getClass().getResourceAsStream(path));
+						s.soundPlay();
+					}catch(Exception e){
+						assertEquals(SomeSoundActualyRun.class, e.getClass());
+						if(e instanceof SomeSoundActualyRun)
+							System.err.println("SomeSoundActualyRun");
+						else
+							e.printStackTrace();
+					}
+					break;	
+				case 8:
+					System.out.println("time " + i + ": stopMusic - music stop" );
+					s.soundStop();
+					break;	
+				case 10:
+					System.out.println("time " + i + ": play - nothing happend" );
+					try{
+						s.soundPlay();
+					}catch(Exception e){
+						assertEquals(NoSourceWasGivenException.class, e.getClass());
+						if(e instanceof NoSourceWasGivenException)
+							System.err.println("NoSourceWasGiven");
+						else
+							e.printStackTrace();
+					}
+					break;
+				case 13:
+					System.out.println("time " + i + ": setStream, play - music start" );
+					s.setStream(getClass().getResourceAsStream(path));
+					s.soundPlay();
+					break;	
+				case 20:
+					System.out.println("time " + i + ": pause - music stop" );
+					s.soundPause();
+					break;	
+				case 25:
+					System.out.println("time " + i + ": play - music start, where was stopped" );
+					s.soundPlay();
+					break;
+				case 30:
+					System.out.println("time " + i + ": stopMusic - music stop" );
+					s.soundStop();
+					break;
+				case 32:
+					System.err.println("End");
+					assertEquals(threads+1, Thread.activeCount());
+					return;
+				default:
+					System.out.println("time: " + i);
+					break;
+				}
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {e.printStackTrace();}
+			} catch (Exception e) {e.printStackTrace();}
 		}
 	}
 
