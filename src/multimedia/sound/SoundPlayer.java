@@ -19,6 +19,13 @@ import exceptions.SomeSoundActualyRun;
 
 public class SoundPlayer{
 	
+	public static final int NO_SOURCE = 0;
+	public static final int NOT_STARTED_YET = 1;
+	public static final int PLAYING = 2;
+	public static final int PAUSE = 3;
+	public static final int ENDED = 4;
+	
+	
 	AudioInputStream stream = null;
 	Clip clip = null;
 	
@@ -50,6 +57,20 @@ public class SoundPlayer{
 	private void canRunNew() throws SomeSoundActualyRun{
 		if(stream != null)
 			throw new SomeSoundActualyRun();
+	}
+	/**************/
+	public int status(){
+		if(stream == null)
+			return NO_SOURCE;
+		if(clip == null)
+			return NOT_STARTED_YET;
+		if(clip.isRunning() || clip.isActive())
+			return PLAYING;
+		if(soundDuration() <= soundGetPosition())
+			return ENDED;
+		if(!clip.isActive() && !clip.isRunning())
+			return PAUSE;
+		return -1;
 	}
 	
 	/******************/
@@ -157,7 +178,4 @@ public class SoundPlayer{
 		super.finalize();
 	}
 	
-	public void clipStatistic(){
-		
-	}
 }
