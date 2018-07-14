@@ -32,10 +32,11 @@ public class SoundPlayerTest {
 		try {
 			s.setStream(getClass().getResourceAsStream(path));
 			s.soundPlay();
-		} catch (UnsupportedAudioFileException e2) {e2.printStackTrace();
-		} catch (IOException e2) {e2.printStackTrace();
-		} catch (LineUnavailableException e) {e.printStackTrace();}
-		assertEquals(185, SoundPlayer.toSecond(s.soundDuration()));
+			assertEquals(185, SoundPlayer.toSecond(s.soundDuration()));
+			s.soundStop();
+		} catch (UnsupportedAudioFileException e2) {e2.printStackTrace(); fail("UnsupportedAudioFileException");
+		} catch (IOException e2) {e2.printStackTrace(); fail("IOException");
+		} catch (LineUnavailableException e) {e.printStackTrace(); fail("LineUnavailableException");}
 	}
 	
 	@Test
@@ -70,9 +71,8 @@ public class SoundPlayerTest {
 				switch (i) {
 				case 0:
 					System.out.println("time " + i + " sound start");
-					
-						s.setStream(getClass().getResourceAsStream(path));
-						s.soundPlay();
+					s.setStream(getClass().getResourceAsStream(path));
+					s.soundPlay();
 				case 6:
 					System.out.println("time " + i + " fowart for 60s");
 					s.soundFoward(SoundPlayer.toMicrosecond(15));
