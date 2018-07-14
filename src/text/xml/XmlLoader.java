@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -86,6 +88,11 @@ public class XmlLoader extends InputTextBuffer{
 			in.next();
 			if(in.getEventType() == XMLStreamConstants.CHARACTERS){
 				value = in.getText();
+				Pattern p = Pattern.compile("[\t|\n]*"); //(.*)([\t|\n| ]*)
+				Matcher m = p.matcher(value);
+				while(m.find()){
+					value = value.replace(m.group(), "");
+				}
 			}else if(in.getEventType() == XMLStreamConstants.START_ELEMENT){
 				references=readReferences(in, name);
 			}
