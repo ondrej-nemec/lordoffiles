@@ -12,9 +12,9 @@ import java.util.List;
 import org.junit.Test;
 
 public class PlainTextCreatorTest {
-	private String writeString = "tests/text/plaintext/res/write-string.txt";
-	private String writeLines = "tests/text/plaintext/res/write-lines.txt";
-	private String writeGrid = "tests/text/plaintext/res/write-grid.txt";
+	private String writeString = "tests/text/plaintext/write-string.txt";
+	private String writeLines = "tests/text/plaintext/write-lines.txt";
+	private String writeGrid = "tests/text/plaintext/write-grid.txt";
 	
 	@Test
 	public void testWriteStringWorks() {

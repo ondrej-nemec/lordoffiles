@@ -23,7 +23,7 @@ public class XmlCreatorTest {
 
 	@Test
 	public void testWriteConsumerWorks(){
-		String path = "tests/text/xml/res/write-consumer.xml";
+		String path = "res/text/xml/write-consumer.xml";
 		
 		try(BufferedWriter bw = new BufferedWriter(new FileWriter(path))){
 			clearRepository(path);
@@ -52,7 +52,7 @@ public class XmlCreatorTest {
 	
 	@Test
 	public void testWriteXmlObjectWorks(){
-		String path = "tests/text/xml/res/write-xmlobject.xml";
+		String path = "res/text/xml/write-xmlobject.xml";
 		
 		Map<String, String> firstAttributes = new HashMap<>();
 		firstAttributes.put("class", "class1");

@@ -14,7 +14,7 @@ import exceptions.SomeSoundActualyRun;
 
 public class SoundPlayerTest {
 	
-	private String path = "/multimedia/sound/res/sound.wav";
+	private String path = "/multimedia/sound/sound.wav";
 	
 	@Test
 	public void testToMicrosecond(){

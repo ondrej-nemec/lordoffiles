@@ -15,7 +15,7 @@ public class PlainTextLoaderTest {
 	public void testReadWithConsumerWorks() {
 		try(BufferedReader br = new BufferedReader(
 				new InputStreamReader(
-						getClass().getResourceAsStream("/text/plaintext/res/read-consumer.txt")))){
+						getClass().getResourceAsStream("/text/plaintext/read-consumer.txt")))){
 			PlainTextLoader loader = new PlainTextLoader();
 			loader.read(br, (a)->{
 				if(a.length() == 4)
@@ -36,7 +36,7 @@ public class PlainTextLoaderTest {
 	public void testReadAsOneStringWorks() {
 		try(BufferedReader br = new BufferedReader(
 				new InputStreamReader(
-						getClass().getResourceAsStream("/text/plaintext/res/read-string.txt")))){
+						getClass().getResourceAsStream("/text/plaintext/read-string.txt")))){
 			PlainTextLoader loader = new PlainTextLoader();
 			
 			assertEquals(
@@ -53,7 +53,7 @@ public class PlainTextLoaderTest {
 	public void testReadLinesWorks() {
 		try(BufferedReader br = new BufferedReader(
 				new InputStreamReader(
-						getClass().getResourceAsStream("/text/plaintext/res/read-lines.txt")))){
+						getClass().getResourceAsStream("/text/plaintext/read-lines.txt")))){
 			PlainTextLoader loader = new PlainTextLoader();
 			
 			assertEquals(
@@ -70,7 +70,7 @@ public class PlainTextLoaderTest {
 	public void testReadGridWorks() {
 		try(BufferedReader br = new BufferedReader(
 				new InputStreamReader(
-						getClass().getResourceAsStream("/text/plaintext/res/read-grid.txt")))){
+						getClass().getResourceAsStream("/text/plaintext/read-grid.txt")))){
 			PlainTextLoader loader = new PlainTextLoader();
 			
 			assertEquals(
