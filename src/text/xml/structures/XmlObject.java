@@ -106,14 +106,19 @@ public class XmlObject implements Serializable {
 	
 	@Override
 	public String toString() {
-		String aux ="";
+		return toString("");
+	}
+	
+	public String toString(String tab){
+		String aux =tab;
 		aux += name;
 		//value
 		aux += " [" + value + "]";
 		//atributes
-		aux += attributes.toString();//references
+		aux += attributes;
+		//references
 		for(int i = 0; i<references.size();i++){
-			aux +="\n\t" +references.get(i).toString();
+			aux +="\n" + tab + references.get(i).toString(tab + "\t");
 		}
 		return aux;
 	}
@@ -123,14 +128,15 @@ public class XmlObject implements Serializable {
 		if(!(o instanceof XmlObject))
 			return false;
 		XmlObject aux = (XmlObject)o;
-		if(name != aux.getName())
+		if(!name.equals(aux.getName()))
 			return false;
-		if(value != aux.getValue())
+		
+		if(!value.equals(aux.getValue()))
 			return false;
 		
 		if(!attributes.equals(aux.getAttributes()))
 			return false;
-		
+
 		if(!references.equals(aux.getReferences()))
 			return false;
 		return true;

@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 /bin/
 /rip/
 /.classpath
 /.project
 /.settings
+=======
+/.project
+/.settings
+/bin
+/.classpath
+/rip/
+>>>>>>> refs/heads/multimedia

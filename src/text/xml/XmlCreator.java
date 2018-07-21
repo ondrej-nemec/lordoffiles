@@ -3,7 +3,6 @@ package text.xml;
 import java.io.BufferedWriter;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -103,7 +102,7 @@ public class XmlCreator {
 	 * @throws XMLStreamException
 	 */
 	private void writeValue(XMLStreamWriter out, String value) throws XMLStreamException{
-		if(!value.equals(Optional.empty()))
+		if(value != null)
 			out.writeCharacters(value);
 	}
 	
@@ -116,7 +115,7 @@ public class XmlCreator {
 	private void writeAtribute(
 			XMLStreamWriter out,
 			final Map<String, String> attributes) throws XMLStreamException{
-		if(!attributes.equals(Optional.empty())){
+		if(attributes != null){
 			Set<String> set = attributes.keySet();
 			for (String key : set) {
 				out.writeAttribute(key, attributes.get(key));
@@ -131,7 +130,7 @@ public class XmlCreator {
 	 * @throws XMLStreamException
 	 */
 	private void writeReferences(XMLStreamWriter out, List<XmlObject> references) throws XMLStreamException{
-		if(!references.equals(Optional.empty()))
+		if(references != null)
 			for(int i = 0; i<references.size();i++){
 				writeLevel(out, references.get(i));
 			}
