@@ -1,6 +1,7 @@
 package text.plaintext;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,22 +12,22 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class PlainTextCreatorTest {
+public class PlainTextCreatorTest{
 	private String writeString = "res/text/plaintext/write-string.txt";
 	private String writeLines = "res/text/plaintext/write-lines.txt";
 	private String writeGrid = "res/text/plaintext/write-grid.txt";
 	
 	@Test
 	public void testWriteStringWorks() {
-		try(BufferedWriter bw = new BufferedWriter(
-				new FileWriter(writeString))){
+		PlainTextCreator creator = new PlainTextCreator();
+		String data = "This is test data\nNew line\tafter tab";
+		
+		try(BufferedWriter bw = mockBuffer(writeString)){
 			clearRepository(writeString);
-			
-			PlainTextCreator creator = new PlainTextCreator();
-			String data = "This is test data\nNew line\tafter tab";
 			creator.write(bw, data);
 			
-			System.err.println("This file needs check: " + writeString);
+			verify(bw, times(1)).write(data);
+			verify(bw, times(1)).flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail("IOException");
@@ -35,15 +36,18 @@ public class PlainTextCreatorTest {
 	
 	@Test
 	public void testWriteLinesWorks() {
-		try(BufferedWriter bw = new BufferedWriter(
-				new FileWriter(writeLines))){
+		PlainTextCreator creator = new PlainTextCreator();
+		List<String> data = Arrays.asList("First line","Second line","Third line");
+		
+		try(BufferedWriter bw = mockBuffer(writeLines)){
 			clearRepository(writeLines);
-			
-			PlainTextCreator creator = new PlainTextCreator();
-			List<String> data = Arrays.asList("First line","Second line","Third line");
 			creator.write(bw, data);
 			
-			System.err.println("This file needs check: " + writeLines);
+			for(String line : data){
+				verify(bw).write(line);
+			}
+			verify(bw, times(2)).newLine();
+			verify(bw).flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail("IOException");
@@ -52,23 +56,35 @@ public class PlainTextCreatorTest {
 	
 	@Test
 	public void testWriteGridWorks() {
-		try(BufferedWriter bw = new BufferedWriter(
-				new FileWriter(writeGrid))){
-			clearRepository(writeGrid);
-			
-			PlainTextCreator creator = new PlainTextCreator();
-			List<List<String>> data = Arrays.asList(
+		PlainTextCreator creator = new PlainTextCreator();
+		List<List<String>> data = Arrays.asList(
 					Arrays.asList("a-a", "a-b", "a-c"),
 					Arrays.asList("b-a", "b-b", "b-c"),
 					Arrays.asList("c-a", "c-b", "c-c")
 					);
+		
+		try(BufferedWriter bw = mockBuffer(writeGrid)){
+			clearRepository(writeGrid);
 			creator.write(bw, data, ";");
 			
-			System.err.println("This file need checks: " + writeGrid);
+			for(List<String> line : data){
+				verify(bw).write(line.get(0) + ";" + line.get(1) + ";" + line.get(2));
+			}
+			verify(bw, times(2)).newLine();
+			verify(bw).flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail("IOException");
 		}
+	}
+	
+	private BufferedWriter mockBuffer(String file) throws IOException{
+		return mock(
+				BufferedWriter.class,
+				withSettings()
+					.useConstructor(new FileWriter(file))
+					.defaultAnswer(CALLS_REAL_METHODS)
+			);
 	}
 	
 	private void clearRepository(String path) throws IOException{

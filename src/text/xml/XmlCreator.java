@@ -16,6 +16,7 @@ import exceptions.FileCouldNotBeClosedException;
 import text.xml.structures.XmlObject;
 
 public class XmlCreator {
+	//TODO some factory for stream, maybe
 
 	/**
 	 * write whole step by step
@@ -25,6 +26,32 @@ public class XmlCreator {
 	 * @throws XMLStreamException
 	 * @throws FileCouldNotBeClosedException
 	 */
+	public void write(final BufferedWriter bw, Consumer<XMLStreamWriter> consumer)
+			throws XMLStreamException, FileCouldNotBeClosedException{
+		XMLOutputFactory factory = XMLOutputFactory.newInstance();
+		write(new IndentingXMLStreamWriter( 
+					factory.createXMLStreamWriter(bw)
+				), consumer);
+	}
+	
+	public void write(final XMLStreamWriter out, Consumer<XMLStreamWriter> consumer)
+			throws XMLStreamException, FileCouldNotBeClosedException{
+		try {
+			out.writeStartDocument();
+			consumer.accept(out);
+			out.writeEndDocument();
+			out.flush();
+		} finally {
+			try {
+				if(out != null)
+					out.close();
+			} catch (Exception e) {
+				throw new FileCouldNotBeClosedException();
+			}
+		}
+	}
+	
+	/*
 	public void write(final BufferedWriter bw, Consumer<XMLStreamWriter> consumer)
 			throws XMLStreamException, FileCouldNotBeClosedException{
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
@@ -47,6 +74,8 @@ public class XmlCreator {
 			}
 		}
 	}
+	*/
+	
 	
 	
 	/**
@@ -57,6 +86,33 @@ public class XmlCreator {
 	 * @throws XMLStreamException
 	 * @throws FileCouldNotBeClosedException
 	 */
+	public void write(final BufferedWriter bw, final XmlObject object)
+			throws XMLStreamException, FileCouldNotBeClosedException{
+		XMLOutputFactory factory = XMLOutputFactory.newInstance();
+		write(new IndentingXMLStreamWriter( 
+					factory.createXMLStreamWriter(bw)
+				), object);
+	}
+	
+	public boolean write(final XMLStreamWriter out, final XmlObject object)
+			throws XMLStreamException, FileCouldNotBeClosedException{
+		try {
+			out.writeStartDocument();
+			writeLevel(out, object);
+			out.writeEndDocument();
+			out.flush();
+		} finally {
+			try {
+				if(out != null)
+					out.close();
+			} catch (Exception e) {
+				throw new FileCouldNotBeClosedException();
+			}
+		}
+		return true;
+	}
+	
+	/*
 	public boolean write(final BufferedWriter bw, final XmlObject object)
 			throws XMLStreamException, FileCouldNotBeClosedException{
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
@@ -80,6 +136,8 @@ public class XmlCreator {
 		}
 		return true;
 	}
+	*/
+	
 	
 	/**
 	 * write element
