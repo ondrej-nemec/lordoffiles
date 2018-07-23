@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class PlainTextCreatorTest{
 	private String writeString = "res/text/plaintext/write-string.txt";
@@ -47,7 +48,8 @@ public class PlainTextCreatorTest{
 				verify(bw).write(line);
 			}
 			verify(bw, times(2)).newLine();
-			verify(bw).flush();
+			verify(bw, times(5)).write(Mockito.anyString());
+			verify(bw, times(1)).flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail("IOException");
@@ -71,7 +73,8 @@ public class PlainTextCreatorTest{
 				verify(bw).write(line.get(0) + ";" + line.get(1) + ";" + line.get(2));
 			}
 			verify(bw, times(2)).newLine();
-			verify(bw).flush();
+			verify(bw, times(5)).write(Mockito.anyString());
+			verify(bw, times(1)).flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 			fail("IOException");

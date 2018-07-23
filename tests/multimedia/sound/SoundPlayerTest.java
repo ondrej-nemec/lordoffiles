@@ -17,16 +17,217 @@ public class SoundPlayerTest {
 	private String path = "/multimedia/sound/sound.wav";
 	
 	@Test
-	public void testToMicrosecond(){
+	public void testClip(){
+		SoundPlayer s = new SoundPlayer();
+		try {
+			s.clip("before");
+			
+			s.setStream(getClass().getResourceAsStream(path));
+			s.clip("stream setted");
+
+			s.soundPlay();
+			s.clip("play");
+			
+			s.soundPause();
+			s.clip("pause");
+			
+			s.soundStop();
+			s.clip("stop");
+			
+			s.soundPlay();
+			s.clip("play");
+
+			s.soundStop();
+			s.clip("stop");
+			
+			s.soundPause();
+			s.clip("pause");
+						
+			s.soundPlay();
+			s.clip("start");
+			
+			s.soundSetPosition(200000000);
+			s.clip("ended");
+			
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	
+	@Test
+	public void testToMicrosecondWorks(){
 		assertEquals(1000000, SoundPlayer.toMicrosecond(1));
 	}
 	
 	@Test
-	public void testToSecond(){
+	public void testToSecondWorks(){
 		assertEquals(1, SoundPlayer.toSecond(1000000));
 	}
 	
+	@Test(expected = SomeSoundActualyRun.class)
+	public void testSetStreamThrowsWhenSomeSourceIsGiven(){
+		SoundPlayer s = new SoundPlayer();
+		try {
+			s.setStream(getClass().getResourceAsStream(path));
+			s.setStream(getClass().getResourceAsStream(path));
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			if(e instanceof SomeSoundActualyRun)
+				throw new SomeSoundActualyRun();
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test()
+	public void testSetStreamOverride(){
+		SoundPlayer s = new SoundPlayer();
+		try {
+			s.setStream(getClass().getResourceAsStream(path));
+			s.setStream(getClass().getResourceAsStream(path));
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			if(e instanceof SomeSoundActualyRun)
+				throw new SomeSoundActualyRun();
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test(expected = NoSourceWasGivenException.class)
+	public void testPlayThrowsWhenNoSourceGiven(){
+		SoundPlayer s = new SoundPlayer();
+		try {
+			s.soundPlay();
+		} catch (LineUnavailableException | IOException e) {
+			if(e instanceof NoSourceWasGivenException)
+				throw new NoSourceWasGivenException();
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
 	@Test
+	public void testSoundStatus(){
+		SoundPlayer s = new SoundPlayer();
+		try {
+			assertEquals(SoundPlayer.NOT_PREPARED, s.status());
+			s.setStream(getClass().getResourceAsStream(path));
+			assertEquals(SoundPlayer.STOPPED, s.status());
+			
+			s.soundPlay();
+			s.soundPause();
+			assertEquals(SoundPlayer.PAUSE, s.status());
+			
+			s.soundStop();
+			assertEquals(SoundPlayer.STOPPED, s.status());
+			
+			s.soundPlay();
+			assertEquals(SoundPlayer.PLAYING, s.status());
+
+			s.soundPause();
+			assertEquals(SoundPlayer.PAUSE, s.status());
+			
+			s.soundStop();
+			assertEquals(SoundPlayer.STOPPED, s.status());
+			
+			s.soundSetPosition(200000000);
+			assertEquals(SoundPlayer.ENDED, s.status());
+			
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void testDurations(){
+		SoundPlayer s = new SoundPlayer();
+		try {
+			s.setStream(getClass().getResourceAsStream(path));
+			assertEquals(185835102, s.soundDuration());
+			
+			assertEquals(0, s.soundGetPosition());
+			
+			s.soundSetPosition(100000000);
+			assertEquals(100000000, s.soundGetPosition());
+			
+			s.soundBack(50000000);
+			assertEquals(50000000, s.soundGetPosition());
+		
+			s.soundFoward(50000000);
+			assertEquals(100000000, s.soundGetPosition());
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	public void testLoopWorks(){
+		SoundPlayer s = new SoundPlayer();
+		try {
+			s.setStream(getClass().getResourceAsStream(path));
+			
+			s.soundLoop(1);
+			s.soundSetPosition(180000000);
+			assertEquals(SoundPlayer.PLAYING, s.status());
+			
+			s.soundFoward(20000000);
+			assertEquals(SoundPlayer.PLAYING, s.status());
+			
+			s.soundSetPosition(190000000);
+			assertEquals(SoundPlayer.ENDED, s.status());
+		} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+
+	/*
+	@Test
+	public void testStatusWorks(){
+		SoundPlayer s = new SoundPlayer();
+		Clip clip = mock(Clip.class);
+		try {
+			assertEquals(SoundPlayer.NO_SOURCE, s.status());
+			
+			s.setStream(getClass().getResourceAsStream(path));
+			assertEquals(SoundPlayer.NOT_PLAYING, s.status());	
+			
+			s.setClip(clip);
+			
+			s.soundPlay();
+			Thread.sleep(10);
+			assertEquals(SoundPlayer.PLAYING, s.status());
+			
+			s.soundPause();
+			Thread.sleep(100);
+			assertEquals(SoundPlayer.PAUSE, s.status());
+			
+			s.soundSetPosition(200000000);
+			assertEquals(SoundPlayer.ENDED, s.status());
+	
+		} catch (UnsupportedAudioFileException e) {
+			e.printStackTrace();
+			fail();
+		} catch (IOException e) {
+			e.printStackTrace();
+			fail();
+		} catch (LineUnavailableException e) {
+			e.printStackTrace();
+			fail();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	*/
+	
+	
+	/*************************/
+	/*
+//	@Test
 	public void testSoundDuration(){
 		SoundPlayer s = new SoundPlayer();
 		try {
@@ -39,22 +240,21 @@ public class SoundPlayerTest {
 		} catch (LineUnavailableException e) {e.printStackTrace(); fail("LineUnavailableException");}
 	}
 	
-	@Test
+//	@Test
 	public void testSoundStatus(){
-		System.err.println("This test not require your attention - status - but duration: <2, 4>s");
 		SoundPlayer s = new SoundPlayer();
 		try {
-			assertEquals(SoundPlayer.NO_SOURCE, s.status());
+			assertEquals(SoundPlayer.NOT_PREPARED, s.status());
 			
 			s.setStream(getClass().getResourceAsStream(path));
-			assertEquals(SoundPlayer.NOT_STARTED_YET, s.status());
+			assertEquals(SoundPlayer.NOT_PLAYED_YET, s.status());
 			
 			s.soundPlay();
-			Thread.sleep(500);
+			Thread.sleep(100);
 			assertEquals(SoundPlayer.PLAYING, s.status());
 			
 			s.soundPause();
-			Thread.sleep(500);
+			Thread.sleep(100);
 			assertEquals(SoundPlayer.PAUSE, s.status());
 			
 			s.soundSetPosition(SoundPlayer.toMicrosecond(200));
@@ -62,7 +262,7 @@ public class SoundPlayerTest {
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
-	@Test
+//	@Test
 	public void testSoundPlayerFowardRewievPosition() {
 		System.err.println("This test require your full attention - foward, rewiev, position, duration: 32s");
 		SoundPlayer s = new SoundPlayer();
@@ -102,7 +302,7 @@ public class SoundPlayerTest {
 		}
 	}
 	
-	@Test
+//	@Test
 	public void testSoundPlayerLoop() {
 		System.err.println("This test require your full attention - loop, duration: 50s");
 		
@@ -163,7 +363,7 @@ public class SoundPlayerTest {
 	}
 	
 	
-	@Test
+//	@Test
 	public void testSoundPlayerStartStopPause() {
 		System.err.println("This test require your full attention - start, stop, pause, duration: 32s");
 		SoundPlayer s = new SoundPlayer();
@@ -256,4 +456,5 @@ public class SoundPlayerTest {
 		}
 	}
 
+*/
 }

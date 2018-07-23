@@ -19,74 +19,105 @@ import exceptions.SomeSoundActualyRun;
 
 public class SoundPlayer{
 	
-	public static final int NO_SOURCE = 0;
-	public static final int NOT_STARTED_YET = 1;
+	public static final int NOT_PREPARED = 0;
+	public static final int NOT_PLAYED_YET = 1;
 	public static final int PLAYING = 2;
 	public static final int PAUSE = 3;
 	public static final int ENDED = 4;
+	public static final int STOPPED = 5;
 	
 	
-	AudioInputStream stream = null;
-	Clip clip = null;
-	
-	
+	private AudioInputStream stream = null;
+	private Clip clip = null;
+
 	public AudioInputStream getStream(){
 		return stream;
 	}
 	
-	public void setStream(InputStream is) throws UnsupportedAudioFileException, IOException{
+	public void setStream(InputStream is) throws UnsupportedAudioFileException, IOException, LineUnavailableException{
 		canRunNew();
 		this.stream = AudioSystem.getAudioInputStream(is);
+		prepare();
 	}
 	
-	public void setStream(String path) throws UnsupportedAudioFileException, IOException{
+	public void setStream(String path) throws UnsupportedAudioFileException, IOException, LineUnavailableException{
 		canRunNew();
 		this.stream = AudioSystem.getAudioInputStream(new File(path));
+		prepare();
 	}
 	
-	public void setStream(File file) throws UnsupportedAudioFileException, IOException{
+	public void setStream(File file) throws UnsupportedAudioFileException, IOException, LineUnavailableException{
 		canRunNew();
 		this.stream = AudioSystem.getAudioInputStream(file);
+		prepare();
 	}
 	
-	public void setStream(URL url) throws UnsupportedAudioFileException, IOException{
+	public void setStream(URL url) throws UnsupportedAudioFileException, IOException, LineUnavailableException{
 		canRunNew();
 		this.stream = AudioSystem.getAudioInputStream(url);
+		prepare();
+	}
+	
+	public void clear() throws IOException{
+		soundStop();
+		stream = null;
+		clip = null;
 	}
 	
 	private void canRunNew() throws SomeSoundActualyRun{
 		if(stream != null)
 			throw new SomeSoundActualyRun();
 	}
+	
+	/**
+	 * @throws LineUnavailableException 
+	 * @throws IOException
+	*/
+	private void prepare() throws LineUnavailableException, IOException{
+		AudioFormat format = stream.getFormat();		
+		DataLine.Info info = new DataLine.Info(Clip.class, format);
+		clip = (Clip)AudioSystem.getLine(info);
+	}
+	
 	/**************/
 	public int status(){
-		if(stream == null)
-			return NO_SOURCE;
-		if(clip == null)
-			return NOT_STARTED_YET;
-		if(clip.isRunning() || clip.isActive())
-			return PLAYING;
+		
+		try {Thread.sleep(90);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		if(stream == null || clip == null)
+			return NOT_PREPARED;
+/*		System.out.println();
+		System.out.println(clip.isActive());
+		System.out.println(clip.isOpen());
+		System.out.println(clip.isRunning());*/
+		if(!clip.isOpen()) // && !clip.isRunning() && !clip.isActive()
+			return STOPPED;
+		if(!clip.isActive() && !clip.isRunning()) // && clip.isOpen()
+			return PAUSE;
 		if(soundDuration() <= soundGetPosition())
 			return ENDED;
-		if(!clip.isActive() && !clip.isRunning())
-			return PAUSE;
+		if(clip.isRunning() || clip.isOpen())
+			return PLAYING;
 		return -1;
 	}
 	
-	/******************/
-	public void soundStop() throws FileCouldNotBeClosedException{
-		soundPause();
+	public void clip(String name){
+		try {Thread.sleep(90);} catch (InterruptedException e) {e.printStackTrace();}
+		
+		System.out.println("---- " + name);
 		if(clip != null){
-			clip.close();
-			clip.flush();
+			System.out.println("active " + clip.isActive());
+			System.out.println("running " + clip.isRunning());
+			System.out.println("open " + clip.isOpen());
 		}
-		clip = null;
-		stream = null;
+		System.out.println();
 	}
 	
+	/******************/	
 	public void soundPause() throws FileCouldNotBeClosedException{
-		if(clip != null)
+		if(clip != null){
 			clip.stop();
+		}
 		if(stream != null)
 			try {
 				stream.close();
@@ -95,18 +126,43 @@ public class SoundPlayer{
 			}
 	}
 	
+	public void soundStop() throws FileCouldNotBeClosedException{
+		soundPause();
+		if(clip != null){
+			clip.close();
+			clip.flush();
+		}
+	//	clip = null;
+	//	stream = null;
+	}
+	
 	public void soundPlay() throws LineUnavailableException, IOException{
 		if(stream == null)
 			throw new NoSourceWasGivenException();
-		if(clip != null)
+		if(!clip.isOpen()){
+			System.out.println("----------------openning");
+			prepare();
+			clip.open(stream);
+		}
+		if(!clip.isActive() || !clip.isRunning()){
+			System.out.println("---------------starting");
 			clip.start();
-		else if(stream != null)
-			playing();
+		}
 	}
+
+	public void soundBack(long positionFromStart){
+		soundSetPosition(soundGetPosition() - positionFromStart);
+	}
+	
+	public void soundFoward(long positionFromStart){
+		soundSetPosition(soundGetPosition() + positionFromStart);
+	}
+
+	/**************/
 	
 	/**
 	 * 
-	 * @param count ouf loop, 0 - stop looping, -x, infinity
+	 * @param count of loop, 0 - stop looping, -x infinity
 	 */
 	public void soundLoop(int count){
 		if(clip != null){
@@ -116,24 +172,11 @@ public class SoundPlayer{
 				clip.loop(count);
 		}
 	}
-	
-	
-	/*******  *******/
-	public void soundBack(long positionFromStart){
-		soundSetPosition(soundGetPosition() - positionFromStart);
-	}
-	
-	public void soundFoward(long positionFromStart){
-		soundSetPosition(soundGetPosition() + positionFromStart);
-	}
 
-	
 	public long soundGetPosition(){
 		if(clip == null)
 			throw new NoSourceWasGivenException();
 		return clip.getMicrosecondPosition();
-		
-		
 	}
 	
 	public void soundSetPosition(long microSecond){
@@ -159,22 +202,10 @@ public class SoundPlayer{
 	
 	/**********************************************************/
 	
-	/**
-	 * @throws LineUnavailableException 
-	 * @throws IOException
-	*/
-	private void playing() throws LineUnavailableException, IOException{
-		AudioFormat format = stream.getFormat();		
-		DataLine.Info info = new DataLine.Info(Clip.class, format);
-		clip = (Clip)AudioSystem.getLine(info);
-		clip.open(stream);
-		clip.start();
-	}
-	
 	
 	@Override
 	protected void finalize() throws Throwable {
-		soundStop();
+		clear();
 		super.finalize();
 	}
 	

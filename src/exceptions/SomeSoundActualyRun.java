@@ -1,8 +1,6 @@
 package exceptions;
 
-import java.io.IOException;
-
-public class SomeSoundActualyRun  extends IOException{
+public class SomeSoundActualyRun  extends RuntimeException{
 
 	private static final long serialVersionUID = 1L;
 
