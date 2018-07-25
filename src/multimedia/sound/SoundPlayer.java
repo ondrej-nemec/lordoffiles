@@ -10,203 +10,211 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-import exceptions.FileCouldNotBeClosedException;
 import exceptions.NoSourceWasGivenException;
 import exceptions.SomeSoundActualyRun;
 
 public class SoundPlayer{
-	
-	public static final int NOT_PREPARED = 0;
-	public static final int NOT_PLAYED_YET = 1;
-	public static final int PLAYING = 2;
-	public static final int PAUSE = 3;
-	public static final int ENDED = 4;
-	public static final int STOPPED = 5;
+	//TODO volume clip.getLevel();
+	//FloatControl v = clip.getControl(FloatControl.Type.Master_gain)
+	//v .setValue
 	
 	
 	private AudioInputStream stream = null;
-	private Clip clip = null;
+	private Clip sound = null;
+	private int loopCount = 0;
+	
+	public static final int NO_SOURCE = 0;
+	public static final int PLAYED = 1;
+	public static final int STOPPED = 2;
+	public static final int PAUSED = 3;
+	public static final int ENDED = 4;
+	
+	/*********************** STREAM *****************************/
 
 	public AudioInputStream getStream(){
 		return stream;
 	}
 	
-	public void setStream(InputStream is) throws UnsupportedAudioFileException, IOException, LineUnavailableException{
-		canRunNew();
+	public void setStream(InputStream is, boolean stopPrevius) throws UnsupportedAudioFileException, IOException, LineUnavailableException{
+		throwIfStreamIsNotNull(stopPrevius);
 		this.stream = AudioSystem.getAudioInputStream(is);
-		prepare();
+		this.sound = createClip();
 	}
 	
-	public void setStream(String path) throws UnsupportedAudioFileException, IOException, LineUnavailableException{
-		canRunNew();
+	public void setStream(String path, boolean stopPrevius) throws UnsupportedAudioFileException, IOException, LineUnavailableException{
+		throwIfStreamIsNotNull(stopPrevius);
 		this.stream = AudioSystem.getAudioInputStream(new File(path));
-		prepare();
+		this.sound = createClip();
 	}
 	
-	public void setStream(File file) throws UnsupportedAudioFileException, IOException, LineUnavailableException{
-		canRunNew();
+	public void setStream(File file, boolean stopPrevius) throws UnsupportedAudioFileException, IOException, LineUnavailableException{
+		throwIfStreamIsNotNull(stopPrevius);
 		this.stream = AudioSystem.getAudioInputStream(file);
-		prepare();
+		this.sound = createClip();
 	}
 	
-	public void setStream(URL url) throws UnsupportedAudioFileException, IOException, LineUnavailableException{
-		canRunNew();
+	public void setStream(URL url, boolean stopPrevius) throws UnsupportedAudioFileException, IOException, LineUnavailableException{
+		throwIfStreamIsNotNull(stopPrevius);
 		this.stream = AudioSystem.getAudioInputStream(url);
-		prepare();
+		this.sound = createClip();
 	}
+
+	/******************** CONTROL 
+	 * @throws IOException 
+	 * @throws LineUnavailableException ************************/
 	
-	public void clear() throws IOException{
-		soundStop();
-		stream = null;
-		clip = null;
-	}
+	public void play() throws LineUnavailableException, IOException{
+		throwIfStreamIsNull();
+		if(!sound.isOpen()){
+			sound.open(stream);
+		}
 	
-	private void canRunNew() throws SomeSoundActualyRun{
-		if(stream != null)
-			throw new SomeSoundActualyRun();
-	}
-	
-	/**
-	 * @throws LineUnavailableException 
-	 * @throws IOException
-	*/
-	private void prepare() throws LineUnavailableException, IOException{
-		AudioFormat format = stream.getFormat();		
-		DataLine.Info info = new DataLine.Info(Clip.class, format);
-		clip = (Clip)AudioSystem.getLine(info);
-	}
-	
-	/**************/
-	public int status(){
+		int i = 0;
+		while(!sound.isRunning() || !sound.isActive()){
+			try {Thread.sleep(30);} catch (InterruptedException e) {e.printStackTrace();}
+			sound.start();
+			i++;
+			if(i==100)
+				break;
+		}
+		System.out.println(i);
 		
-		try {Thread.sleep(90);} catch (InterruptedException e) {e.printStackTrace();}
 		
-		if(stream == null || clip == null)
-			return NOT_PREPARED;
-/*		System.out.println();
-		System.out.println(clip.isActive());
-		System.out.println(clip.isOpen());
-		System.out.println(clip.isRunning());*/
-		if(!clip.isOpen()) // && !clip.isRunning() && !clip.isActive()
-			return STOPPED;
-		if(!clip.isActive() && !clip.isRunning()) // && clip.isOpen()
-			return PAUSE;
-		if(soundDuration() <= soundGetPosition())
-			return ENDED;
-		if(clip.isRunning() || clip.isOpen())
-			return PLAYING;
+		System.out.println("---------");
+		System.out.println("running " + sound.isRunning());
+		System.out.println("active " + sound.isActive());
+		System.out.println("open " + sound.isOpen());
+		System.out.println("position " + sound.getMicrosecondPosition());
+		System.out.println("-------");
+	}
+	
+	public void stop() throws IOException{
+		throwIfStreamIsNull();
+		pause();
+		sound.close();
+		sound.flush();		
+	}
+	
+	public void pause() throws IOException{
+		throwIfStreamIsNull();
+		sound.stop();
+	}
+	
+	public void foward(long interval){
+		throwIfStreamIsNull();
+		sound.setMicrosecondPosition(sound.getMicrosecondPosition() + interval);
+	}
+	
+	public void back(long interval){
+		throwIfStreamIsNull();
+		sound.setMicrosecondPosition(sound.getMicrosecondPosition() - interval);
+	}
+	
+	/********* SUPPORT ************/
+	
+	public int getStatus(){
+		if(stream == null || sound == null)
+			return NO_SOURCE; //0
+		if(!sound.isOpen())
+			return STOPPED; //2
+		if(getDuration() <= getPosition())
+			return ENDED; //4
+		if(sound.isRunning() && sound.isActive())
+			return PLAYED; //1
+		if(!sound.isActive() && !sound.isRunning() && sound.isOpen())
+			return PAUSED; //3
 		return -1;
 	}
-	
-	public void clip(String name){
-		try {Thread.sleep(90);} catch (InterruptedException e) {e.printStackTrace();}
 		
-		System.out.println("---- " + name);
-		if(clip != null){
-			System.out.println("active " + clip.isActive());
-			System.out.println("running " + clip.isRunning());
-			System.out.println("open " + clip.isOpen());
-		}
-		System.out.println();
+	public long getPosition(){
+		throwIfStreamIsNull();
+		return sound.getMicrosecondPosition();
 	}
 	
-	/******************/	
-	public void soundPause() throws FileCouldNotBeClosedException{
-		if(clip != null){
-			clip.stop();
-		}
-		if(stream != null)
-			try {
-				stream.close();
-			}catch(IOException e){
-				throw new FileCouldNotBeClosedException();
-			}
+	public void setPosition(long position){
+		throwIfStreamIsNull();
+		sound.setMicrosecondPosition(position);
 	}
 	
-	public void soundStop() throws FileCouldNotBeClosedException{
-		soundPause();
-		if(clip != null){
-			clip.close();
-			clip.flush();
-		}
-	//	clip = null;
-	//	stream = null;
+	public long getDuration(){
+		throwIfStreamIsNull();
+		return sound.getMicrosecondLength();
 	}
 	
-	public void soundPlay() throws LineUnavailableException, IOException{
-		if(stream == null)
-			throw new NoSourceWasGivenException();
-		if(!clip.isOpen()){
-			System.out.println("----------------openning");
-			prepare();
-			clip.open(stream);
+	public void setLoop(int count){
+		throwIfStreamIsNull();
+		if(count < 0){
+			sound.loop(Clip.LOOP_CONTINUOUSLY);
+			this.loopCount = Clip.LOOP_CONTINUOUSLY;
+		}else{
+			sound.loop(count);
+			this.loopCount = count;
 		}
-		if(!clip.isActive() || !clip.isRunning()){
-			System.out.println("---------------starting");
-			clip.start();
-		}
+	}
+	
+	public int getLoopCount(){
+		return loopCount;
 	}
 
-	public void soundBack(long positionFromStart){
-		soundSetPosition(soundGetPosition() - positionFromStart);
+	/********************************************************/
+	/**
+	 * for test only
+	 * override existing clip instance
+	 * to future - some annotation
+	 * @param clip
+	 */
+	protected void setClip(Clip clip){
+		this.sound = clip;
 	}
-	
-	public void soundFoward(long positionFromStart){
-		soundSetPosition(soundGetPosition() + positionFromStart);
-	}
-
-	/**************/
 	
 	/**
 	 * 
-	 * @param count of loop, 0 - stop looping, -x infinity
+	 * @return
+	 * @throws LineUnavailableException 
+	 * @throws IOException 
 	 */
-	public void soundLoop(int count){
-		if(clip != null){
-			if(count < 0)
-				clip.loop(Clip.LOOP_CONTINUOUSLY);
-			else
-				clip.loop(count);
-		}
+	protected Clip createClip() throws LineUnavailableException, IOException{
+		//TODO this or other implementatios
+		AudioFormat format = stream.getFormat();		
+		DataLine.Info info = new DataLine.Info(Clip.class, format);
+		Clip c = (Clip) AudioSystem.getLine(info);
+		c.addLineListener(new LineListener() {
+			
+			@Override
+			public void update(LineEvent e) {
+				System.err.println(e);
+			}
+		});
+		return c;
 	}
-
-	public long soundGetPosition(){
-		if(clip == null)
+	
+	private void throwIfStreamIsNotNull(boolean stopPrevius){
+		if(!stopPrevius && stream !=null)
+			throw new SomeSoundActualyRun();
+	}
+		
+	private void throwIfStreamIsNull(){
+		if(stream == null || sound == null)
 			throw new NoSourceWasGivenException();
-		return clip.getMicrosecondPosition();
 	}
 	
-	public void soundSetPosition(long microSecond){
-		if(clip == null)
-			throw new NoSourceWasGivenException();
-		clip.setMicrosecondPosition(microSecond);
-	}
-	
-	public long soundDuration(){
-		if(clip == null)
-			throw new NoSourceWasGivenException();
-		return clip.getMicrosecondLength();
-	}
-	
-	/****** *******/
-	public static int toSecond(long microsecond){
-		return (int)(microsecond/1000000.0);
-	}
-	
-	public static long toMicrosecond(int second){
-		return (long)(second*1000000);
-	}
-	
-	/**********************************************************/
-	
+	/*********************************/
 	
 	@Override
 	protected void finalize() throws Throwable {
-		clear();
+		if(stream != null)
+			stream.close();
+		if(sound != null){
+			sound.stop();
+			sound.close();
+			sound.flush();
+			
+		}
 		super.finalize();
 	}
-	
 }
