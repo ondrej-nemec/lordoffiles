@@ -29,7 +29,6 @@ public class SoundRecorder {
 		//	line = (TargetDataLine)AudioSystem.getLine(info);
 			line.open(format);
 		} catch (LineUnavailableException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

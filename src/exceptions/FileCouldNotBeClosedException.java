@@ -1,8 +1,6 @@
 package exceptions;
 
-import java.io.IOException;
-
-public class FileCouldNotBeClosedException extends IOException{
+public class FileCouldNotBeClosedException extends RuntimeException{
 
 	private static final long serialVersionUID = 1L;
 	
