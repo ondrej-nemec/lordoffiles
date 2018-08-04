@@ -7,9 +7,38 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
+
 public class BufferPlayer extends SoundPlayerApi<SourceDataLine>{
 
-	private int bufferSize = 128000;
+	class Play extends Thread {
+		
+		@Override
+		public void run() {
+			super.run();
+			int bufferSize = 128000;
+			byte[] data = new byte[bufferSize];
+			int nBytesRead = 0;
+			while(nBytesRead != -1 ){
+				if(!isPaused) {
+				try {
+					nBytesRead = stream.read(data, 0, data.length);
+				} catch (IOException e) {e.printStackTrace();}
+				
+				if(nBytesRead >= 0){
+					nBytesWritten = line.write(data, 0, nBytesRead);
+				}
+				
+				}
+			}
+		}
+	}
+	
+	private int nBytesWritten = 0;
+
+	private boolean isPaused;
+	/***************/
+	
+	private Thread run;
 	
 	@Override
 	protected Function<DataLine, SourceDataLine> fromLineToT() {
@@ -24,31 +53,68 @@ public class BufferPlayer extends SoundPlayerApi<SourceDataLine>{
 	@Override
 	public void play() throws LineUnavailableException, IOException {
 		throwIfNoResource();
+	/*	paused = false;
 		if(!line.isOpen()){
+			if(stream.markSupported())
+				stream.reset();
+			
 			line.open(stream.getFormat());
+			line.start();
+			
+			run = new Play();
+			run.start();
+			
+		}else{
+			line.start();
 		}
-		line.start();
-		int nBytesRead = 0;
-		byte[] data = new byte[bufferSize];
+		*/
+		/*
+		if(paused){
+			paused = false;
+			run.start();
+		}else{
+			if(stream.markSupported())
+				stream.reset();
+			
+			line.open(stream.getFormat());
+			line.start();
+			
+			run = new Play();
+			run.start();
+		}
+		*/
+		//after pause
+		isPaused = false;
+		//after stop
+		if(!line.isOpen()){
+			if(stream.markSupported())
+				stream.reset();
+			line.open(stream.getFormat());
+			line.start();
+			
+			run = new Play();
+			run.start();
+		}
+		//nothing do
 		
-		while(nBytesRead != -1 ){
-			nBytesRead = stream.read(data, 0, data.length);
-			if(nBytesRead >= 0){
-				/*int nBytesWritten = */line.write(data, 0, nBytesRead);
-			}
-		}
+		
 	}
 
 	@Override
 	public void pause() {
 		throwIfNoResource();
-		line.stop();
+		if(line.isOpen())
+			isPaused = true;
 	}
 
 	@Override
 	public void stop() {
-		// TODO Auto-generated method stub
-		
+		throwIfNoResource();
+		run.interrupt();
+		run = null;
+		line.stop();
+		line.close();
+		isPaused = false;
 	}
 
 	@Override
@@ -66,7 +132,13 @@ public class BufferPlayer extends SoundPlayerApi<SourceDataLine>{
 	@Override
 	public int getStatus() {
 		// TODO Auto-generated method stub
-		return 0;
+		if(line == null || stream == null)
+			return SoundPlayerApi.NO_SOURCE;
+		if(isPaused)
+			return SoundPlayerApi.PAUSED;
+		if(line.isActive())
+			return SoundPlayerApi.PLAYED;
+		return SoundPlayerApi.STOPPED;
 	}
 
 	@Override

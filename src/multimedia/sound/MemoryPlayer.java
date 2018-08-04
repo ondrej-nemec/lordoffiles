@@ -60,8 +60,6 @@ public class MemoryPlayer extends SoundPlayerApi<Clip> {
 
 	@Override
 	public int getStatus() {
-		// TODO Auto-generated method stub
-		//foward more that duration - stop event
 		if(line == null || stream == null)
 			return SoundPlayerApi.NO_SOURCE;
 		if(line.isActive())

@@ -16,7 +16,7 @@ public class APlayer {
 	
 	public APlayer() {
 		SoundPlayerApi<?> p;
-		//*
+		/*
 		p = new MemoryPlayer();
 		/*/
 		p = new BufferPlayer();
