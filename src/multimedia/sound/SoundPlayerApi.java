@@ -9,7 +9,6 @@ import java.util.function.Function;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
@@ -60,6 +59,17 @@ public abstract class SoundPlayerApi<T extends DataLine> {
 		this.line = createLine();
 	}
 	
+	public void closeResources() throws IOException{
+		if(stream != null){
+			stream.close();
+		}
+		if(line != null){
+			line.stop();
+			line.close();
+			line.flush();
+		}
+	}
+	
 	/**************/
 	
 	protected void setResource(AudioInputStream stream, T line) throws LineUnavailableException, IOException{
@@ -76,6 +86,7 @@ public abstract class SoundPlayerApi<T extends DataLine> {
 	}
 		
 	protected T createLine() throws LineUnavailableException, IOException{
+		stream.mark(Integer.MAX_VALUE);
 		format = stream.getFormat();
 		DataLine.Info info = new DataLine.Info(clazz(), format);
 		DataLine line = (DataLine)AudioSystem.getLine(info);
@@ -84,7 +95,12 @@ public abstract class SoundPlayerApi<T extends DataLine> {
 			
 			@Override
 			public void update(LineEvent e) {
-				System.err.println(e);
+				if(e.getType().equals(LineEvent.Type.STOP)){
+				//	if(getStatus() == ENDED){
+					if(getPosition() >= getDuration()){
+						stop();
+					}
+				}
 			}
 		});
 		return fromLineToT().apply(line);
@@ -107,7 +123,7 @@ public abstract class SoundPlayerApi<T extends DataLine> {
 	
 	public abstract void foward(long msInterval);
 	
-	public abstract void back(long msInterval);
+	public abstract void back(long msInterval) throws LineUnavailableException, IOException ;
 	/**/
 	public abstract int getStatus();
 	
@@ -137,13 +153,7 @@ public abstract class SoundPlayerApi<T extends DataLine> {
 	
 	@Override
 	protected void finalize() throws Throwable {
-		if(stream != null)
-			stream.close();
-		if(line != null){
-			line.stop();
-			line.close();
-			line.flush();
-		}
+		closeResources();
 		super.finalize();
 	}	
 }

@@ -23,7 +23,8 @@ public class MemoryPlayer extends SoundPlayerApi<Clip> {
 	public void play() throws LineUnavailableException, IOException {
 		throwIfNoResource();
 		if(!line.isOpen()){
-			line = createLine();
+			if(stream.markSupported())
+				stream.reset();
 			line.open(stream);
 		}
 		line.start();
@@ -40,7 +41,6 @@ public class MemoryPlayer extends SoundPlayerApi<Clip> {
 		throwIfNoResource();
 		line.stop();
 		line.close();
-		//line.flush();
 	}
 
 	@Override
@@ -51,18 +51,24 @@ public class MemoryPlayer extends SoundPlayerApi<Clip> {
 	}
 
 	@Override
-	public void back(long msInterval) {
+	public void back(long msInterval) throws LineUnavailableException, IOException {
 		throwIfNoResource();
 		if(msInterval >= 0)
 			setPosition(getPosition() - msInterval);
-		line.start();
+		play();
 	}
 
 	@Override
 	public int getStatus() {
 		// TODO Auto-generated method stub
 		//foward more that duration - stop event
-		return 0;
+		if(line == null || stream == null)
+			return SoundPlayerApi.NO_SOURCE;
+		if(line.isActive())
+			return SoundPlayerApi.PLAYED;
+		if(line.isOpen())
+			return SoundPlayerApi.PAUSED;
+		return SoundPlayerApi.STOPPED;
 	}
 
 	@Override

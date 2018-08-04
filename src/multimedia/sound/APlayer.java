@@ -26,9 +26,9 @@ public class APlayer {
 	
 	private void player(SoundPlayerApi<?> p){
 		
-		int max = 40;
+		int max = 55;
 		for(int i = 0; i < max; i++){
-			System.out.println("Time: " + i + "; threads: " + Thread.activeCount());
+			System.out.println("Time: " + i + "; threads: " + Thread.activeCount() + " ----- status: " + status(p.getStatus()));
 			switch (i) {
 			case 0:
 				try {
@@ -43,7 +43,7 @@ public class APlayer {
 				action("stream");
 				break;
 			case 2:
-				info(p);
+				//info(p);
 				break;
 			case 4:
 				try {
@@ -52,7 +52,7 @@ public class APlayer {
 				action("play");
 				break;
 			case 5:
-				info(p);
+				//info(p);
 				break;
 			case 6:
 				try {
@@ -76,11 +76,7 @@ public class APlayer {
 				break;
 			/************/
 			case 18:
-				//*
 				p.stop();
-				/*/
-				//TODO
-				//*/
 				action("stop");
 				break;
 			case 20:
@@ -99,7 +95,9 @@ public class APlayer {
 				action("foward");
 				break;
 			case 30:
-				p.back(duration/3);
+				try {
+					p.back(duration/3);
+				} catch (LineUnavailableException | IOException e1) {e1.printStackTrace();}
 				action("back");
 				break;	
 			case 33:
@@ -107,21 +105,46 @@ public class APlayer {
 				action("foward - more time: " + p.getPosition() );
 				break;
 			case 36:
-				p.back(3*duration);
+				try {
+					p.back(3*duration);
+				} catch (LineUnavailableException | IOException e1) {e1.printStackTrace();}
 				action("back - less time: " + p.getPosition() );
 				break;		
-				
 			/***********/
-				
+			case 40:
+				p.setLoop(1);
+				p.foward(duration - p.getPosition() - 10000);
+				action("loop setted - fowart nearly to end");
+				break;
 			default:
 				break;
 			}
 			try {Thread.sleep(1000);} catch (InterruptedException e) {e.printStackTrace();}
 		}
+		info(p);
+		p.stop();
+		System.out.println("Time: " + max + "; threads: " + Thread.activeCount());
 		System.out.println("END");
 		
 	}
 
+
+	private String status(int status) {
+		switch (status) {
+		case 0:
+			return "NO_SOURCE";
+		case 1:
+			return "STOPPED";
+		case 2:
+			return "PLAYED";
+		case 3:
+			return "PAUSED";
+		case 4:
+			return "ENDED";
+		default:
+			return "--";
+		}
+	}
 
 	private void info(SoundPlayerApi<?> p) {
 		System.out.println("CONTROL");
