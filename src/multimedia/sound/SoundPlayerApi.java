@@ -65,8 +65,8 @@ public abstract class SoundPlayerApi<T extends DataLine> {
 		}
 		if(line != null){
 			line.stop();
-			line.close();
 			line.flush();
+			line.close();
 		}
 	}
 	
@@ -95,6 +95,7 @@ public abstract class SoundPlayerApi<T extends DataLine> {
 			
 			@Override
 			public void update(LineEvent e) {
+				System.err.println(e);
 				if(e.getType().equals(LineEvent.Type.STOP)){
 				//	if(getStatus() == ENDED){
 					if(getPosition() >= getDuration()){

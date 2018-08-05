@@ -18,24 +18,36 @@ public class BufferPlayer extends SoundPlayerApi<SourceDataLine>{
 			int bufferSize = 128000;
 			byte[] data = new byte[bufferSize];
 			int nBytesRead = 0;
+			
 			while(nBytesRead != -1 ){
 				if(!isPaused) {
+					try {
+						while(toSkip > 0){
+							toSkip = toSkip - stream.skip(toSkip);
+						}
+						nBytesRead = stream.read(data, 0, data.length);
+					} catch (IOException e) {e.printStackTrace();}
+					
+					if(nBytesRead >= 0){
+						/*int nBytesWritten =*/ line.write(data, 0, nBytesRead);
+					}
+				}
+			}
+			if(actualLoop < loopCount && actualLoop >= 0){
 				try {
-					nBytesRead = stream.read(data, 0, data.length);
+					stream.reset();
+					run();
 				} catch (IOException e) {e.printStackTrace();}
-				
-				if(nBytesRead >= 0){
-					nBytesWritten = line.write(data, 0, nBytesRead);
-				}
-				
-				}
+				actualLoop++;
 			}
 		}
 	}
 	
-	private int nBytesWritten = 0;
-
+	private int actualLoop = 0;
+	
 	private boolean isPaused;
+	
+	private long toSkip = 0;
 	/***************/
 	
 	private Thread run;
@@ -53,36 +65,6 @@ public class BufferPlayer extends SoundPlayerApi<SourceDataLine>{
 	@Override
 	public void play() throws LineUnavailableException, IOException {
 		throwIfNoResource();
-	/*	paused = false;
-		if(!line.isOpen()){
-			if(stream.markSupported())
-				stream.reset();
-			
-			line.open(stream.getFormat());
-			line.start();
-			
-			run = new Play();
-			run.start();
-			
-		}else{
-			line.start();
-		}
-		*/
-		/*
-		if(paused){
-			paused = false;
-			run.start();
-		}else{
-			if(stream.markSupported())
-				stream.reset();
-			
-			line.open(stream.getFormat());
-			line.start();
-			
-			run = new Play();
-			run.start();
-		}
-		*/
 		//after pause
 		isPaused = false;
 		//after stop
@@ -95,9 +77,7 @@ public class BufferPlayer extends SoundPlayerApi<SourceDataLine>{
 			run = new Play();
 			run.start();
 		}
-		//nothing do
-		
-		
+		//nothing to do if it's not stopped or paused
 	}
 
 	@Override
@@ -119,19 +99,20 @@ public class BufferPlayer extends SoundPlayerApi<SourceDataLine>{
 
 	@Override
 	public void foward(long msInterval) {
-		// TODO Auto-generated method stub
-		
+		throwIfNoResource();
+		if(msInterval >= 0)
+			setPosition(getPosition() + msInterval);		
 	}
 	
 	@Override
 	public void back(long msInterval) {
-		// TODO Auto-generated method stub
-		
+		throwIfNoResource();
+		if(msInterval >= 0)
+			setPosition(getPosition() - msInterval);
 	}
 
 	@Override
 	public int getStatus() {
-		// TODO Auto-generated method stub
 		if(line == null || stream == null)
 			return SoundPlayerApi.NO_SOURCE;
 		if(isPaused)
@@ -143,20 +124,30 @@ public class BufferPlayer extends SoundPlayerApi<SourceDataLine>{
 
 	@Override
 	public long getDuration() {
-		// TODO Auto-generated method stub
-		return 0;
+		// length of stream in sample frames * actual position in micro-seconds / actual position in sample frames
+		return (long)stream.getFrameLength() * line.getMicrosecondPosition()/(long)line.getLongFramePosition();
 	}
 
 	@Override
 	public void setPosition(long microSeconds) {
-		// TODO Auto-generated method stub
-		
+		if(microSeconds > getPosition()){
+			//TODO sometimes skip, sometime not
+			toSkip = microSeconds  //micro-seconds to skip
+					* line.getLongFramePosition() / (long)line.getMicrosecondPosition() //how many sample frame has one micro-second
+					* format.getSampleSizeInBits() / (long) 8; // size of sample frame in bytes
+		}else if(microSeconds < getPosition()){
+			//TODO
+			/*
+			long msInterval = getPosition() - microSeconds;
+			loopCount = 1;
+			foward(getDuration() + msInterval);
+			*/
+		}
 	}
 
 	@Override
 	public void setLoop(int count) {
-		// TODO Auto-generated method stub
-		
+		this.loopCount = count;
 	}
 
 }

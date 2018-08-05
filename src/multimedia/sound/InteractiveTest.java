@@ -8,13 +8,13 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import exceptions.NoSourceWasGivenException;
 
-public class APlayer {
+public class InteractiveTest {
 	
 	private String path = "/multimedia/sound/sound.wav";
 
 	private long duration = 185835102; // 185, 835 102 s
 	
-	public APlayer() {
+	public InteractiveTest() {
 		SoundPlayerApi<?> p;
 		/*
 		p = new MemoryPlayer();
@@ -52,7 +52,7 @@ public class APlayer {
 				action("play");
 				break;
 			case 5:
-				//info(p);
+				action("duration (origin, calculated): " + duration + " : " + p.getDuration());
 				break;
 			case 6:
 				try {
@@ -92,13 +92,13 @@ public class APlayer {
 			/***********/
 			case 26:
 				p.foward(2*duration/3);
-				action("foward");
+				action("foward - actual pos: " + p.getPosition());
 				break;
 			case 30:
 				try {
 					p.back(duration/3);
 				} catch (LineUnavailableException | IOException e1) {e1.printStackTrace();}
-				action("back");
+				action("back - actual pos: " + p.getPosition());
 				break;	
 			case 33:
 				p.foward(2*duration);
@@ -164,6 +164,6 @@ public class APlayer {
 	
 	/*****************/
 	public static void main(String[] args) {
-		new APlayer();
+		new InteractiveTest();
 	}
 }
