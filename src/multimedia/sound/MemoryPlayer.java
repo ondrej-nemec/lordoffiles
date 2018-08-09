@@ -70,7 +70,7 @@ public class MemoryPlayer extends SoundPlayerApi<Clip> {
 	}
 
 	@Override
-	public long getDuration() {
+	public long getDuration() { //TODO without play can't get right duration -> repair
 		throwIfNoResource();
 		return line.getMicrosecondLength();
 	}

@@ -25,7 +25,6 @@ public abstract class SoundPlayerApi<T extends DataLine> {
 	public static final int STOPPED = 1;
 	public static final int PLAYED = 2;
 	public static final int PAUSED = 3;
-	public static final int ENDED = 4;
 	
 	/***** ****** *****/
 	
@@ -72,7 +71,7 @@ public abstract class SoundPlayerApi<T extends DataLine> {
 	
 	/**************/
 	
-	protected void setResource(AudioInputStream stream, T line) throws LineUnavailableException, IOException{
+	public void setResource(AudioInputStream stream, T line) throws LineUnavailableException, IOException{
 		this.stream = stream;
 		this.line = line;
 	}	
@@ -81,7 +80,7 @@ public abstract class SoundPlayerApi<T extends DataLine> {
 		return stream;
 	}
 		
-	protected T getDataLine(){
+	public T getDataLine(){
 		return line;
 	}
 		
@@ -95,22 +94,21 @@ public abstract class SoundPlayerApi<T extends DataLine> {
 			
 			@Override
 			public void update(LineEvent e) {
-				System.err.println(e);
 				if(e.getType().equals(LineEvent.Type.STOP)){
-				//	if(getStatus() == ENDED){
 					if(getPosition() >= getDuration()){
 						stop();
 					}
 				}
 			}
 		});
+		
 		return fromLineToT().apply(line);
 	}
 	
 	protected abstract Function<DataLine, T> fromLineToT();
 	
 	protected abstract Class<T> clazz();
-	
+		
 	/***** volume *****/
 	//TODO volume
 
