@@ -11,11 +11,14 @@ import java.util.Arrays;
 import org.junit.Test;
 
 public class PlainTextLoaderTest {
+	
 	private String stringFromConsumer = "";
+	
+	private String path = "src/tests/res/text/plaintext/";
 	
 	@Test
 	public void testReadWithConsumerWorks() {
-		try(BufferedReader br = mockBuilder("res/text/plaintext/read-consumer.txt")){
+		try(BufferedReader br = mockBuilder(path + "read-consumer.txt")){
 			PlainTextLoader loader = new PlainTextLoader();
 			loader.read(br, (a)->{
 				if(a.length() == 4)
@@ -35,7 +38,7 @@ public class PlainTextLoaderTest {
 	
 	@Test
 	public void testReadAsOneStringWorks() {
-		try(BufferedReader br = mockBuilder("res/text/plaintext/read-string.txt")){
+		try(BufferedReader br = mockBuilder(path + "read-string.txt")){
 			PlainTextLoader loader = new PlainTextLoader();
 			
 			assertEquals(
@@ -51,7 +54,7 @@ public class PlainTextLoaderTest {
 	
 	@Test
 	public void testReadLinesWorks() {
-		try(BufferedReader br = mockBuilder("res/text/plaintext/read-lines.txt")){
+		try(BufferedReader br = mockBuilder(path + "read-lines.txt")){
 			PlainTextLoader loader = new PlainTextLoader();
 			
 			assertEquals(
@@ -67,7 +70,7 @@ public class PlainTextLoaderTest {
 	
 	@Test
 	public void testReadGridWorks() {
-		try(BufferedReader br = mockBuilder("res/text/plaintext/read-grid.txt")){
+		try(BufferedReader br = mockBuilder(path + "read-grid.txt")){
 			PlainTextLoader loader = new PlainTextLoader();
 			
 			assertEquals(
