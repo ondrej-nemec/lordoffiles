@@ -10,6 +10,7 @@ public class PlainTextCreator extends OutputTextBuffer{
 
 	public boolean write(final BufferedWriter bw, final String data) throws IOException{
 		bw.write(data);
+		bw.newLine();
 		bw.flush();
 		return true;
 	}
@@ -31,8 +32,7 @@ public class PlainTextCreator extends OutputTextBuffer{
 					line += split + data.get(i).get(j);
 				}
 				bw.write(line);
-				if(i != data.size()-1)
-					bw.newLine();
+				bw.newLine();
 			}
 		}
 		bw.flush();

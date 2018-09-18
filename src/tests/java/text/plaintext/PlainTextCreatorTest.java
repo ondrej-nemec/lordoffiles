@@ -28,6 +28,7 @@ public class PlainTextCreatorTest{
 			creator.write(bw, data);
 			
 			verify(bw, times(1)).write(data);
+			verify(bw, times(1)).newLine();
 			verify(bw, times(1)).flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -72,8 +73,8 @@ public class PlainTextCreatorTest{
 			for(List<String> line : data){
 				verify(bw).write(line.get(0) + ";" + line.get(1) + ";" + line.get(2));
 			}
-			verify(bw, times(2)).newLine();
-			verify(bw, times(5)).write(Mockito.anyString());
+			verify(bw, times(3)).newLine();
+			verify(bw, times(6)).write(Mockito.anyString());
 			verify(bw, times(1)).flush();
 		} catch (IOException e) {
 			e.printStackTrace();
