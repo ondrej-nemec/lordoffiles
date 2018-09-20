@@ -4,7 +4,7 @@
 * [Description](#description)
 * [Get library](#how-to-install)
 * [Usage](#usage)
-	*[Text files](#text-files)
+	* [Text files](#text-files)
 		* [Plain text](#plain-text)
 		* [XML](#xml)
 
@@ -28,7 +28,7 @@ Package provide simply way how to read from file or write to file.
 
 ## Usage
 ### Text files
-Each text-reading-class extends `InputTextBuffer` which is factory for `BufferReader`. Use `buffer` method (is not static) and give what you have (URL, InputStream, Path, name or charset).
+Each text-reading-class extends `InputTextBuffer` which is factory for `BufferReader`. Use `buffer` method (is not static):
 ```java
 public BufferedReader buffer(final String path) throws FileNotFoundException;	
 	
@@ -42,7 +42,7 @@ public BufferedReader buffer(final URL url) throws IOException;
 	
 public BufferedReader buffer(final URL url, final String charset);
 ```
-Similar text-writing-classes extends `OutputTextBuffer`, which is factory for `BufferWriter`. Call `buffer`, you can give: path, charset, OutputStream or append.
+Similar text-writing-classes extends `OutputTextBuffer`, which is factory for `BufferWriter`. Call `buffer`:
 ```java
 public BufferedWriter buffer(final String path, boolean append) throws IOException;
 	
@@ -52,7 +52,7 @@ public BufferedWriter buffer(final OutputStream outputStream);
 	
 public BufferedWriter buffer(final OutputStream outputStream, final String charset) throws UnsupportedEncodingException;
 ```
-** **
+** Remember: each Buffer need to be closed after finishing work. Best practice is call buffer method in try-with-resources block **
 #### Plain text
 
 #### XML
