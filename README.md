@@ -54,5 +54,64 @@ public BufferedWriter buffer(final OutputStream outputStream, final String chars
 ```
 ** Remember: each Buffer need to be closed after finishing work. Best practice is call buffer method in try-with-resources block **
 #### Plain text
+##### Reading
+`PlainTextLoader` class is for reading plain text from file:
+```java
+//read content of file by lines
+//always read line, apply consumer, discart line and read new line
+//at the end return true
+public boolean read(final BufferedReader br, final Consumer<String> consumer) throws IOException
 
+//read content of file as one string		
+public String readAsOneString(final BufferedReader br) throws IOException
+
+//read content of file as list of lines
+public List<String> read(final BufferedReader br) throws IOException
+
+//read content of file as list of lines and split each line with given 'split'
+//data.get(r).get(c) are r x c matrix, r - row, c - column
+public List<List<String>> read(final BufferedReader br, final String split) throws IOException;
+```
+##### Writing
+For writing plain text is `PlainTextCreator` class. Has three method:
+```java
+//write or append string to file and write new line
+public boolean write(final BufferedWriter bw, final String data) throws IOException;
+	
+//write or append string by string from list to file and write new line
+public boolean write(final BufferedWriter bw, final List<String> data) throws IOException;
+
+//write or append grid to file and write new line
+//data.get(r).get(c) are r x c matrix, r - row, c - column
+//strings in row are splited with 'split' string
+public boolean write(final BufferedWriter bw, final List<List<String>> data, final String split) throws IOException;
+```
+Theses methods return true after finishing writing.
 #### XML
+##### Reading
+To read xml file use `XmlLoader` (unexpectedly). You can use two ways. First allow you to manage reading, return true at the finish:
+```java
+//this method starts reading, calls next on stream and closes stream
+public boolean read(final BufferedReader br, Consumer<XMLStreamReader> consumer) 
+			throws XMLStreamException, FileCouldNotBeClosedException;
+```
+The second method reads whole xml to XmlObject. [More about XmlObject](#xmlobject)
+```java
+public XmlObject read(final BufferedReader br) 
+			throws FileCouldNotBeClosedException, XMLStreamException;
+```
+##### Writing
+`XmlCreator` allow write data to xml file. There are two ways too. Both return true after writing is finished. First:
+```java
+//this method starts reading, calls next on stream and closes stream
+public boolean write(final BufferedWriter bw, Consumer<XMLStreamWriter> consumer)
+			throws XMLStreamException, FileCouldNotBeClosedException;
+```
+And second write given XmlObject:
+```java
+public boolean write(final BufferedWriter bw, final XmlObject object)
+			throws XMLStreamException, FileCouldNotBeClosedException
+```
+##### XmlObject
+
+
