@@ -15,6 +15,7 @@ import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter;
 import exceptions.FileCouldNotBeClosedException;
 import text.xml.structures.XmlObject;
 
+@SuppressWarnings("restriction")
 public class XmlCreator {
 	//TODO some factory for stream, maybe
 
@@ -26,15 +27,15 @@ public class XmlCreator {
 	 * @throws XMLStreamException
 	 * @throws FileCouldNotBeClosedException
 	 */
-	public void write(final BufferedWriter bw, Consumer<XMLStreamWriter> consumer)
+	public boolean write(final BufferedWriter bw, Consumer<XMLStreamWriter> consumer)
 			throws XMLStreamException, FileCouldNotBeClosedException{
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
-		write(new IndentingXMLStreamWriter( 
+		return write(new IndentingXMLStreamWriter( 
 					factory.createXMLStreamWriter(bw)
 				), consumer);
 	}
 	
-	public void write(final XMLStreamWriter out, Consumer<XMLStreamWriter> consumer)
+	protected boolean write(final XMLStreamWriter out, Consumer<XMLStreamWriter> consumer)
 			throws XMLStreamException, FileCouldNotBeClosedException{
 		try {
 			out.writeStartDocument();
@@ -49,35 +50,9 @@ public class XmlCreator {
 				throw new FileCouldNotBeClosedException();
 			}
 		}
+		return true;
 	}
-	
-	/*
-	public void write(final BufferedWriter bw, Consumer<XMLStreamWriter> consumer)
-			throws XMLStreamException, FileCouldNotBeClosedException{
-		XMLOutputFactory factory = XMLOutputFactory.newInstance();
-		XMLStreamWriter out= null;
-		try {
-			out = new IndentingXMLStreamWriter( 
-					factory.createXMLStreamWriter(bw)
-				);
-			
-			out.writeStartDocument();
-			consumer.accept(out);
-			out.writeEndDocument();
-			out.flush();
-		} finally {
-			try {
-				if(out != null)
-					out.close();
-			} catch (Exception e) {
-				throw new FileCouldNotBeClosedException();
-			}
-		}
-	}
-	*/
-	
-	
-	
+
 	/**
 	 * write whole xml object
 	 * @param bw
@@ -86,15 +61,15 @@ public class XmlCreator {
 	 * @throws XMLStreamException
 	 * @throws FileCouldNotBeClosedException
 	 */
-	public void write(final BufferedWriter bw, final XmlObject object)
+	public boolean write(final BufferedWriter bw, final XmlObject object)
 			throws XMLStreamException, FileCouldNotBeClosedException{
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
-		write(new IndentingXMLStreamWriter( 
+		return write(new IndentingXMLStreamWriter( 
 					factory.createXMLStreamWriter(bw)
 				), object);
 	}
 	
-	public boolean write(final XMLStreamWriter out, final XmlObject object)
+	protected boolean write(final XMLStreamWriter out, final XmlObject object)
 			throws XMLStreamException, FileCouldNotBeClosedException{
 		try {
 			out.writeStartDocument();
@@ -111,33 +86,6 @@ public class XmlCreator {
 		}
 		return true;
 	}
-	
-	/*
-	public boolean write(final BufferedWriter bw, final XmlObject object)
-			throws XMLStreamException, FileCouldNotBeClosedException{
-		XMLOutputFactory factory = XMLOutputFactory.newInstance();
-		XMLStreamWriter out= null;
-		try {
-			out = new IndentingXMLStreamWriter( 
-					factory.createXMLStreamWriter(bw)
-				);
-			
-			out.writeStartDocument();
-			writeLevel(out, object);
-			out.writeEndDocument();
-			out.flush();
-		} finally {
-			try {
-				if(out != null)
-					out.close();
-			} catch (Exception e) {
-				throw new FileCouldNotBeClosedException();
-			}
-		}
-		return true;
-	}
-	*/
-	
 	
 	/**
 	 * write element

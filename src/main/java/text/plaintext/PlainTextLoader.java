@@ -11,12 +11,13 @@ import text.InputTextBuffer;
 
 public class PlainTextLoader extends InputTextBuffer{
 
-	public void read(final BufferedReader br, final Consumer<String> consumer) throws IOException{
+	public boolean read(final BufferedReader br, final Consumer<String> consumer) throws IOException{
 		String line = br.readLine();
 		while(line!=null){
 			consumer.accept(line);
 			line = br.readLine();
 		}
+		return true;
 	}
 	
 	

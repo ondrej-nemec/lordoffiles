@@ -29,7 +29,7 @@ public class XmlLoader extends InputTextBuffer{
 	 * @throws XMLStreamException
 	 * @throws FileCouldNotBeClosedException
 	 */
-	public void read(final BufferedReader br, Consumer<XMLStreamReader> consumer) 
+	public boolean read(final BufferedReader br, Consumer<XMLStreamReader> consumer) 
 			throws XMLStreamException, FileCouldNotBeClosedException{
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader in = null;
@@ -46,6 +46,7 @@ public class XmlLoader extends InputTextBuffer{
 				throw new FileCouldNotBeClosedException();
 			}
 		}
+		return true;
 	}
 	
 		

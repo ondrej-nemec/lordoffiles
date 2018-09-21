@@ -24,6 +24,7 @@ import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter;
 
 import text.xml.structures.XmlObject;
 
+@SuppressWarnings("restriction")
 public class XmlCreatorTest {
 
 	private String pathConsumer = "src/tests/res/text/xml/write-consumer.xml";
