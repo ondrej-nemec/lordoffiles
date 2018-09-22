@@ -52,7 +52,7 @@ public BufferedWriter buffer(final OutputStream outputStream);
 	
 public BufferedWriter buffer(final OutputStream outputStream, final String charset) throws UnsupportedEncodingException;
 ```
-** Remember: each Buffer need to be closed after finishing work. Best practice is call buffer method in try-with-resources block **
+**Remember: each Buffer need to be closed after finishing work. Best practice is call buffer method in try-with-resources block**
 #### Plain text
 ##### Reading
 `PlainTextLoader` class is for reading plain text from file:
