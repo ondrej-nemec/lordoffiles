@@ -1,5 +1,5 @@
 # Lord of files
-**Newest version:** 1.1
+**Newest version:** 1.1.1
 
 * [Description](#description)
 * [Get library](#how-to-install)
@@ -14,7 +14,7 @@ Package provide simply way how to read from file or write to file.
 ## How to install
 ### Download:
 
-<a href="https://ondrej-nemec.github.io/download/lof-1.1.jar" target=_blank>Download jar</a>
+<a href="https://ondrej-nemec.github.io/download/lof-1.1.1.jar" target=_blank>Download jar</a>
 
 ### Maven:
 
@@ -22,7 +22,7 @@ Package provide simply way how to read from file or write to file.
 <dependency>
   <groupId>io.github.ondrej-nemec.lordoffiles</groupId>
   <artifactId>lof</artifactId>
-  <version>1.1</version>
+  <version>1.1.1</version>
 </dependency>
 ```
 
@@ -113,5 +113,30 @@ public boolean write(final BufferedWriter bw, final XmlObject object)
 			throws XMLStreamException, FileCouldNotBeClosedException
 ```
 ##### XmlObject
+`XmlObject` is data object.
+```java
+public String getName();
+	
+public String getValue();
+	
+public Map<String, String> getAttributes();
+	
+public List<XmlObject> getReferences();
 
-
+public void setName(final String name);
+	
+public void setValue(final String value);
+	
+public void setAttributes(final Map<String, String> atributes);
+	
+public void setReferences(final List<XmlObject> references);
+```
+As you can see from getters and setters, this object has four attributes. First is 'name' which is name of tag. 'Value' is value between start and end tag. 'Attributes' is hash map where key is class name and value is class value. And 'references' are subelements. See example:
+```xml
+<name className="classValue" class2Name="class2Name">
+	Value
+	<sublementName>...
+	</subelementName>
+</name>
+```
+If some of attributes don't exists in xml or tag is empty `<emptyTag />`, every attributes of `XmlObject` have default values **not null** except 'name' which is required.
