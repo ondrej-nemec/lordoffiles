@@ -1,5 +1,6 @@
 package text;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -11,12 +12,27 @@ import java.net.URL;
 
 public class InputTextBuffer {
 
+	public BufferedReader buffer(final File file) throws FileNotFoundException{
+		return new BufferedReader(
+				new FileReader(file)
+				);
+	}
+	
 	public BufferedReader buffer(final String path) throws FileNotFoundException{
 		return new BufferedReader(
 				new FileReader(path)
 				);
 	}
 	
+	
+	public BufferedReader buffer(final File file, final String charset) 
+			throws UnsupportedEncodingException, FileNotFoundException{
+		return new BufferedReader(
+				new InputStreamReader(
+						new FileInputStream(file), charset
+				)
+			);
+	}
 	
 	public BufferedReader buffer(final String path, final String charset) 
 			throws UnsupportedEncodingException, FileNotFoundException{
@@ -52,5 +68,5 @@ public class InputTextBuffer {
 			throws UnsupportedEncodingException, IOException{
 		return buffer(url.openStream(), charset);
 	}
-	
+
 }
