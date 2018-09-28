@@ -1,5 +1,5 @@
 # Lord of files
-**Newest version:** 1.1.1
+**Newest version:** 1.2
 
 * [Description](#description)
 * [Get library](#how-to-install)
@@ -7,6 +7,7 @@
 	* [Text files](#text-files)
 		* [Plain text](#plain-text)
 		* [XML](#xml)
+		* [Binary files](#binary-files)
 
 ## Description
 Package provide simply way how to read from file or write to file.
@@ -14,7 +15,7 @@ Package provide simply way how to read from file or write to file.
 ## How to install
 ### Download:
 
-<a href="https://ondrej-nemec.github.io/download/lof-1.1.1.jar" target=_blank>Download jar</a>
+<a href="https://ondrej-nemec.github.io/download/lof-1.2.jar" target=_blank>Download jar</a>
 
 ### Maven:
 
@@ -140,3 +141,40 @@ As you can see from getters and setters, this object has four attributes. First 
 </name>
 ```
 If some of attributes don't exists in xml or tag is empty `<emptyTag />`, every attributes of `XmlObject` have default values **not null** except 'name' which is required.
+
+#### Binary files
+Work with binary files is very simply.
+##### Reading
+For reading use `BinaryCreator` class. This class allow set byte array size, which is used in reading with consumer 
+```java
+public int getDefaultBufferSize();
+
+public void setDefaultBufferSize(int defaultBufferSize);
+```
+Methods:
+```java
+// InputStream factory
+public InputStream stream(String name) throws FileNotFoundException;
+
+// read byte array with default size and for each array apply consumer
+public void read(final InputStream stream, final Consumer<byte[]> consumer) throws IOException;
+
+// read byte array with given size and for each array apply consumer
+public void read(final InputStream stream, final Consumer<byte[]> consumer, final int bufferSize) throws IOException;
+
+// read whole content of stream
+public byte[] read(final InputStream stream) throws IOException;
+```
+##### Writing
+For wring is `BinaryLoader` class. ```java
+// OutputStream factory
+public OutputStream stream(String name) throws FileNotFoundException;
+
+// write given data to stream
+public boolean write(final OutputStream stream, final byte[] data) throws IOException
+```
+
+### Other structured formats
+<a href="https://www.baeldung.com/java-snake-yaml" target=_blank>YAML jar</a>
+
+<a href="https://github.com/stleary/JSON-java" target=_blank>JSON</a>
