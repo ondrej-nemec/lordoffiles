@@ -21,7 +21,7 @@ Package provide simply way how to read from file or write to file.
 
 ```xml
 <dependency>
-  <groupId>io.github.ondrej-nemec.lordoffiles</groupId>
+  <groupId>com.github.ondrej-nemec</groupId>
   <artifactId>lof</artifactId>
   <version>1.1.1</version>
 </dependency>
@@ -166,7 +166,8 @@ public void read(final InputStream stream, final Consumer<byte[]> consumer, fina
 public byte[] read(final InputStream stream) throws IOException;
 ```
 ##### Writing
-For wring is `BinaryLoader` class. ```java
+For wring is `BinaryLoader` class. 
+```java
 // OutputStream factory
 public OutputStream stream(String name) throws FileNotFoundException;
 
