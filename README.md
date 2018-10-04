@@ -1,5 +1,6 @@
 # Lord of files
-**Newest version:** 1.2
+
+[![](https://jitpack.io/v/ondrej-nemec/lordoffiles.svg)](https://jitpack.io/#ondrej-nemec/lordoffiles)
 
 * [Description](#description)
 * [Get library](#how-to-install)
@@ -18,7 +19,16 @@ Package provide simply way how to read from file or write to file.
 <a href="https://ondrej-nemec.github.io/download/lof-1.2.jar" target=_blank>Download jar</a>
 
 ### Maven:
-
+After `build` tag:
+```xml
+<repositories>
+	<repository>
+	    <id>jitpack.io</id>
+	    <url>https://jitpack.io</url>
+	</repository>
+</repositories>
+```
+And to `dependencies`:
 ```xml
 <dependency>
   <groupId>com.github.ondrej-nemec</groupId>
