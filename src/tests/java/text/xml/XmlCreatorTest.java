@@ -3,9 +3,7 @@ package text.xml;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,18 +11,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter;
 
 import text.xml.structures.XmlObject;
 
-@SuppressWarnings("restriction")
 public class XmlCreatorTest {
 
 	private String pathConsumer = "src/tests/res/text/xml/write-consumer.xml";
@@ -144,17 +139,7 @@ public class XmlCreatorTest {
 	
 	private XMLStreamWriter mockStream(String path)
 			throws XMLStreamException, IOException{
-		XMLOutputFactory factory = XMLOutputFactory.newInstance();
-		return mock(
-				IndentingXMLStreamWriter.class,
-				withSettings()
-					.useConstructor(
-							factory.createXMLStreamWriter(
-							new BufferedWriter(new FileWriter(path))
-							)
-						)
-					.defaultAnswer(CALLS_REAL_METHODS)
-				);
+		return mock(XMLStreamWriter.class);
 	}
 	
 	private void clearRepository(String path) throws IOException{

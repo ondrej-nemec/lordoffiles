@@ -10,12 +10,10 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter;
 
 import exceptions.FileCouldNotBeClosedException;
 import text.xml.structures.XmlObject;
 
-@SuppressWarnings("restriction")
 public class XmlCreator {
 	//TODO some factory for stream, maybe
 
@@ -30,9 +28,7 @@ public class XmlCreator {
 	public boolean write(final BufferedWriter bw, Consumer<XMLStreamWriter> consumer)
 			throws XMLStreamException, FileCouldNotBeClosedException{
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
-		return write(new IndentingXMLStreamWriter( 
-					factory.createXMLStreamWriter(bw)
-				), consumer);
+		return write(factory.createXMLStreamWriter(bw), consumer);
 	}
 	
 	protected boolean write(final XMLStreamWriter out, Consumer<XMLStreamWriter> consumer)
@@ -64,9 +60,7 @@ public class XmlCreator {
 	public boolean write(final BufferedWriter bw, final XmlObject object)
 			throws XMLStreamException, FileCouldNotBeClosedException{
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
-		return write(new IndentingXMLStreamWriter( 
-					factory.createXMLStreamWriter(bw)
-				), object);
+		return write(factory.createXMLStreamWriter(bw), object);
 	}
 	
 	protected boolean write(final XMLStreamWriter out, final XmlObject object)
