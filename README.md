@@ -23,7 +23,7 @@ Package provide simply way how to read from file or write to file.
 <dependency>
   <groupId>com.github.ondrej-nemec</groupId>
   <artifactId>lof</artifactId>
-  <version>1.1.1</version>
+  <version>1.2</version>
 </dependency>
 ```
 
