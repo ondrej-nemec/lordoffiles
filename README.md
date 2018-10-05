@@ -32,7 +32,7 @@ And to `dependencies`:
 ```xml
 <dependency>
   <groupId>com.github.ondrej-nemec</groupId>
-  <artifactId>lof</artifactId>
+  <artifactId>lordoffiles</artifactId>
   <version>1.2</version>
 </dependency>
 ```
