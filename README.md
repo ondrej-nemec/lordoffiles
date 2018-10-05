@@ -1,7 +1,7 @@
 # Lord of files
 
 [![](https://jitpack.io/v/ondrej-nemec/lordoffiles.svg)](https://jitpack.io/#ondrej-nemec/lordoffiles)
-[![MIT License](http://img.shields.io/badge/license-MIT-green.svg) ](https://github.com/ondrej-nemec/lordoffiles/LICENSE)
+[![MIT License](http://img.shields.io/badge/license-MIT-green.svg) ](https://github.com/ondrej-nemec/lordoffiles/blob/master/LICENSE)
 
 * [Description](#description)
 * [Get library](#how-to-install)
