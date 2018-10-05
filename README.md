@@ -1,6 +1,7 @@
 # Lord of files
 
 [![](https://jitpack.io/v/ondrej-nemec/lordoffiles.svg)](https://jitpack.io/#ondrej-nemec/lordoffiles)
+[![MIT License](http://img.shields.io/badge/license-MIT-green.svg) ](https://github.com/ondrej-nemec/lordoffiles/LICENSE)
 
 * [Description](#description)
 * [Get library](#how-to-install)
@@ -33,7 +34,7 @@ And to `dependencies`:
 <dependency>
   <groupId>com.github.ondrej-nemec</groupId>
   <artifactId>lordoffiles</artifactId>
-  <version>1.2.1</version>
+  <version>v1.2.1-alpha</version>
 </dependency>
 ```
 
