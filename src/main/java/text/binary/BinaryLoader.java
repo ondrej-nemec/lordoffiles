@@ -16,15 +16,17 @@ public class BinaryLoader {
 		return new FileInputStream(name);
 	}
 
-	public void read(final InputStream stream, final Consumer<byte[]> consumer) throws IOException {
+	public boolean read(final InputStream stream, final Consumer<byte[]> consumer) throws IOException {
 		read(stream, consumer, defaultBufferSize);
+		return true;
 	}
 
-	public void read(final InputStream stream, final Consumer<byte[]> consumer, final int bufferSize) throws IOException {
+	public boolean read(final InputStream stream, final Consumer<byte[]> consumer, final int bufferSize) throws IOException {
 		byte[] bytes = new byte[bufferSize];
 		while(stream.read(bytes) != -1) {
 			consumer.accept(bytes);
 		}
+		return true;
 	}
 	
 	public byte[] read(final InputStream stream) throws IOException {

@@ -3,6 +3,7 @@ package text.plaintext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -45,7 +46,7 @@ public class PlainTextLoader extends InputTextBuffer{
 		return result;
 	}
 	
-	public List<List<String>> read(final BufferedReader br, final String split) throws IOException{
+	public Collection<List<String>> read(final BufferedReader br, final String split) throws IOException{
 		List<List<String>> result = new ArrayList<>();
 		String line = br.readLine();
 		while(line != null){
