@@ -10,6 +10,7 @@
 		* [Plain text](#plain-text)
 		* [XML](#xml)
 		* [Binary files](#binary-files)
+	* [Concurrent processing](#concurrent-processing)
 
 ## Description
 Package provide simply way how to read from file or write to file.
@@ -34,7 +35,7 @@ And to `dependencies`:
 <dependency>
   <groupId>com.github.ondrej-nemec</groupId>
   <artifactId>lordoffiles</artifactId>
-  <version>v1.2.1-alpha</version>
+  <version>v1.3-alpha</version>
 </dependency>
 ```
 
@@ -190,3 +191,20 @@ public boolean write(final OutputStream stream, final byte[] data) throws IOExce
 <a href="https://www.baeldung.com/java-snake-yaml" target=_blank>YAML jar</a>
 
 <a href="https://github.com/stleary/JSON-java" target=_blank>JSON</a>
+
+### Concurrent processing
+Each class has "double", which provide concurrent processing. Name convention is *original-class-name*Async. Calling methods looks same as in originals classes. The return types are: Future<*original-return-type*>. [More about Future](https://www.baeldung.com/java-future). What is different is constructor. This classes require `ExecutorService` (more about in mentioned article) and optionally original class.
+Example for `PlainTextLoader`:
+```java
+ExecutorService executor = ...;
+BufferedReader br = ...;
+PlainTextLoaderAsync loader = new PlainTextLoaderAsync(executor);
+Future<String> result = loader.readAsOneString(br);
+// or
+ExecutorService executor = ...;
+BufferedReader br = ...;
+PlainTextLoader load = new PlainTextLoader();
+//work with load...
+PlainTextLoaderAsync loader = new PlainTextLoaderAsync(executor, load);
+Future<String> result = loader.readAsOneString(br);
+```
