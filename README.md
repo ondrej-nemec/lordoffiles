@@ -18,7 +18,7 @@ Package provide simply way how to read from file or write to file.
 ## How to install
 ### Download:
 
-<a href="https://ondrej-nemec.github.io/download/lof-1.2.1.jar" target=_blank>Download jar</a>
+<a href="https://ondrej-nemec.github.io/download/lof-1.3.jar" target=_blank>Download jar</a>
 
 ### Maven:
 After `build` tag:
