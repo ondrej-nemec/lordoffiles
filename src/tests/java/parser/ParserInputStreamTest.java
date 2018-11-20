@@ -17,7 +17,7 @@ public class ParserInputStreamTest {
 		char f = 'f';
 		
 		InputStream is = mock(InputStream.class);
-		Format format = mock(Format.class);
+		InputFormat format = mock(InputFormat.class);
 		
 		when(format.parse(t)).thenReturn(true);
 		when(format.parse(f)).thenReturn(false);

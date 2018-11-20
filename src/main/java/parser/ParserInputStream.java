@@ -7,9 +7,9 @@ public class ParserInputStream {
 	
 	private final InputStream is;
 	
-	private final Format format;
+	private final InputFormat format;
 		
-	public ParserInputStream(final InputStream stream, Format format) {
+	public ParserInputStream(final InputStream stream, InputFormat format) {
 		this.is = stream;
 		this.format = format;
 	}
@@ -25,7 +25,7 @@ public class ParserInputStream {
 		return false;
 	}
 	
-	public void getEventType() {
-		//TODO return
+	public InputFormat getFormat() {
+		return format;
 	}
 }
