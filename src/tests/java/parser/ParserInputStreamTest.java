@@ -22,7 +22,7 @@ public class ParserInputStreamTest {
 		when(format.parse(t)).thenReturn(true);
 		when(format.parse(f)).thenReturn(false);
 		
-		ParserInputStream parser = new ParserInputStream(is, format);
+		ParserInputStream<InputFormat> parser = new ParserInputStream<>(is, format);
 		
 		when(is.read()).thenReturn((int)t).thenReturn((int)t).thenReturn((int)f);		
 		assertTrue(parser.next());

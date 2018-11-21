@@ -3,13 +3,13 @@ package parser;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ParserInputStream {
+public class ParserInputStream<T extends InputFormat> {
 	
 	private final InputStream is;
 	
-	private final InputFormat format;
+	private final T format;
 		
-	public ParserInputStream(final InputStream stream, InputFormat format) {
+	public ParserInputStream(final InputStream stream, T format) {
 		this.is = stream;
 		this.format = format;
 	}
@@ -25,7 +25,7 @@ public class ParserInputStream {
 		return false;
 	}
 	
-	public InputFormat getFormat() {
+	public T getFormat() {
 		return format;
 	}
 }
