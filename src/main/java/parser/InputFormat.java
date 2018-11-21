@@ -8,9 +8,6 @@ public interface InputFormat {
 	String getValue();
 	
 	// csv
-	int getRowIndex();
-	
-	// csv
-	int getColumnIndex();
+	int getLine();
 	
 }
