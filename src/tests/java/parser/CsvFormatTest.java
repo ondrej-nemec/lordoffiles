@@ -122,8 +122,7 @@ public class CsvFormatTest {
 		assertEquals(0, f.getLine());
 	}
 	
-	// TODO repair this
-	// @Test
+	@Test
 	public void testParseMoreQuots() {
 		CsvFormat f = new CsvFormat();
 
@@ -134,12 +133,11 @@ public class CsvFormatTest {
 		assertEquals(true, f.parse('"'));
 		assertEquals(true, f.parse('"'));
 		assertEquals(false, f.parse(','));
-		assertEquals("\"\"\"\"", f.getValue());
+		assertEquals("\"\"\"", f.getValue());
 		assertEquals(0, f.getLine());
 	}
 	
-	// TODO repair this
-	// @Test(expected=ParserSyntaxException.class)
+	@Test(expected=ParserSyntaxException.class)
 	public void testParseThrowsWhenQuotesNotEnded() {
 		CsvFormat f = new CsvFormat();
 
@@ -150,8 +148,7 @@ public class CsvFormatTest {
 		f.parse(',');
 	}
 	
-	// TODO repair this
-	// @Test(expected=ParserSyntaxException.class)
+	@Test(expected=ParserSyntaxException.class)
 	public void testParseThrowsWhenQuotesEndButNotStart() {
 		CsvFormat f = new CsvFormat();
 

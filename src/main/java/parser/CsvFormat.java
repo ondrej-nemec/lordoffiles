@@ -1,5 +1,6 @@
 package parser;
 
+import exceptions.ParserSyntaxException;
 
 public class CsvFormat implements InputFormat {
 
@@ -8,7 +9,7 @@ public class CsvFormat implements InputFormat {
 	
 	private int line = 0;
 	private String value = "";
-//	private boolean twoQuots; //TODO this is not optimal solution
+	private int countOfQuots = 0;
 	
 	@Override
 	public boolean parse(char car) {
@@ -22,20 +23,22 @@ public class CsvFormat implements InputFormat {
 		if (previousChar == ',' && !isInQuots)
 			 value = "";
 		
-	//	if (previousChar != '"')
-	//		twoQuots = false;
+		if (car != '"' && countOfQuots > 0) {
+			if (!isInQuots && countOfQuots == 1 && value.isEmpty()) // start quot
+				isInQuots = true;
+			else if (isInQuots && countOfQuots %2 == 1) // end quot
+				isInQuots = false;
+			else if (countOfQuots % 2 == 0) {}// ignoring				
+			else
+				throw new ParserSyntaxException("CSV", "You have syntax problem with double quots on line " + line + ".");
+			countOfQuots = 0;
+		}
 				
 		switch (car) {
 		case '"':
-		//	if (twoQuots)
-		//		throw new ParserSyntaxException("CSV, could not be three double quots");
+			countOfQuots++;
 			if (previousChar == '"') {
 				value += car;
-		//		twoQuots = true;
-			} else if (isInQuots) {
-				isInQuots = false;
-			} else {
-				isInQuots = true;
 			}
 			break;
 		case ',':
@@ -60,12 +63,9 @@ public class CsvFormat implements InputFormat {
 			value += car;
 		}
 		
-		/*		
 		if (car == '"' && previousChar == '"')
 			previousChar = '\u0000';
-		else 
-		*/	
-		if ( ! (!isInQuots && car == '\r') ) 
+		else if ( ! (!isInQuots && car == '\r') ) 
 			previousChar = car;
 		
 		return result;
