@@ -9,7 +9,7 @@ public class ParserInputStream<T extends InputFormat> {
 	
 	private final T format;
 		
-	public ParserInputStream(final InputStream stream, T format) {
+	public ParserInputStream(final InputStream stream, final T format) {
 		this.is = stream;
 		this.format = format;
 	}

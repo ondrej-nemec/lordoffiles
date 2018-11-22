@@ -2,7 +2,7 @@ package parser;
 
 import exceptions.ParserSyntaxException;
 
-public class CsvFormat implements InputFormat {
+public class CsvInputFormat implements InputFormat {
 
 	private char previousChar = '\u0000';
 	private boolean isInQuots = false;
@@ -30,7 +30,11 @@ public class CsvFormat implements InputFormat {
 				isInQuots = false;
 			else if (countOfQuots % 2 == 0) {}// ignoring				
 			else
-				throw new ParserSyntaxException("CSV", "You have syntax problem with double quots on line " + line + ".");
+				throw new ParserSyntaxException(
+						"CSV",
+						"You have syntax problem with double quots on line " 
+						+ line + " near " + previousChar + car
+				);
 			countOfQuots = 0;
 		}
 				

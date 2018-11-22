@@ -1,16 +1,20 @@
 package parser;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import org.junit.Test;
 
 import exceptions.ParserSyntaxException;
 
-public class CsvFormatTest {
+public class CsvInputFormatTest {
 	
 	@Test
 	public void testParseGrid() {
-		CsvFormat f = new CsvFormat();
+		CsvInputFormat f = new CsvInputFormat();
 		//just text
 		assertEquals(true, f.parse('t'));
 		assertEquals("t", f.getValue());
@@ -42,7 +46,7 @@ public class CsvFormatTest {
 	
 	@Test
 	public void testParseColonInQuotes() {
-		CsvFormat f = new CsvFormat();
+		CsvInputFormat f = new CsvInputFormat();
 		
 		//colon in quots
 		assertEquals(true, f.parse('"'));
@@ -56,7 +60,7 @@ public class CsvFormatTest {
 	
 	@Test
 	public void testParseNewLineWindows() {
-		CsvFormat f = new CsvFormat();
+		CsvInputFormat f = new CsvInputFormat();
 
 		//new line windows
 		assertEquals(true, f.parse('n'));
@@ -69,7 +73,7 @@ public class CsvFormatTest {
 	
 	@Test
 	public void testParseQuotsInText() {
-		CsvFormat f = new CsvFormat();
+		CsvInputFormat f = new CsvInputFormat();
 
 		//double quots in text
 		assertEquals(true, f.parse('"'));
@@ -84,7 +88,7 @@ public class CsvFormatTest {
 	
 	@Test
 	public void testParseIgnorigBackslash() {
-		CsvFormat f = new CsvFormat();
+		CsvInputFormat f = new CsvInputFormat();
 		
 		// ignoring \
 		assertEquals(true, f.parse('\\'));
@@ -95,7 +99,7 @@ public class CsvFormatTest {
 	
 	@Test
 	public void testParseNewLineInQuots() {
-		CsvFormat f = new CsvFormat();
+		CsvInputFormat f = new CsvInputFormat();
 		
 		// \n in quots
 		assertEquals(true, f.parse('"'));
@@ -111,7 +115,7 @@ public class CsvFormatTest {
 	
 	@Test
 	public void testParseNotIgnoteRInQuotes() {
-		CsvFormat f = new CsvFormat();
+		CsvInputFormat f = new CsvInputFormat();
 		
 		//not ignore \r in quotes
 		assertEquals(true, f.parse('"'));
@@ -124,7 +128,7 @@ public class CsvFormatTest {
 	
 	@Test
 	public void testParseMoreQuots() {
-		CsvFormat f = new CsvFormat();
+		CsvInputFormat f = new CsvInputFormat();
 
 		assertEquals(true, f.parse('"'));
 		assertEquals(true, f.parse('"'));
@@ -139,7 +143,7 @@ public class CsvFormatTest {
 	
 	@Test(expected=ParserSyntaxException.class)
 	public void testParseThrowsWhenQuotesNotEnded() {
-		CsvFormat f = new CsvFormat();
+		CsvInputFormat f = new CsvInputFormat();
 
 		//double quots in text
 		assertEquals(true, f.parse('"'));
@@ -150,11 +154,73 @@ public class CsvFormatTest {
 	
 	@Test(expected=ParserSyntaxException.class)
 	public void testParseThrowsWhenQuotesEndButNotStart() {
-		CsvFormat f = new CsvFormat();
+		CsvInputFormat f = new CsvInputFormat();
 
 		//double quots in text
 		assertEquals(true, f.parse('a'));
 		assertEquals(true, f.parse('"'));
 		f.parse(',');
+	}
+	
+	@Test
+	public void endToEndTest() {
+		try (InputStream is = new FileInputStream("src/tests/res/parser/csv-input.csv")) {
+			CsvInputFormat format = new CsvInputFormat();
+			ParserInputStream<CsvInputFormat> parser = new ParserInputStream<CsvInputFormat>(is, format);
+			
+			int i = 1;
+			
+			while (parser.next()) {
+				switch(i) {
+				case 1:
+					assertEquals("simple text", format.getValue());
+					assertEquals(0, format.getLine());
+					break;
+				case 2:
+					assertEquals("\"text in quotes\"", format.getValue());
+					assertEquals(0, format.getLine());
+					break;
+				case 3:
+					assertEquals("text,with,colons", format.getValue());
+					assertEquals(0, format.getLine());
+					break;
+				case 4:
+					assertEquals("\\\"", format.getValue());
+					assertEquals(1, format.getLine());
+					break;
+				case 5:
+					assertEquals(" \"quotes\"", format.getValue());
+					assertEquals(1, format.getLine());
+					break;
+				case 6:
+					assertEquals("new\r\nline", format.getValue());
+					assertEquals(1, format.getLine());
+					break;
+				case 7:
+					assertEquals("", format.getValue());
+					assertEquals(1, format.getLine());
+					break;
+				case 8:
+					assertEquals("10000", format.getValue());
+					assertEquals(1, format.getLine());
+					break;
+				case 9:
+					assertEquals("'single", format.getValue());
+					assertEquals(2, format.getLine());
+					break;
+				case 10:
+					assertEquals(" quots'", format.getValue());
+					assertEquals(2, format.getLine());
+					break;
+				default:
+					throw new RuntimeException("More that " + i + " elements");
+				}
+				i++;
+			}			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
 	}
 }
