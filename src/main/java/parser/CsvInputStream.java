@@ -1,8 +1,13 @@
 package parser;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import exceptions.ParserSyntaxException;
 
-public class CsvInputFormat implements InputFormat {
+public class CsvInputStream {
+	
+	private final InputStream is;
 
 	private char previousChar = '\u0000';
 	private boolean isInQuots = false;
@@ -10,9 +15,31 @@ public class CsvInputFormat implements InputFormat {
 	private int line = 0;
 	private String value = "";
 	private int countOfQuots = 0;
+		
+	public CsvInputStream(final InputStream stream) {
+		this.is = stream;
+	}	
+
+	public String getValue() {
+		return value;
+	}
+
+	public int getLine() {
+		return line;
+	}	
 	
-	@Override
-	public boolean parse(char car) {
+	public boolean next() throws IOException {
+		int b = 0;
+		boolean isContinue = true;
+		while(isContinue && ((b = is.read()) != -1)) {
+			isContinue = parse((char)b);
+		}
+		if (b != -1)
+			return true;
+		return false;
+	}
+	
+	protected boolean parse(char car) {
 		//TODO if string start with " and not stopped before file end, this return true
 		boolean result = true;
 		
@@ -75,14 +102,4 @@ public class CsvInputFormat implements InputFormat {
 		return result;
 	}
 
-	@Override
-	public String getValue() {
-		return value;
-	}
-
-	@Override
-	public int getLine() {
-		return line;
-	}	
-	
 }
