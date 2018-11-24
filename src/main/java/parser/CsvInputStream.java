@@ -8,18 +8,24 @@ import exceptions.ParserSyntaxException;
 public class CsvInputStream {
 	
 	private final InputStream is;
+	private final char separator;
 
 	private char previousChar = '\u0000';
 	private boolean isInQuots = false;
+	private int countOfQuots = 0;
 	
 	private int line = 0;
 	private String value = "";
-	private int countOfQuots = 0;
 		
 	public CsvInputStream(final InputStream stream) {
 		this.is = stream;
+		this.separator = ',';
 	}	
-
+		
+	public CsvInputStream(final InputStream stream, final char separator) {
+		this.is = stream;
+		this.separator = separator;
+	}
 	public String getValue() {
 		return value;
 	}
@@ -46,9 +52,9 @@ public class CsvInputStream {
 		if (previousChar == '\n' && !isInQuots) {
 			line++;
 			value = "";
-		}		
-		if (previousChar == ',' && !isInQuots)
-			 value = "";
+		} else if (previousChar == separator && !isInQuots) {
+			value = "";
+		}
 		
 		if (car != '"' && countOfQuots > 0) {
 			if (!isInQuots && countOfQuots == 1 && value.isEmpty()) // start quot
@@ -64,35 +70,36 @@ public class CsvInputStream {
 				);
 			countOfQuots = 0;
 		}
-				
-		switch (car) {
-		case '"':
-			countOfQuots++;
-			if (previousChar == '"') {
-				value += car;
-			}
-			break;
-		case ',':
+		
+		if (car == separator) {
 			if (!isInQuots) {
 				result = false;
 			} else {
 				value += car;
-			}					
-			break;
-		case '\n':
-			if (isInQuots) {
+			}	
+		} else {
+			switch (car) {
+			case '"':
+				countOfQuots++;
+				if (previousChar == '"') {
+					value += car;
+				}
+				break;
+			case '\n':
+				if (isInQuots) {
+					value += car;
+				} else {
+					result = false;
+				}
+				break;
+			case '\r':
+				if (isInQuots)
+					value += car;
+				break;
+			default:
 				value += car;
-			} else {
-				result = false;
 			}
-			break;
-		case '\r':
-			if (isInQuots)
-				value += car;
-			break;
-		default:
-			value += car;
-		}
+		}		
 		
 		if (car == '"' && previousChar == '"')
 			previousChar = '\u0000';
