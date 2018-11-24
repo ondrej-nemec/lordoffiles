@@ -4,14 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class CsvOutputFormat {
+public class CsvOutputStream {
 	
 	private OutputStream os;
 	
 	private boolean isFirst = true;
 	private String newLine = File.separator == "/" ? "\n" : "\r\n";
 	
-	public CsvOutputFormat(final OutputStream stream) {
+	public CsvOutputStream(final OutputStream stream) {
 		this.os = stream;
 	}
 

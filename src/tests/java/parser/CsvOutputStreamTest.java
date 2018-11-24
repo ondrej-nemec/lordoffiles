@@ -18,13 +18,13 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 
 @RunWith(JUnitParamsRunner.class)
-public class CsvOutputFormatTest {
+public class CsvOutputStreamTest {
 	
 	@Test
 	@Parameters
 	public void testWriteValueWorks(String write, String expected) throws IOException {
 		OutputStream os = mock(OutputStream.class);
-		CsvOutputFormat format = new CsvOutputFormat(os);
+		CsvOutputStream format = new CsvOutputStream(os);
 		
 		format.writeValue(write);
 		verify(os).write(expected.getBytes());		
@@ -43,7 +43,7 @@ public class CsvOutputFormatTest {
 	public void testWriteNewLineWorks() throws IOException {
 		String newLine = File.separator == "/" ? "\n" : "\r\n";
 		OutputStream os = mock(OutputStream.class);
-		CsvOutputFormat format = new CsvOutputFormat(os);
+		CsvOutputStream format = new CsvOutputStream(os);
 		
 		format.writeNewLine();
 		verify(os).write(newLine.getBytes());
@@ -58,7 +58,7 @@ public class CsvOutputFormatTest {
 		String a11 = "bbaa";
 		
 		OutputStream os = mock(OutputStream.class);
-		CsvOutputFormat format = new CsvOutputFormat(os);
+		CsvOutputStream format = new CsvOutputStream(os);
 		
 		format.writeValue(a00);
 		format.writeValue(a01);
@@ -76,7 +76,7 @@ public class CsvOutputFormatTest {
 	@Test
 	public void endToEndTest() {
 		try (OutputStream os = new FileOutputStream("src/tests/res/parser/csv-output.csv")) {
-			CsvOutputFormat format = new CsvOutputFormat(os);
+			CsvOutputStream format = new CsvOutputStream(os);
 			String newLine = File.separator == "/" ? "\n" : "\r\n";
 						
 			format.writeValue("simple text");
