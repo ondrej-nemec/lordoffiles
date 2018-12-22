@@ -1,4 +1,4 @@
-package parser;
+package parser.csv;
 
 import java.io.IOException;
 import java.io.InputStream;

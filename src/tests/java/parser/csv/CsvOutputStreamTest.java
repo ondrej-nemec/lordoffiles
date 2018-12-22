@@ -1,4 +1,4 @@
-package parser;
+package parser.csv;
 
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import parser.csv.CsvOutputStream;
 
 @RunWith(JUnitParamsRunner.class)
 public class CsvOutputStreamTest {

@@ -1,4 +1,4 @@
-package parser;
+package parser.csv;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import exceptions.ParserSyntaxException;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import parser.csv.CsvInputStream;
 
 @RunWith(JUnitParamsRunner.class)
 public class CsvInputStreamTest {
