@@ -141,7 +141,7 @@ public class CsvInputStreamTest {
 		CsvInputStream f = new CsvInputStream(mock(InputStream.class));
 		
 		if (toParse.length != expectedReturn.length)
-			fail();
+			fail("Arrays could not be compare - havenn't got equals length.");
 		
 		for (int i = 0; i < toParse.length; i++) {
 			assertEquals(expectedReturn[i], f.parse(toParse[i]));
