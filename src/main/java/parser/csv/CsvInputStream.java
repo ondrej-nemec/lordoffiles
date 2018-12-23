@@ -1,13 +1,12 @@
 package parser.csv;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import exceptions.ParserSyntaxException;
+import parser.ParserInputStream;
 
-public class CsvInputStream {
+public class CsvInputStream extends ParserInputStream{
 	
-	private final InputStream is;
 	private final char separator;
 
 	private char previousChar = '\u0000';
@@ -18,14 +17,15 @@ public class CsvInputStream {
 	private String value = "";
 		
 	public CsvInputStream(final InputStream stream) {
-		this.is = stream;
+		super(stream);
 		this.separator = ',';
 	}	
 		
 	public CsvInputStream(final InputStream stream, final char separator) {
-		this.is = stream;
+		super(stream);
 		this.separator = separator;
 	}
+	
 	public String getValue() {
 		return value;
 	}
@@ -34,17 +34,7 @@ public class CsvInputStream {
 		return line;
 	}	
 	
-	public boolean next() throws IOException {
-		int b = 0;
-		boolean isContinue = true;
-		while(isContinue && ((b = is.read()) != -1)) {
-			isContinue = parse((char)b);
-		}
-		if (b != -1)
-			return true;
-		return false;
-	}
-	
+	@Override
 	protected boolean parse(char car) {
 		//TODO if string start with " and not stopped before file end, this return true
 		boolean result = true;

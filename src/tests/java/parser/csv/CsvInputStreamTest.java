@@ -1,17 +1,10 @@
 package parser.csv;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,28 +20,6 @@ import parser.csv.CsvInputStream;
 
 @RunWith(JUnitParamsRunner.class)
 public class CsvInputStreamTest {
-	
-	@Test
-	public void testNextWorks() throws IOException {		
-		char t = 't';
-		char f = 'f';
-		
-		InputStream is = mock(InputStream.class);
-		
-		CsvInputStream parser = spy(new CsvInputStream(is));
-		
-		when(parser.parse(t)).thenReturn(true);
-		when(parser.parse(f)).thenReturn(false);
-		
-		when(is.read()).thenReturn((int)t).thenReturn((int)t).thenReturn((int)f);		
-		assertTrue(parser.next());
-		
-		verify(parser, times(2)).parse(t);
-		verify(parser, times(1)).parse(f);
-		
-		when(is.read()).thenReturn(-1);
-		assertFalse(parser.next());	
-	}
 	
 	@Test
 	public void testParseGrid() {
