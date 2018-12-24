@@ -4,9 +4,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.List;
 
-import text.OutputTextBuffer;
-
-public class PlainTextCreator extends OutputTextBuffer{
+public class PlainTextCreator {
 
 	public boolean write(final BufferedWriter bw, final String data) throws IOException{
 		bw.write(data);

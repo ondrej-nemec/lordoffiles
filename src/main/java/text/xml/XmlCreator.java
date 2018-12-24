@@ -15,8 +15,7 @@ import exceptions.FileCouldNotBeClosedException;
 import text.xml.structures.XmlObject;
 
 public class XmlCreator {
-	//TODO some factory for stream, maybe
-
+	
 	/**
 	 * write whole step by step
 	 * @param bw

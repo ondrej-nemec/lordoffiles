@@ -7,10 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import text.InputTextBuffer;
-
-
-public class PlainTextLoader extends InputTextBuffer{
+public class PlainTextLoader {
 
 	public boolean read(final BufferedReader br, final Consumer<String> consumer) throws IOException{
 		String line = br.readLine();

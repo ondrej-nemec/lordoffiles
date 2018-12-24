@@ -10,22 +10,22 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 
-public class InputTextBuffer {
+public class BufferedReaderFactory {
 
-	public BufferedReader buffer(final File file) throws FileNotFoundException{
+	public static BufferedReader buffer(final File file) throws FileNotFoundException{
 		return new BufferedReader(
 				new FileReader(file)
 				);
 	}
 	
-	public BufferedReader buffer(final String path) throws FileNotFoundException{
+	public static BufferedReader buffer(final String path) throws FileNotFoundException{
 		return new BufferedReader(
 				new FileReader(path)
 				);
 	}
 	
 	
-	public BufferedReader buffer(final File file, final String charset) 
+	public static BufferedReader buffer(final File file, final String charset) 
 			throws UnsupportedEncodingException, FileNotFoundException{
 		return new BufferedReader(
 				new InputStreamReader(
@@ -34,7 +34,7 @@ public class InputTextBuffer {
 			);
 	}
 	
-	public BufferedReader buffer(final String path, final String charset) 
+	public static BufferedReader buffer(final String path, final String charset) 
 			throws UnsupportedEncodingException, FileNotFoundException{
 		return new BufferedReader(
 				new InputStreamReader(
@@ -43,7 +43,7 @@ public class InputTextBuffer {
 			);
 	}
 	
-	public BufferedReader buffer(final InputStream inputStream){
+	public static BufferedReader buffer(final InputStream inputStream){
 		return new BufferedReader(
 				new InputStreamReader(
 						inputStream
@@ -51,7 +51,7 @@ public class InputTextBuffer {
 			);
 	}
 	
-	public BufferedReader buffer(final InputStream inputStream, final String charset) 
+	public static BufferedReader buffer(final InputStream inputStream, final String charset) 
 			throws UnsupportedEncodingException{
 		return new BufferedReader(
 				new InputStreamReader(
@@ -60,11 +60,11 @@ public class InputTextBuffer {
 			);
 	}
 	
-	public BufferedReader buffer(final URL url) throws IOException{
+	public static BufferedReader buffer(final URL url) throws IOException{
 		return buffer(url.openStream());
 	}
 	
-	public BufferedReader buffer(final URL url, final String charset)
+	public static BufferedReader buffer(final URL url, final String charset)
 			throws UnsupportedEncodingException, IOException{
 		return buffer(url.openStream(), charset);
 	}

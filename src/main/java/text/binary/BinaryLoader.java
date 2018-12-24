@@ -1,7 +1,5 @@
 package text.binary;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -11,10 +9,6 @@ import java.util.function.Consumer;
 public class BinaryLoader {
 	
 	private int defaultBufferSize = 32;
-	
-	public InputStream stream(String name) throws FileNotFoundException {
-		return new FileInputStream(name);
-	}
 
 	public boolean read(final InputStream stream, final Consumer<byte[]> consumer) throws IOException {
 		read(stream, consumer, defaultBufferSize);

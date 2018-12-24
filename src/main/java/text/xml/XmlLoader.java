@@ -15,11 +15,10 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import exceptions.FileCouldNotBeClosedException;
-import text.InputTextBuffer;
+import text.BufferedReaderFactory;
 import text.xml.structures.XmlObject;
 
-
-public class XmlLoader extends InputTextBuffer{
+public class XmlLoader extends BufferedReaderFactory{
 
 	
 	/**
