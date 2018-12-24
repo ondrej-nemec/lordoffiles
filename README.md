@@ -10,6 +10,9 @@
 		* [Plain text](#plain-text)
 		* [XML](#xml)
 		* [Binary files](#binary-files)
+	* [Parsers](#parsers)
+		* [CSV](#csv)
+		* [Dotenv](#dotenv)
 	* [Concurrent processing](#concurrent-processing)
 
 ## Description
@@ -18,7 +21,7 @@ Package provide simply way how to read from file or write to file.
 ## How to install
 ### Download:
 
-<a href="https://ondrej-nemec.github.io/download/lof-1.3.jar" target=_blank>Download jar</a>
+<a href="https://ondrej-nemec.github.io/download/lof-1.4.jar" target=_blank>Download jar</a>
 
 ### Maven:
 After `build` tag:
@@ -35,7 +38,7 @@ And to `dependencies`:
 <dependency>
   <groupId>com.github.ondrej-nemec</groupId>
   <artifactId>lordoffiles</artifactId>
-  <version>v1.3-alpha</version>
+  <version>v1.4-alpha</version>
 </dependency>
 ```
 
@@ -65,38 +68,38 @@ public BufferedWriter buffer(final OutputStream outputStream);
 	
 public BufferedWriter buffer(final OutputStream outputStream, final String charset) throws UnsupportedEncodingException;
 ```
-**Remember: each Buffer need to be closed after finishing work. Best practice is call buffer method in try-with-resources block**
+**Remember: each Buffer needs to be closed after finishing work. Best practice is call buffer method in try-with-resources block**
 #### Plain text
 ##### Reading
 `PlainTextLoader` class is for reading plain text from file:
 ```java
-//read content of file by lines
-//always read line, apply consumer, discart line and read new line
-//at the end return true
+// read content of file by lines
+// always read line, apply consumer, discart line and read new line
+// at the end return true
 public boolean read(final BufferedReader br, final Consumer<String> consumer) throws IOException
 
-//read content of file as one string		
+// read content of file as one string		
 public String readAsOneString(final BufferedReader br) throws IOException
 
-//read content of file as list of lines
+// read content of file as list of lines
 public List<String> read(final BufferedReader br) throws IOException
 
-//read content of file as list of lines and split each line with given 'split'
-//data.get(r).get(c) are r x c matrix, r - row, c - column
+// read content of file as list of lines and split each line with given 'split'
+// data.get(r).get(c) are r x c matrix, r - row, c - column
 public List<List<String>> read(final BufferedReader br, final String split) throws IOException;
 ```
 ##### Writing
 For writing plain text is `PlainTextCreator` class. Has three method:
 ```java
-//write or append string to file and write new line
+// write or append string to file and write new line
 public boolean write(final BufferedWriter bw, final String data) throws IOException;
 	
-//write or append string by string from list to file and write new line
+// write or append string by string from list to file and write new line
 public boolean write(final BufferedWriter bw, final List<String> data) throws IOException;
 
-//write or append grid to file and write new line
-//data.get(r).get(c) are r x c matrix, r - row, c - column
-//strings in row are splited with 'split' string
+// write or append grid to file and write new line
+// data.get(r).get(c) are r x c matrix, r - row, c - column
+// strings in row are splited with 'split' string
 public boolean write(final BufferedWriter bw, final List<List<String>> data, final String split) throws IOException;
 ```
 Theses methods return true after finishing writing.
@@ -104,7 +107,7 @@ Theses methods return true after finishing writing.
 ##### Reading
 To read xml file use `XmlLoader` (unexpectedly). You can use two ways. First allow you to manage reading, return true at the finish:
 ```java
-//this method starts reading, calls next on stream and closes stream
+// this method starts reading, calls next on stream and closes stream
 public boolean read(final BufferedReader br, Consumer<XMLStreamReader> consumer) 
 			throws XMLStreamException, FileCouldNotBeClosedException;
 ```
@@ -116,7 +119,7 @@ public XmlObject read(final BufferedReader br)
 ##### Writing
 `XmlCreator` allow write data to xml file. There are two ways too. Both return true after writing is finished. First:
 ```java
-//this method starts reading, calls next on stream and closes stream
+// this method starts reading, calls next on stream and closes stream
 public boolean write(final BufferedWriter bw, Consumer<XMLStreamWriter> consumer)
 			throws XMLStreamException, FileCouldNotBeClosedException;
 ```
@@ -186,11 +189,17 @@ public OutputStream stream(String name) throws FileNotFoundException;
 // write given data to stream
 public boolean write(final OutputStream stream, final byte[] data) throws IOException
 ```
+### Parsers
+This library contains some parsers, which allow parse structured files. Work with parsers is sililar to SAX.
+#### CSV
+##### Reading
 
-### Other structured formats
-<a href="https://www.baeldung.com/java-snake-yaml" target=_blank>YAML jar</a>
+##### Writing
 
-<a href="https://github.com/stleary/JSON-java" target=_blank>JSON</a>
+#### Dotenv
+##### Reading
+
+##### Writing
 
 ### Concurrent processing
 Each class has "double", which provide concurrent processing. Name convention is *original-class-name*Async. Calling methods looks same as in originals classes. The return types are: Future<*original-return-type*>. [More about Future](https://www.baeldung.com/java-future). What is different is constructor. This classes require `ExecutorService` (more about in mentioned article) and optionally original class.
