@@ -11,18 +11,18 @@ import javax.xml.stream.XMLStreamReader;
 import exceptions.FileCouldNotBeClosedException;
 import text.xml.structures.XmlObject;
 
-public class XmlLoadeAsync {
+public class XmlLoaderAsync {
 	
 	private ExecutorService executor;
 	
 	private XmlLoader loader;
 
-	public XmlLoadeAsync(ExecutorService executor) {
+	public XmlLoaderAsync(ExecutorService executor) {
 		this.executor = executor;
 		this.loader = new XmlLoader();
 	}
 
-	public XmlLoadeAsync(ExecutorService executor, XmlLoader loader) {
+	public XmlLoaderAsync(ExecutorService executor, XmlLoader loader) {
 		this.executor = executor;
 		this.loader = loader;
 	}
