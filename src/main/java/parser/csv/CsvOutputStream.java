@@ -1,24 +1,23 @@
 package parser.csv;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class CsvOutputStream {
+import parser.ParserOutputStream;
+
+public class CsvOutputStream extends ParserOutputStream{
 	
-	private final OutputStream os;
 	private final char separator;
 	
-	private boolean isFirst = true;
-	private String newLine = File.separator == "/" ? "\n" : "\r\n";
+	private boolean isFirst = true;	
 	
 	public CsvOutputStream(final OutputStream stream) {
-		this.os = stream;
+		super(stream);
 		this.separator = ',';
 	}
 	
 	public CsvOutputStream(final OutputStream stream, final char separator) {
-		this.os = stream;
+		super(stream);
 		this.separator = separator;
 	}
 
@@ -33,7 +32,7 @@ public class CsvOutputStream {
 	}
 	
 	public void writeNewLine() throws IOException {
-		os.write(newLine.getBytes());
+		os.write(NEW_LINE.getBytes());
 		isFirst = true;
 	}
 	
