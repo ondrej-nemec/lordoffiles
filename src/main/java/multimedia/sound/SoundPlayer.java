@@ -34,6 +34,8 @@ public class SoundPlayer {
 				}
 			}
 		}
+		line.stop();
+		line.close();
 	}
 	
 	public long getMicroSecondPosition() {

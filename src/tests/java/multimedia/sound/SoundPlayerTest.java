@@ -30,6 +30,12 @@ public class SoundPlayerTest {
 		
 		verify(stream, times(2)).read(any(), eq(0), eq(player.BUFFER_SIZE));
 		verify(line, times(1)).write(any(), eq(0), anyInt());
+
+		verify(line, times(1)).open(any());
+		verify(line, times(1)).start();
+		verify(line, times(1)).close();
+		verify(line, times(1)).stop();
+		verify(stream, times(1)).getFormat();
 		
 		verifyNoMoreInteractions(stream);
 		verifyNoMoreInteractions(line);
@@ -47,7 +53,16 @@ public class SoundPlayerTest {
 	@Test
 	public void testPlayWorksWithStopAction() throws IOException, LineUnavailableException {
 		player.ACTION = PlayingAction.STOP;
-		verifyZeroInteractions(stream);
-		verifyZeroInteractions(line);
+		
+		player.play();
+		
+		verify(line, times(1)).open(any());
+		verify(line, times(1)).start();
+		verify(line, times(1)).close();
+		verify(line, times(1)).stop();
+		verify(stream, times(1)).getFormat();
+		
+		verifyNoMoreInteractions(stream);
+		verifyNoMoreInteractions(line);
 	}
 }
