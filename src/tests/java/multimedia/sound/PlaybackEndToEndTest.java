@@ -7,6 +7,9 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import multimedia.AudioInputStreamFactory;
+import multimedia.DataLineFactory;
+
 public class PlaybackEndToEndTest {
 
 	private final long DURATION = 185835102; // 185, 835 102 s

@@ -3,7 +3,6 @@ package multimedia.sound;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
-import java.io.ByteArrayOutputStream;
 import java.util.function.Consumer;
 
 import javax.sound.sampled.AudioFormat;
@@ -46,27 +45,4 @@ public class MicrophoneTest {
 			fail("LineUnavailableException " + e.getMessage());
 		}
 	}
-	
-	@Test
-	public void testCaptureWithArrayWorks() {
-		try {
-			when(line.read(any(), eq(0), eq(mic.getBufferSize()))).thenReturn(1).thenReturn(-1);
-			
-			ByteArrayOutputStream output = mock(ByteArrayOutputStream.class);
-			
-			mic.capture(line, format, output);
-			
-			verify(output, times(1)).write(any(), eq(0), eq(mic.getBufferSize()));
-			verify(line, times(1)).open(format);
-			verify(line, times(1)).start();
-			verify(line, times(1)).stop();
-			verify(line, times(1)).drain();
-			verify(line, times(1)).close();
-			
-			
-		} catch (LineUnavailableException e) {
-			fail("LineUnavailableException " + e.getMessage());
-		}
-	}
-	
 }
