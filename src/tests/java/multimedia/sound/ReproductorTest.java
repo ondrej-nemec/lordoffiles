@@ -7,71 +7,42 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.function.Supplier;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ReproductorTest {
 
 	private final SourceDataLine line;
+	private final Reproductor reproductor;
 	
 	public ReproductorTest() {
 		this.line = mock(SourceDataLine.class);
+		this.reproductor = new Reproductor(line);
 	}
 	
-	//TODO Reproductor API is not clear yet
-	
-	/*
-	
 	@Test
-	public void testPlayWorksWithPlayAction() throws IOException, LineUnavailableException {
-		when(stream.read(any(), eq(0), eq(loader.BUFFER_SIZE))).thenReturn(0).thenReturn(-1);
+	public void testPlayWorks() throws LineUnavailableException, IOException {
+		@SuppressWarnings("unchecked")
+		Supplier<byte[]> consumer = mock(Supplier.class);
+		AudioFormat format = mock(AudioFormat.class);
+		reproductor.play(format, consumer);
 		
-		loader.play();
-		
-		verify(stream, times(2)).read(any(), eq(0), eq(loader.BUFFER_SIZE));
 		verify(line, times(1)).write(any(), eq(0), anyInt());
-
+		verify(consumer, times(1)).get();
+				
 		verify(line, times(1)).open(any());
 		verify(line, times(1)).start();
 		verify(line, times(1)).close();
 		verify(line, times(1)).stop();
-		verify(stream, times(1)).getFormat();
 		
-		verifyNoMoreInteractions(stream);
 		verifyNoMoreInteractions(line);
 	}
 	
-	@Test
-	@Ignore //TODO how to test this infinity cyklus
-	public void testPlayWorksWithPauseAction() throws IOException, LineUnavailableException {
-		loader.ACTION = PlayingAction.PAUSE;
-		loader.play();
-		verifyZeroInteractions(stream);
-		verifyZeroInteractions(line);
-	}
-
-	@Test
-	public void testPlayWorksWithStopAction() throws IOException, LineUnavailableException {
-		loader.ACTION = PlayingAction.STOP;
-		
-		loader.play();
-		
-		verify(line, times(1)).open(any());
-		verify(line, times(1)).start();
-		verify(line, times(1)).close();
-		verify(line, times(1)).stop();
-		verify(stream, times(1)).getFormat();
-		
-		verifyNoMoreInteractions(stream);
-		verifyNoMoreInteractions(line);
-	}
-	*/
 }

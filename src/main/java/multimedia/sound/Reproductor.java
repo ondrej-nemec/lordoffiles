@@ -1,6 +1,5 @@
 package multimedia.sound;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.function.Supplier;
 
@@ -17,6 +16,7 @@ public class Reproductor {
 		this.line = line;
 	}
 
+	//TODO
 	public void play(AudioFormat format, Supplier<byte[]> dataProvider)
 			throws IOException, LineUnavailableException {
 		line.open(format);
@@ -30,9 +30,5 @@ public class Reproductor {
 		}
 		line.stop();
 		line.close();
-	}
-	
-	public void play(AudioFormat format, ByteArrayInputStream data) {
-		
 	}
 }

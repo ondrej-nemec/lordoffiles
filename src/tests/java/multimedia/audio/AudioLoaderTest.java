@@ -3,9 +3,8 @@ package multimedia.audio;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import javax.sound.sampled.AudioInputStream;
 
@@ -28,26 +27,13 @@ public class AudioLoaderTest {
 		try {
 			when(stream.read(any(), eq(0), eq(loader.BUFFER_SIZE))).thenReturn(0).thenReturn(-1);
 			@SuppressWarnings("unchecked")
-			BiConsumer<byte[], Integer> biConsumer = mock(BiConsumer.class);
+			Consumer<byte[]> biConsumer = mock(Consumer.class);
 			
 			loader.load(stream, biConsumer);
-			verify(biConsumer, times(1)).accept(any(), eq(0));
+			verify(biConsumer, times(1)).accept(any());
 		} catch (IOException e) {
 			fail("IOException " + e.getMessage());
 		}
 	}
 	
-	@Test
-	public void testLoadWithArrayWorks() {
-		try {
-			when(stream.read(any(), eq(0), eq(loader.BUFFER_SIZE))).thenReturn(0).thenReturn(-1);
-			ByteArrayOutputStream output = mock(ByteArrayOutputStream.class);
-			
-			loader.load(stream, output);
-			verify(output, times(1)).write(any(), eq(0), eq(0));
-		} catch (IOException e) {
-			fail("IOException " + e.getMessage());
-		}
-	}
-
 }
