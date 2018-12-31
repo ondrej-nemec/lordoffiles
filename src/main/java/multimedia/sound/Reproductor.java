@@ -1,13 +1,16 @@
 package multimedia.sound;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.function.Supplier;
+import java.io.PipedInputStream;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 public class Reproductor {
+	
+	protected final int BUFFER_SIZE = 128000;
 	
 	private final SourceDataLine line;
 	public boolean play = true;
@@ -16,16 +19,30 @@ public class Reproductor {
 		this.line = line;
 	}
 
-	//TODO
-	public void play(AudioFormat format, Supplier<byte[]> dataProvider)
-			throws IOException, LineUnavailableException {
+	public void play(AudioFormat format, ByteArrayInputStream data) throws IOException, LineUnavailableException {
 		line.open(format);
 		line.start();
 		int nBytesRead = 0;
+		byte[] readed = new byte[BUFFER_SIZE];
 		while(nBytesRead != -1 && play){
-			byte[] data = dataProvider.get();
+			nBytesRead = data.read(readed);
 			if(nBytesRead >= 0){
-				/*int nBytesWritten =*/ line.write(data, 0, nBytesRead);
+				/*int nBytesWritten =*/ line.write(readed, 0, nBytesRead);
+			}
+		}
+		line.stop();
+		line.close();
+	}
+	
+	public void play(AudioFormat format, PipedInputStream pipe) throws IOException, LineUnavailableException {
+		line.open(format);
+		line.start();
+		int nBytesRead = 0;
+		byte[] readed = new byte[BUFFER_SIZE];
+		while(nBytesRead != -1 && play){
+			nBytesRead = pipe.read(readed);
+			if(nBytesRead >= 0){
+				/*int nBytesWritten =*/ line.write(readed, 0, nBytesRead);
 			}
 		}
 		line.stop();

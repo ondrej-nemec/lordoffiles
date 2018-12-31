@@ -1,15 +1,14 @@
 package multimedia.sound;
 
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.*;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.function.Supplier;
+import java.io.PipedInputStream;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
@@ -28,14 +27,15 @@ public class ReproductorTest {
 	}
 	
 	@Test
-	public void testPlayWorks() throws LineUnavailableException, IOException {
-		@SuppressWarnings("unchecked")
-		Supplier<byte[]> consumer = mock(Supplier.class);
+	public void testPlayWithByteArrayWorks() throws LineUnavailableException, IOException {
+		ByteArrayInputStream data = mock(ByteArrayInputStream.class);
+		when(data.read(any())).thenReturn(0).thenReturn(-1);
+		
 		AudioFormat format = mock(AudioFormat.class);
-		reproductor.play(format, consumer);
+		reproductor.play(format, data);
 		
 		verify(line, times(1)).write(any(), eq(0), anyInt());
-		verify(consumer, times(1)).get();
+		verify(data, times(2)).read(any());
 				
 		verify(line, times(1)).open(any());
 		verify(line, times(1)).start();
@@ -43,6 +43,30 @@ public class ReproductorTest {
 		verify(line, times(1)).stop();
 		
 		verifyNoMoreInteractions(line);
+	}
+	
+	@Test
+	public void testPlayWithPipeWorks() throws LineUnavailableException, IOException {
+		PipedInputStream data = mock(PipedInputStream.class);
+		when(data.read(any())).thenReturn(0).thenReturn(-1);
+		
+		AudioFormat format = mock(AudioFormat.class);
+		reproductor.play(format, data);
+		
+		verify(line, times(1)).write(any(), eq(0), anyInt());
+		verify(data, times(2)).read(any());
+				
+		verify(line, times(1)).open(any());
+		verify(line, times(1)).start();
+		verify(line, times(1)).close();
+		verify(line, times(1)).stop();
+		
+		verifyNoMoreInteractions(line);
+	}
+	
+	@Test
+	public void testPlayWithByteArrayEndToEnd() {
+		fail("Not implement");
 	}
 	
 }
