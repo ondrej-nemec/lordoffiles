@@ -4,6 +4,7 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
@@ -55,8 +56,19 @@ public class AudioCreatorTest {
 	}
 	
 	@Test
-	public void testSaveWithByteArrayEndToEnd() {
-		fail("Not implement");
+	public void testSaveWithByteArrayEndToEnd() throws IOException {
+		try (OutputStream os = new FileOutputStream("src/tests/res/multimedia/sound-output.wav")) {
+			AudioFormat format = new AudioFormat(8000.0f, 16, 1, true, true);
+			AudioCreator cr = new AudioCreator(os);
+			
+			//TODO fill data
+			fail("Not implement - fill data");
+			ByteArrayOutputStream data = new ByteArrayOutputStream();
+			
+			cr.save(format, AudioFileFormat.Type.AU, data);
+		} catch (IOException e) {
+			throw new IOException(e);
+		}
 	}
 	
 }

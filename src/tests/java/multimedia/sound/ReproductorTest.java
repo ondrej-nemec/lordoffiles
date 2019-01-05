@@ -9,12 +9,19 @@ import static org.mockito.Mockito.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PipedInputStream;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import org.junit.Test;
+
+import multimedia.AudioInputStreamFactory;
+import multimedia.DataLineFactory;
 
 public class ReproductorTest {
 
@@ -65,8 +72,27 @@ public class ReproductorTest {
 	}
 	
 	@Test
-	public void testPlayWithByteArrayEndToEnd() {
-		fail("Not implement");
+	public void testPlayWithByteArrayEndToEnd() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+		AudioFormat format = new AudioFormat(8000.0f, 16, 1, true, true);
+		AudioInputStream stream = AudioInputStreamFactory.getStream("src/tests/res/multimedia/sound-input.wav");
+		SourceDataLine line = DataLineFactory.getSourceLine(stream);
+		
+		ByteArrayInputStream data = new ByteArrayInputStream(new byte[] {}); //TODO fill data
+		
+		Reproductor rep = new Reproductor(line);
+		
+		ExecutorService executor = Executors.newFixedThreadPool(5);
+		executor.submit(()->{
+			try {
+				rep.play(format, data);
+			} catch (IOException | LineUnavailableException e) {
+				fail("LineUnavailableException: " + e.getMessage());
+			}
+		});
+		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		rep.play = false;
+				
+		fail("Not implement - data to assert");
 	}
 	
 }
