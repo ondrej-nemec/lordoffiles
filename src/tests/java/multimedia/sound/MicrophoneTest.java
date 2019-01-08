@@ -6,10 +6,8 @@ import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PipedOutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
@@ -32,54 +30,19 @@ public class MicrophoneTest {
 	}
 
 	@Test
-	public void testCaptureWithConsumerWorks() throws LineUnavailableException {
-		when(line.read(any(), eq(0), eq(mic.getBufferSize()))).thenReturn(1).thenReturn(-1);
+	public void testCaptureWorks() throws LineUnavailableException, IOException {
+		when(line.read(any(), eq(0), eq(mic.getBufferSize()))).thenReturn(1).thenReturn(-1);		
+		Microphone.Writer writer = mock(Microphone.Writer.class);
 		
-		@SuppressWarnings("unchecked")
-		Consumer<byte[]> consumer = mock(Consumer.class);
+		mic.capture(line, format, writer);
 		
-		mic.capture(line, format, consumer);
-		
-		verify(consumer, times(1)).accept(any());
+		verify(writer, times(1)).write(any(), eq(0), anyInt());
 		verify(line, times(1)).open(format);
 		verify(line, times(1)).start();
 		verify(line, times(1)).stop();
 		verify(line, times(1)).drain();
 		verify(line, times(1)).close();
 
-	}
-
-	@Test
-	public void testCaptureWithByteArrayWorks() throws LineUnavailableException {
-		when(line.read(any(), eq(0), eq(mic.getBufferSize()))).thenReturn(1).thenReturn(-1);
-		
-		ByteArrayOutputStream stream = mock(ByteArrayOutputStream.class);
-		
-		mic.capture(line, format, stream);
-		
-		verify(stream, times(1)).write(any(), eq(0), anyInt());
-		verify(line, times(1)).open(format);
-		verify(line, times(1)).start();
-		verify(line, times(1)).stop();
-		verify(line, times(1)).drain();
-		verify(line, times(1)).close();
-
-	}
-
-	@Test
-	public void testCaptureWithPipeWorks() throws LineUnavailableException, IOException {
-		when(line.read(any(), eq(0), eq(mic.getBufferSize()))).thenReturn(1).thenReturn(-1);
-		
-		PipedOutputStream pipe = mock(PipedOutputStream.class);
-		
-		mic.capture(line, format, pipe);
-		
-		verify(pipe, times(1)).write(any(), eq(0), anyInt());
-		verify(line, times(1)).open(format);
-		verify(line, times(1)).start();
-		verify(line, times(1)).stop();
-		verify(line, times(1)).drain();
-		verify(line, times(1)).close();
 	}
 	
 	@Test
@@ -100,9 +63,9 @@ public class MicrophoneTest {
 		mic.capture = false;
 		
 		//TODO fill data
-		byte[] actual = new byte[] {};
-		assertEquals(actual, stream.toByteArray());
-		
 		fail("Not implement - data to assert");
+		
+		byte[] actual = new byte[] {};
+		assertEquals(actual, stream.toByteArray());		
 	}
 }

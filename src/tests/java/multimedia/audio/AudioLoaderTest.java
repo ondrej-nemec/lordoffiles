@@ -6,8 +6,6 @@ import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PipedOutputStream;
-import java.util.function.Consumer;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -28,35 +26,14 @@ public class AudioLoaderTest {
 	}
 	
 	@Test
-	public void testLoadWithConsumerWorks() throws IOException {
+	public void testLoadWorks() throws IOException {
 		when(stream.read(any(), eq(0), eq(loader.BUFFER_SIZE))).thenReturn(0).thenReturn(-1);
-		@SuppressWarnings("unchecked")
-		Consumer<byte[]> biConsumer = mock(Consumer.class);
+		AudioLoader.Writer writer = mock(AudioLoader.Writer.class);
 		
-		loader.load(stream, biConsumer);
-		verify(biConsumer, times(1)).accept(any());
+		loader.load(stream, writer);
+		verify(writer, times(1)).write(any(), eq(0), anyInt());
 	}
-	
-	@Test
-	public void testLoadWithByteArrayWorks() throws IOException {
-		when(stream.read(any(), eq(0), eq(loader.BUFFER_SIZE))).thenReturn(0).thenReturn(-1);
-		ByteArrayOutputStream out = mock(ByteArrayOutputStream.class);
 		
-		loader.load(stream, out);
-		
-		verify(out, times(1)).write(any());
-	}
-	
-	@Test
-	public void testLoadWithPipeWorks() throws IOException {
-		PipedOutputStream pos = mock(PipedOutputStream.class);
-		when(stream.read(any(), eq(0), eq(loader.BUFFER_SIZE))).thenReturn(0).thenReturn(-1);
-					
-		loader.load(stream, pos);
-		
-		verify(pos, times(1)).write(any());
-	}	
-	
 	@Test
 	public void testLoadWithByteArrayEndToEnd() throws UnsupportedAudioFileException, IOException {
 		AudioInputStream stream = AudioInputStreamFactory.getStream("src/tests/res/multimedia/sound-input.wav");
@@ -65,9 +42,10 @@ public class AudioLoaderTest {
 		loader.load(stream, out);		
 		
 		//TODO fill data
+		fail("Not implement - data to assert");
+		
 		byte[] actual = new byte[] {};
 		assertEquals(actual, out.toByteArray());
 		
-		fail("Not implement - data to assert");	}
-	
+	}
 }

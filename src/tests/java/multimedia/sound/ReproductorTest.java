@@ -8,7 +8,6 @@ import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.PipedInputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,27 +33,8 @@ public class ReproductorTest {
 	}
 	
 	@Test
-	public void testPlayWithByteArrayWorks() throws LineUnavailableException, IOException {
-		ByteArrayInputStream data = mock(ByteArrayInputStream.class);
-		when(data.read(any())).thenReturn(0).thenReturn(-1);
-		
-		AudioFormat format = mock(AudioFormat.class);
-		reproductor.play(format, data);
-		
-		verify(line, times(1)).write(any(), eq(0), anyInt());
-		verify(data, times(2)).read(any());
-				
-		verify(line, times(1)).open(any());
-		verify(line, times(1)).start();
-		verify(line, times(1)).close();
-		verify(line, times(1)).stop();
-		
-		verifyNoMoreInteractions(line);
-	}
-	
-	@Test
-	public void testPlayWithPipeWorks() throws LineUnavailableException, IOException {
-		PipedInputStream data = mock(PipedInputStream.class);
+	public void testPlayWorks() throws LineUnavailableException, IOException {
+		Reproductor.Reader data = mock(Reproductor.Reader.class);
 		when(data.read(any())).thenReturn(0).thenReturn(-1);
 		
 		AudioFormat format = mock(AudioFormat.class);
