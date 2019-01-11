@@ -22,8 +22,7 @@ public class BufferedReaderFactory {
 		return new BufferedReader(
 				new FileReader(path)
 				);
-	}
-	
+	}	
 	
 	public static BufferedReader buffer(final File file, final String charset) 
 			throws UnsupportedEncodingException, FileNotFoundException{
