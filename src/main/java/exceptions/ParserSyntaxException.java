@@ -8,8 +8,7 @@ public class ParserSyntaxException extends RuntimeException {
 	
 	public ParserSyntaxException(String message) {
 		super(message);
-	}
-	
+	}	
 	
 	public ParserSyntaxException(String format, String message) {
 		super("Parser: " + format + ", " + message);

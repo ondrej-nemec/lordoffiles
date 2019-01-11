@@ -16,22 +16,12 @@ import text.xml.structures.XmlObject;
 
 public class XmlCreator {
 	
-	/**
-	 * write whole step by step
-	 * @param bw
-	 * @param object
-	 * @return
-	 * @throws XMLStreamException
-	 * @throws FileCouldNotBeClosedException
-	 */
-	public boolean write(final BufferedWriter bw, Consumer<XMLStreamWriter> consumer)
-			throws XMLStreamException, FileCouldNotBeClosedException{
+	public boolean write(final BufferedWriter bw, Consumer<XMLStreamWriter> consumer) throws XMLStreamException, FileCouldNotBeClosedException{
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		return write(factory.createXMLStreamWriter(bw), consumer);
 	}
 	
-	protected boolean write(final XMLStreamWriter out, Consumer<XMLStreamWriter> consumer)
-			throws XMLStreamException, FileCouldNotBeClosedException{
+	protected boolean write(final XMLStreamWriter out, Consumer<XMLStreamWriter> consumer) throws XMLStreamException, FileCouldNotBeClosedException{
 		try {
 			out.writeStartDocument();
 			consumer.accept(out);
@@ -42,20 +32,12 @@ public class XmlCreator {
 				if(out != null)
 					out.close();
 			} catch (Exception e) {
-				throw new FileCouldNotBeClosedException();
+				throw new FileCouldNotBeClosedException(); // TODO create besser solution
 			}
 		}
 		return true;
 	}
 
-	/**
-	 * write whole xml object
-	 * @param bw
-	 * @param object
-	 * @return
-	 * @throws XMLStreamException
-	 * @throws FileCouldNotBeClosedException
-	 */
 	public boolean write(final BufferedWriter bw, final XmlObject object)
 			throws XMLStreamException, FileCouldNotBeClosedException{
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
@@ -80,12 +62,6 @@ public class XmlCreator {
 		return true;
 	}
 	
-	/**
-	 * write element
-	 * @param out
-	 * @param object
-	 * @throws XMLStreamException
-	 */
 	private void writeLevel(XMLStreamWriter out, final XmlObject object) throws XMLStreamException{
 		out.writeStartElement(object.getName());
 		writeAtribute(out, object.getAttributes());
@@ -94,23 +70,11 @@ public class XmlCreator {
 		out.writeEndElement();
 	}
 	
-	/**
-	 * write value, if exist
-	 * @param out
-	 * @param value
-	 * @throws XMLStreamException
-	 */
 	private void writeValue(XMLStreamWriter out, String value) throws XMLStreamException{
 		if(value != null)
 			out.writeCharacters(value);
 	}
 	
-	/**
-	 * write attributes if exist
-	 * @param out
-	 * @param attributes
-	 * @throws XMLStreamException
-	 */
 	private void writeAtribute(
 			XMLStreamWriter out,
 			final Map<String, String> attributes) throws XMLStreamException{
@@ -122,12 +86,6 @@ public class XmlCreator {
 		}
 	}
 	
-	/**
-	 * write subelements if exist
-	 * @param out
-	 * @param references
-	 * @throws XMLStreamException
-	 */
 	private void writeReferences(XMLStreamWriter out, List<XmlObject> references) throws XMLStreamException{
 		if(references != null)
 			for(int i = 0; i<references.size();i++){

@@ -11,14 +11,13 @@ public class PlainTextLoader {
 
 	public boolean read(final BufferedReader br, final Consumer<String> consumer) throws IOException{
 		String line = br.readLine();
-		while(line!=null){
+		while(line != null){
 			consumer.accept(line);
 			line = br.readLine();
 		}
 		return true;
 	}
-	
-	
+
 	public String readAsOneString(final BufferedReader br) throws IOException{
 		String result = "";
 		String line = br.readLine();

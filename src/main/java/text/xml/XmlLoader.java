@@ -20,16 +20,7 @@ import text.xml.structures.XmlObject;
 
 public class XmlLoader extends BufferedReaderFactory{
 
-	
-	/**
-	 * read xml step by step
-	 * @param br
-	 * @param consumer
-	 * @throws XMLStreamException
-	 * @throws FileCouldNotBeClosedException
-	 */
-	public boolean read(final BufferedReader br, Consumer<XMLStreamReader> consumer) 
-			throws XMLStreamException, FileCouldNotBeClosedException{
+	public boolean read(final BufferedReader br, Consumer<XMLStreamReader> consumer) throws XMLStreamException, FileCouldNotBeClosedException{
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader in = null;
 		try {
@@ -46,18 +37,9 @@ public class XmlLoader extends BufferedReaderFactory{
 			}
 		}
 		return true;
-	}
-	
+	}	
 		
-	/**
-	 * load whole xml file to java object
-	 * @param br
-	 * @return object reprezentation of file
-	 * @throws FileCouldNotBeClosedException
-	 * @throws XMLStreamException
-	 */
-	public XmlObject read(final BufferedReader br) 
-			throws FileCouldNotBeClosedException, XMLStreamException{
+	public XmlObject read(final BufferedReader br) throws FileCouldNotBeClosedException, XMLStreamException{
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader in = null;
 		try {
@@ -73,12 +55,6 @@ public class XmlLoader extends BufferedReaderFactory{
 		}
 	}
 	
-	/**
-	 * read one level of file
-	 * @param in
-	 * @return
-	 * @throws XMLStreamException
-	 */
 	private XmlObject readLevel(XMLStreamReader in) throws XMLStreamException{
 		String name = in.getName().getLocalPart();
 		Map<String, String> attributes = readAttributes(in);
@@ -100,12 +76,6 @@ public class XmlLoader extends BufferedReaderFactory{
 		return new XmlObject(name, value, attributes, references);
 	}
 	
-	
-	/**
-	 * read all attributes of element
-	 * @param in
-	 * @return
-	 */
 	private Map<String, String> readAttributes(XMLStreamReader in){
 		if(in.getAttributeCount() == 0)
 			return new HashMap<>();
@@ -119,13 +89,6 @@ public class XmlLoader extends BufferedReaderFactory{
 		return aux;
 	}
 	
-	/**
-	 * read all subelements
-	 * @param in
-	 * @param name
-	 * @return
-	 * @throws XMLStreamException 
-	 */
 	private List<XmlObject> readReferences(XMLStreamReader in, String name) throws XMLStreamException {
 		List<XmlObject> result = new ArrayList<>();
 		while(in.getEventType() != XMLStreamConstants.END_ELEMENT || in.getName().getLocalPart() != name){
@@ -136,7 +99,5 @@ public class XmlLoader extends BufferedReaderFactory{
 			}
 		}
 		return result;
-	}
-
-	
+	}	
 }
