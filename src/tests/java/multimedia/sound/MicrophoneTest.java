@@ -59,13 +59,11 @@ public class MicrophoneTest {
 				fail("LineUnavailableException: " + e.getMessage());
 			}
 		});
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		try {Thread.sleep(500);} catch (InterruptedException e) {e.printStackTrace();}
 		mic.capture = false;
 		
-		//TODO fill data
-		fail("Not implement - data to assert");
-		
-		byte[] actual = new byte[] {};
-		assertEquals(actual, stream.toByteArray());		
+		for (byte b : stream.toByteArray()) {
+			assertEquals(0, b, 1);
+		}
 	}
 }

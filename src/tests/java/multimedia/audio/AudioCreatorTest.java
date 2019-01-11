@@ -65,6 +65,7 @@ public class AudioCreatorTest {
 			fail("Not implement - fill data");
 			ByteArrayOutputStream data = new ByteArrayOutputStream();
 			
+			
 			cr.save(format, AudioFileFormat.Type.AU, data);
 		} catch (IOException e) {
 			throw new IOException(e);

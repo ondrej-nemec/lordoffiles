@@ -57,7 +57,10 @@ public class ReproductorTest {
 		AudioInputStream stream = AudioInputStreamFactory.getStream("src/tests/res/multimedia/sound-input.wav");
 		SourceDataLine line = DataLineFactory.getSourceLine(stream);
 		
-		ByteArrayInputStream data = new ByteArrayInputStream(new byte[] {}); //TODO fill data
+		ByteArrayInputStream data = new ByteArrayInputStream(new byte[] {
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+		});
 		
 		Reproductor rep = new Reproductor(line);
 		
@@ -69,10 +72,8 @@ public class ReproductorTest {
 				fail("LineUnavailableException: " + e.getMessage());
 			}
 		});
-		try {Thread.sleep(2000);} catch (InterruptedException e) {e.printStackTrace();}
+		try {Thread.sleep(500);} catch (InterruptedException e) {e.printStackTrace();}
 		rep.play = false;
-				
-		fail("Not implement - data to assert");
 	}
 	
 }
