@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PipedInputStream;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -28,14 +27,5 @@ public class AudioCreator {
         		format,
                 audioData.length / format.getFrameSize());
 		AudioSystem.write(audioInputStream, type, os);
-	}
-
-	public void save(AudioFormat format, AudioFileFormat.Type type, PipedInputStream data) throws IOException {
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		byte[] b = new byte[BUFFER_SIZE];
-		while(data.read(b) != -1) {
-			stream.write(b);
-		}
-		save(format, type, stream);
 	}
 }

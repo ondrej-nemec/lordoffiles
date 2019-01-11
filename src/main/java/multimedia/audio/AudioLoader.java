@@ -1,18 +1,16 @@
 package multimedia.audio;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PipedOutputStream;
 import java.util.function.Consumer;
 
 import javax.sound.sampled.AudioInputStream;
 
 public class AudioLoader {
 	
-	protected interface Writer {
-		
-		void write(byte[] data, int off, int len) throws IOException;
-		
+	protected interface Writer {		
+		void write(byte[] data, int off, int len) throws IOException;		
 	}
 
 	protected final int BUFFER_SIZE = 128000;
@@ -21,12 +19,10 @@ public class AudioLoader {
 		load(stream, (data, off, len)->{consumer.accept(data);});
 	}
 	
-	public void load(AudioInputStream stream, ByteArrayOutputStream out) throws IOException {
+	public ByteArrayInputStream load(AudioInputStream stream) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		load(stream, (data, off, len)->{out.write(data, off, len);});
-	}
-	
-	public void load(AudioInputStream stream, PipedOutputStream pipe) throws IOException {
-		load(stream, (data, off, len)->{pipe.write(data, off, len);});
+		return new ByteArrayInputStream(out.toByteArray());
 	}
 	
 	protected void load(AudioInputStream stream, Writer writer) throws IOException {

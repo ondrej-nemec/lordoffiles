@@ -1,8 +1,8 @@
 package multimedia.sound;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PipedInputStream;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
@@ -22,12 +22,9 @@ public class Reproductor {
 		this.line = line;
 	}
 
-	public void play(AudioFormat format, ByteArrayInputStream data) throws IOException, LineUnavailableException {
-		play(format, (readed)->{return data.read(readed);});
-	}
-	
-	public void play(AudioFormat format, PipedInputStream pipe) throws IOException, LineUnavailableException {
-		play(format, (readed)->{return pipe.read(readed);});
+	public void play(AudioFormat format, ByteArrayOutputStream data) throws IOException, LineUnavailableException {
+		ByteArrayInputStream in = new ByteArrayInputStream(data.toByteArray());
+		play(format, (readed)->{return in.read(readed);});
 	}
 	
 	protected void play (AudioFormat format, Reader reader) throws IOException, LineUnavailableException {

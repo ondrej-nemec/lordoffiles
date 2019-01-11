@@ -1,10 +1,10 @@
 package multimedia.audio;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import javax.sound.sampled.AudioInputStream;
@@ -37,15 +37,17 @@ public class AudioLoaderTest {
 	@Test
 	public void testLoadWithByteArrayEndToEnd() throws UnsupportedAudioFileException, IOException {
 		AudioInputStream stream = AudioInputStreamFactory.getStream("src/tests/res/multimedia/sound-input.wav");
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		
-		loader.load(stream, out);		
-		
-		//TODO fill data
-		fail("Not implement - data to assert");
-		
-		byte[] actual = new byte[] {};
-		assertEquals(actual, out.toByteArray());
-		
+		ByteArrayInputStream data = loader.load(stream);
+		byte[] b = new byte[40];
+		data.read(b);
+		assertArrayEquals(
+			new byte[] {
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			},
+			b
+		);
+		assertEquals(-1, data.read(b));
 	}
 }

@@ -1,8 +1,7 @@
 package multimedia.sound;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PipedOutputStream;
 import java.util.function.Consumer;
 
 import javax.sound.sampled.AudioFormat;
@@ -11,7 +10,7 @@ import javax.sound.sampled.TargetDataLine;
 
 public class Microphone {
 	protected interface Writer {		
-		void write(byte[] data, int off, int len) throws LineUnavailableException, IOException;		
+		void write(byte[] data, int off, int len) throws LineUnavailableException;		
 	}
 
 	public boolean capture = true;
@@ -19,24 +18,20 @@ public class Microphone {
 	private int bufferSize;
 	
 	public void capture(TargetDataLine line, AudioFormat format, Consumer<byte[]> consumer) throws LineUnavailableException {
-		try { capture(line, format, (data, off, len)->{consumer.accept(data);});
-		} catch (IOException ignored) {} // this couldn´t throw
+		capture(line, format, (data, off, len)->{consumer.accept(data);});
 	}
 	
-	public void capture(TargetDataLine line, AudioFormat format, ByteArrayOutputStream stream) throws LineUnavailableException {
-		try { capture(line, format, (data, off, len)->{stream.write(data, off, len);});
-		} catch (IOException ignored) {} // this couldn´t throw
-	}
-	
-	public void capture(TargetDataLine line, AudioFormat format, PipedOutputStream pipe) throws LineUnavailableException, IOException {
-		capture(line, format, (data, off, len)->{pipe.write(data, off, len);});
+	public ByteArrayInputStream capture(TargetDataLine line, AudioFormat format) throws LineUnavailableException {
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+		capture(line, format, (data, off, len)->{stream.write(data, off, len);});
+		return new ByteArrayInputStream(stream.toByteArray());
 	}
 	
 	public int getBufferSize() {
 		return bufferSize;
 	}
 	
-	protected void capture(TargetDataLine line, AudioFormat format, Writer writer)  throws LineUnavailableException, IOException {
+	protected void capture(TargetDataLine line, AudioFormat format, Writer writer)  throws LineUnavailableException {
 		line.open(format);
 	    
 	    int numBytesRead = 0;

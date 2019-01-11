@@ -4,10 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.LineUnavailableException;
@@ -46,24 +48,27 @@ public class MicrophoneTest {
 	}
 	
 	@Test
-	public void testCaptureWithByteArrayEndToEnd() throws LineUnavailableException {
+	public void testCaptureWithByteArrayEndToEnd() throws LineUnavailableException, InterruptedException, ExecutionException, IOException {
 		AudioFormat format = new AudioFormat(8000.0f, 16, 1, true, true); 
 		TargetDataLine line = DataLineFactory.getTargetLine(format);
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		
 		ExecutorService executor = Executors.newFixedThreadPool(5);
-		executor.submit(()->{
+		Future<ByteArrayInputStream> result = executor.submit(()->{
 			try {
-				mic.capture(line, format, stream);
+				return mic.capture(line, format);
 			} catch (LineUnavailableException e) {
 				fail("LineUnavailableException: " + e.getMessage());
+				return null;
 			}
 		});
 		try {Thread.sleep(500);} catch (InterruptedException e) {e.printStackTrace();}
 		mic.capture = false;
 		
-		for (byte b : stream.toByteArray()) {
-			assertEquals(0, b, 1);
+		ByteArrayInputStream stream = result.get();
+		
+		byte[] b = new byte[1];
+		while (stream.read(b) != -1) {
+			assertEquals(0, b[0], 1);
 		}
 	}
 }

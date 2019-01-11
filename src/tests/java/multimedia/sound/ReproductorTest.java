@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -60,14 +61,20 @@ public class ReproductorTest {
 		ByteArrayInputStream data = new ByteArrayInputStream(new byte[] {
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-		});
+		});	
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		
+		byte[] array = new byte[10];
+		while (data.read(array) != -1) {
+			out.write(array);
+		}
 		
 		Reproductor rep = new Reproductor(line);
 		
 		ExecutorService executor = Executors.newFixedThreadPool(5);
 		executor.submit(()->{
 			try {
-				rep.play(format, data);
+				rep.play(format, out);
 			} catch (IOException | LineUnavailableException e) {
 				fail("LineUnavailableException: " + e.getMessage());
 			}
