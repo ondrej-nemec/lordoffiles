@@ -9,13 +9,19 @@ import java.util.function.Consumer;
 public class BinaryLoader {
 	
 	private int defaultBufferSize = 32;
+	
+	private final InputStream stream;
+	
+	public BinaryLoader(final InputStream stream) {
+		this.stream = stream;
+	}
 
-	public boolean read(final InputStream stream, final Consumer<byte[]> consumer) throws IOException {
-		read(stream, consumer, defaultBufferSize);
+	public boolean read(final Consumer<byte[]> consumer) throws IOException {
+		read(consumer, defaultBufferSize);
 		return true;
 	}
 
-	public boolean read(final InputStream stream, final Consumer<byte[]> consumer, final int bufferSize) throws IOException {
+	public boolean read(final Consumer<byte[]> consumer, final int bufferSize) throws IOException {
 		byte[] bytes = new byte[bufferSize];
 		while(stream.read(bytes) != -1) {
 			consumer.accept(bytes);
@@ -23,7 +29,7 @@ public class BinaryLoader {
 		return true;
 	}
 	
-	public byte[] read(final InputStream stream) throws IOException {
+	public byte[] read() throws IOException {
 		List<Byte> a = new LinkedList<>();
 		
 		int readed;

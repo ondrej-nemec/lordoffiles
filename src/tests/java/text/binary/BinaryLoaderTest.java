@@ -19,12 +19,12 @@ public class BinaryLoaderTest {
 	@Test
 	public void testReadWithConsumer() {
 		try(InputStream is = new FileInputStream(file)) {
-			BinaryLoader l = new BinaryLoader();
+			BinaryLoader l = new BinaryLoader(is);
 			Consumer<byte[]> consumer = (a)->{
 				add(a[0]);
 			};
 			
-			l.read(is, consumer, 3);
+			l.read(consumer, 3);
 				
 			assertArrayEquals(
 					new byte[] {72, 108, 119, 108}, 
@@ -44,11 +44,11 @@ public class BinaryLoaderTest {
 	@Test
 	public void testReadWholeContent() {
 		try(InputStream is = new FileInputStream(file)) {
-			BinaryLoader l = new BinaryLoader();
+			BinaryLoader l = new BinaryLoader(is);
 			
 			assertArrayEquals(
 					new byte[] {72, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 33},
-					l.read(is)
+					l.read()
 				);			
 		} catch (Exception e) {
 			e.printStackTrace();

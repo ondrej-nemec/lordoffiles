@@ -30,8 +30,7 @@ public class EnvInputStream extends ParserInputStream{
 	}
 	
 	@Override
-	protected boolean parse(char car) {
-		
+	protected boolean parse(final char car) {		
 		if (clear ) {
 			clear = false;
 			value = "";

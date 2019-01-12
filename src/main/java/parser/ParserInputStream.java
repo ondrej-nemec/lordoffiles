@@ -22,5 +22,5 @@ public abstract class ParserInputStream {
 		return false;
 	}
 	
-	abstract protected boolean parse(char car);
+	abstract protected boolean parse(final char car);
 }

@@ -8,7 +8,7 @@ public class FileCouldNotBeClosedException extends IOException{
 	
 	public FileCouldNotBeClosedException() {}
 	
-	public FileCouldNotBeClosedException(String path) {
+	public FileCouldNotBeClosedException(final String path) {
 		super("File: " + path);
 	}
 

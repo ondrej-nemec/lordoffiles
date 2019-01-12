@@ -11,7 +11,7 @@ public class Playback {
 	private final AudioInputStream stream;
 	private final Clip clip;
 	
-	public Playback(AudioInputStream stream, Clip clip) {
+	public Playback(final AudioInputStream stream, final Clip clip) {
 		this.stream = stream;
 		this.clip = clip;
 	}
@@ -31,7 +31,7 @@ public class Playback {
 		clip.stop();
 	}
 		
-	public void setLoop(int count) {
+	public void setLoop(final int count) {
 		if (count < 0)
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
 		else

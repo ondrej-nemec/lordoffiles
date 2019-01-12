@@ -8,11 +8,11 @@ import java.io.OutputStream;
 
 public class FileStreamFactory {
 	
-	public static InputStream input(String name) throws FileNotFoundException {
+	public static InputStream input(final String name) throws FileNotFoundException {
 		return new FileInputStream(name);
 	}
 
-	public static OutputStream output(String name) throws FileNotFoundException {
+	public static OutputStream output(final String name) throws FileNotFoundException {
 		return new FileOutputStream(name);
 	}
 	

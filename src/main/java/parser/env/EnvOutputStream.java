@@ -12,21 +12,22 @@ public class EnvOutputStream extends ParserOutputStream{
 		super(stream);
 	}
 	
-	public void writeTwins(String key, String value) throws IOException {
+	public void writeTwins(final String key, final String value) throws IOException {
+		String result = value;
 		if (key.indexOf('\n') >= 0)
 			throw new ParserSyntaxException(".env", "Key could not contains new line (" + key + ")");
 		if (key.indexOf('\\') >= 0)
 			throw new ParserSyntaxException(".env", "Key could not contains backslash (" + key + ")");
-		if (value.indexOf('\n') >= 0 || value.indexOf('"') >= 0 || value.indexOf('\'') >= 0 || value.indexOf('\\') >= 0) {
+		if (result.indexOf('\n') >= 0 || result.indexOf('"') >= 0 || result.indexOf('\'') >= 0 || result.indexOf('\\') >= 0) {
 
-			value = value.replaceAll("\\\\", "\\\\\\\\"); // replace \ with \\
-			value = value.replaceAll("\"", "\\\\\""); // replace " with \"
-			value = value.replaceAll("'", "\\\\\'"); // replace ' with \'
-			value = value.replaceAll("\n", "\\\\\\n"); // replace \n (one char) with \n (two chars)
+			result = result.replaceAll("\\\\", "\\\\\\\\"); // replace \ with \\
+			result = result.replaceAll("\"", "\\\\\""); // replace " with \"
+			result = result.replaceAll("'", "\\\\\'"); // replace ' with \'
+			result = result.replaceAll("\n", "\\\\\\n"); // replace \n (one char) with \n (two chars)
 			
-			value = "\"" + value + "\"";
+			result = "\"" + result + "\"";
 		}
-		String toWrite = key + "=" + value + NEW_LINE;
+		String toWrite = key + "=" + result + NEW_LINE;
 		os.write(toWrite.getBytes());
 	}
 }

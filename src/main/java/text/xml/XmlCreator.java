@@ -16,7 +16,13 @@ import text.xml.structures.XmlObject;
 
 public class XmlCreator {
 	
-	public boolean write(final BufferedWriter bw, Consumer<XMLStreamWriter> consumer) throws XMLStreamException, FileCouldNotBeClosedException{
+	private final BufferedWriter bw;
+	
+	public XmlCreator(final BufferedWriter bw) {
+		this.bw = bw;
+	}
+	
+	public boolean write(final Consumer<XMLStreamWriter> consumer) throws XMLStreamException, FileCouldNotBeClosedException{
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		return write(factory.createXMLStreamWriter(bw), consumer);
 	}
@@ -38,7 +44,7 @@ public class XmlCreator {
 		return true;
 	}
 
-	public boolean write(final BufferedWriter bw, final XmlObject object)
+	public boolean write(final XmlObject object)
 			throws XMLStreamException, FileCouldNotBeClosedException{
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		return write(factory.createXMLStreamWriter(bw), object);
@@ -62,7 +68,7 @@ public class XmlCreator {
 		return true;
 	}
 	
-	private void writeLevel(XMLStreamWriter out, final XmlObject object) throws XMLStreamException{
+	private void writeLevel(final XMLStreamWriter out, final XmlObject object) throws XMLStreamException{
 		out.writeStartElement(object.getName());
 		writeAtribute(out, object.getAttributes());
 		writeValue(out, object.getValue());
@@ -70,14 +76,12 @@ public class XmlCreator {
 		out.writeEndElement();
 	}
 	
-	private void writeValue(XMLStreamWriter out, String value) throws XMLStreamException{
+	private void writeValue(final XMLStreamWriter out, String value) throws XMLStreamException{
 		if(value != null)
 			out.writeCharacters(value);
 	}
 	
-	private void writeAtribute(
-			XMLStreamWriter out,
-			final Map<String, String> attributes) throws XMLStreamException{
+	private void writeAtribute(final XMLStreamWriter out, final Map<String, String> attributes) throws XMLStreamException{
 		if(attributes != null){
 			Set<String> set = attributes.keySet();
 			for (String key : set) {

@@ -11,19 +11,19 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class AudioInputStreamFactory {
 
-	public static AudioInputStream getStream(InputStream is) throws UnsupportedAudioFileException, IOException{
+	public static AudioInputStream getStream(final InputStream is) throws UnsupportedAudioFileException, IOException{
  		return AudioSystem.getAudioInputStream(is);
  	}
  	
- 	public static AudioInputStream getStream(String path) throws UnsupportedAudioFileException, IOException{
+ 	public static AudioInputStream getStream(final String path) throws UnsupportedAudioFileException, IOException{
  		return AudioSystem.getAudioInputStream(new File(path));
  	}
  	
- 	public static AudioInputStream getStream(File file) throws UnsupportedAudioFileException, IOException{
+ 	public static AudioInputStream getStream(final File file) throws UnsupportedAudioFileException, IOException{
  		return AudioSystem.getAudioInputStream(file);
  	}
  	
- 	public static AudioInputStream getStream(URL url) throws UnsupportedAudioFileException, IOException{
+ 	public static AudioInputStream getStream(final URL url) throws UnsupportedAudioFileException, IOException{
  		return AudioSystem.getAudioInputStream(url);
  	}
 }

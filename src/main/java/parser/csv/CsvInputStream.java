@@ -35,7 +35,7 @@ public class CsvInputStream extends ParserInputStream{
 	}	
 	
 	@Override
-	protected boolean parse(char car) {
+	protected boolean parse(final char car) {
 		//TODO if string start with " and not stopped before file end, this return true
 		boolean result = true;
 		

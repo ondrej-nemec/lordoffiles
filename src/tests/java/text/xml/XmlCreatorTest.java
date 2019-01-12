@@ -27,7 +27,7 @@ public class XmlCreatorTest {
 	
 	@Test
 	public void testWriteConsumerWorks(){	
-		XmlCreator creator = new XmlCreator();
+		XmlCreator creator = new XmlCreator(null); //BufferedWriter not used in this test
 		Consumer<XMLStreamWriter> consumer = (out)->{
 				try {
 					out.writeStartElement("element");
@@ -75,7 +75,7 @@ public class XmlCreatorTest {
 	
 	@Test
 	public void testWriteXmlObjectWorks(){
-		XmlCreator creator = new XmlCreator();
+		XmlCreator creator = new XmlCreator(null); // BufferedWriter not used in this test
 		XmlObject xmlObjec = getObject();
 		
 		XMLStreamWriter out = null;

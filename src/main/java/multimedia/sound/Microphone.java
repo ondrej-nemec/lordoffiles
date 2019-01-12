@@ -17,13 +17,19 @@ public class Microphone {
 	
 	private int bufferSize;
 	
-	public void capture(TargetDataLine line, AudioFormat format, Consumer<byte[]> consumer) throws LineUnavailableException {
-		capture(line, format, (data, off, len)->{consumer.accept(data);});
+	private final TargetDataLine line;
+	
+	public Microphone(final TargetDataLine line) {
+		this.line = line;
 	}
 	
-	public ByteArrayInputStream capture(TargetDataLine line, AudioFormat format) throws LineUnavailableException {
+	public void capture(final AudioFormat format, final Consumer<byte[]> consumer) throws LineUnavailableException {
+		capture(format, (data, off, len)->{consumer.accept(data);});
+	}
+	
+	public ByteArrayInputStream capture(final AudioFormat format) throws LineUnavailableException {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		capture(line, format, (data, off, len)->{stream.write(data, off, len);});
+		capture(format, (data, off, len)->{stream.write(data, off, len);});
 		return new ByteArrayInputStream(stream.toByteArray());
 	}
 	
@@ -31,7 +37,7 @@ public class Microphone {
 		return bufferSize;
 	}
 	
-	protected void capture(TargetDataLine line, AudioFormat format, Writer writer)  throws LineUnavailableException {
+	protected void capture(final AudioFormat format, final Writer writer)  throws LineUnavailableException {
 		line.open(format);
 	    
 	    int numBytesRead = 0;

@@ -20,7 +20,13 @@ import text.xml.structures.XmlObject;
 
 public class XmlLoader extends BufferedReaderFactory{
 
-	public boolean read(final BufferedReader br, Consumer<XMLStreamReader> consumer) throws XMLStreamException, FileCouldNotBeClosedException{
+	private final BufferedReader br;
+	
+	public XmlLoader(final BufferedReader br) {
+		this.br = br;
+	}
+	
+	public boolean read(final Consumer<XMLStreamReader> consumer) throws XMLStreamException, FileCouldNotBeClosedException{
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader in = null;
 		try {
@@ -39,7 +45,7 @@ public class XmlLoader extends BufferedReaderFactory{
 		return true;
 	}	
 		
-	public XmlObject read(final BufferedReader br) throws FileCouldNotBeClosedException, XMLStreamException{
+	public XmlObject read() throws FileCouldNotBeClosedException, XMLStreamException{
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader in = null;
 		try {
@@ -55,7 +61,7 @@ public class XmlLoader extends BufferedReaderFactory{
 		}
 	}
 	
-	private XmlObject readLevel(XMLStreamReader in) throws XMLStreamException{
+	private XmlObject readLevel(final XMLStreamReader in) throws XMLStreamException{
 		String name = in.getName().getLocalPart();
 		Map<String, String> attributes = readAttributes(in);
 		String value = "";
@@ -76,7 +82,7 @@ public class XmlLoader extends BufferedReaderFactory{
 		return new XmlObject(name, value, attributes, references);
 	}
 	
-	private Map<String, String> readAttributes(XMLStreamReader in){
+	private Map<String, String> readAttributes(final XMLStreamReader in){
 		if(in.getAttributeCount() == 0)
 			return new HashMap<>();
 		Map<String, String> aux = new HashMap<>();
@@ -89,7 +95,7 @@ public class XmlLoader extends BufferedReaderFactory{
 		return aux;
 	}
 	
-	private List<XmlObject> readReferences(XMLStreamReader in, String name) throws XMLStreamException {
+	private List<XmlObject> readReferences(final XMLStreamReader in, String name) throws XMLStreamException {
 		List<XmlObject> result = new ArrayList<>();
 		while(in.getEventType() != XMLStreamConstants.END_ELEMENT || in.getName().getLocalPart() != name){
 			if(in.getEventType() == XMLStreamConstants.START_ELEMENT ){

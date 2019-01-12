@@ -21,13 +21,14 @@ public class CsvOutputStream extends ParserOutputStream{
 		this.separator = separator;
 	}
 
-	public void writeValue(String value) throws IOException {
-		value = value.replaceAll("\"", "\"\"");
-		if (value.indexOf(separator) != -1 || value.indexOf("\n") != -1)
-			value = "\"" + value + "\"";
+	public void writeValue(final String value) throws IOException {
+		String result = value;
+		result = result.replaceAll("\"", "\"\"");
+		if (result.indexOf(separator) != -1 || result.indexOf("\n") != -1)
+			result = "\"" + result + "\"";
 		if (!isFirst)
-			value = separator + value;
-		os.write(value.getBytes());
+			result = separator + result;
+		os.write(result.getBytes());
 		isFirst = false;
 	}
 	

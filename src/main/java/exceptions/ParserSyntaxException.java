@@ -6,11 +6,11 @@ public class ParserSyntaxException extends RuntimeException {
 	
 	public ParserSyntaxException() {}
 	
-	public ParserSyntaxException(String message) {
+	public ParserSyntaxException(final String message) {
 		super(message);
 	}	
 	
-	public ParserSyntaxException(String format, String message) {
+	public ParserSyntaxException(final String format, final String message) {
 		super("Parser: " + format + ", " + message);
 	}
 

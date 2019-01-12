@@ -28,7 +28,7 @@ public class MicrophoneTest {
 	public MicrophoneTest() {
 		this.line = mock(TargetDataLine.class);
 		this.format = new AudioFormat(8000.0f, 16, 1, true, true);
-		this.mic = new Microphone();
+		this.mic = new Microphone(line);
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class MicrophoneTest {
 		when(line.read(any(), eq(0), eq(mic.getBufferSize()))).thenReturn(1).thenReturn(-1);		
 		Microphone.Writer writer = mock(Microphone.Writer.class);
 		
-		mic.capture(line, format, writer);
+		mic.capture(format, writer);
 		
 		verify(writer, times(1)).write(any(), eq(0), anyInt());
 		verify(line, times(1)).open(format);
@@ -52,10 +52,12 @@ public class MicrophoneTest {
 		AudioFormat format = new AudioFormat(8000.0f, 16, 1, true, true); 
 		TargetDataLine line = DataLineFactory.getTargetLine(format);
 		
+		Microphone mic = new Microphone(line);
+		
 		ExecutorService executor = Executors.newFixedThreadPool(5);
 		Future<ByteArrayInputStream> result = executor.submit(()->{
 			try {
-				return mic.capture(line, format);
+				return mic.capture(format);
 			} catch (LineUnavailableException e) {
 				fail("LineUnavailableException: " + e.getMessage());
 				return null;

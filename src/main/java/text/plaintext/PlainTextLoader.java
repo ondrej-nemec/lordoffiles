@@ -9,7 +9,13 @@ import java.util.function.Consumer;
 
 public class PlainTextLoader {
 
-	public boolean read(final BufferedReader br, final Consumer<String> consumer) throws IOException{
+	private final BufferedReader br;
+	
+	public PlainTextLoader(final BufferedReader br) {
+		this.br = br;
+	}
+	
+	public boolean read(final Consumer<String> consumer) throws IOException{
 		String line = br.readLine();
 		while(line != null){
 			consumer.accept(line);
@@ -18,7 +24,7 @@ public class PlainTextLoader {
 		return true;
 	}
 
-	public String readAsOneString(final BufferedReader br) throws IOException{
+	public String readAsOneString() throws IOException{
 		String result = "";
 		String line = br.readLine();
 		if(line != null){
@@ -32,7 +38,7 @@ public class PlainTextLoader {
 		return result;
 	}
 	
-	public List<String> read(final BufferedReader br) throws IOException{
+	public List<String> read() throws IOException{
 		List<String> result = new ArrayList<>();
 		String line = br.readLine();
 		while(line!=null){
@@ -42,7 +48,7 @@ public class PlainTextLoader {
 		return result;
 	}
 	
-	public Collection<List<String>> read(final BufferedReader br, final String split) throws IOException{
+	public Collection<List<String>> read(final String split) throws IOException{
 		List<List<String>> result = new ArrayList<>();
 		String line = br.readLine();
 		while(line != null){

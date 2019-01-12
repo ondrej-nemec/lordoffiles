@@ -18,16 +18,16 @@ public class Reproductor {
 	private final SourceDataLine line;
 	public boolean play = true;
 	
-	public Reproductor(SourceDataLine line) {
+	public Reproductor(final SourceDataLine line) {
 		this.line = line;
 	}
 
-	public void play(AudioFormat format, ByteArrayOutputStream data) throws IOException, LineUnavailableException {
+	public void play(final AudioFormat format, final ByteArrayOutputStream data) throws IOException, LineUnavailableException {
 		ByteArrayInputStream in = new ByteArrayInputStream(data.toByteArray());
 		play(format, (readed)->{return in.read(readed);});
 	}
 	
-	protected void play (AudioFormat format, Reader reader) throws IOException, LineUnavailableException {
+	protected void play (final AudioFormat format, final Reader reader) throws IOException, LineUnavailableException {
 		line.open(format);
 		line.start();
 		int nBytesRead = 0;

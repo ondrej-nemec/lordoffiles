@@ -19,8 +19,8 @@ public class PlainTextLoaderTest {
 	@Test
 	public void testReadWithConsumerWorks() {
 		try(BufferedReader br = mockBuilder(path + "read-consumer.txt")){
-			PlainTextLoader loader = new PlainTextLoader();
-			loader.read(br, (a)->{
+			PlainTextLoader loader = new PlainTextLoader(br);
+			loader.read((a)->{
 				if(a.length() == 4)
 					setTestString(a);
 			});
@@ -39,11 +39,11 @@ public class PlainTextLoaderTest {
 	@Test
 	public void testReadAsOneStringWorks() {
 		try(BufferedReader br = mockBuilder(path + "read-string.txt")){
-			PlainTextLoader loader = new PlainTextLoader();
+			PlainTextLoader loader = new PlainTextLoader(br);
 			
 			assertEquals(
 					"This is text of success reading of file.\nFile has two rows;",
-					loader.readAsOneString(br)
+					loader.readAsOneString()
 				);
 			verify(br, times(3)).readLine();
 		} catch (Exception e){
@@ -55,11 +55,11 @@ public class PlainTextLoaderTest {
 	@Test
 	public void testReadLinesWorks() {
 		try(BufferedReader br = mockBuilder(path + "read-lines.txt")){
-			PlainTextLoader loader = new PlainTextLoader();
+			PlainTextLoader loader = new PlainTextLoader(br);
 			
 			assertEquals(
 					Arrays.asList("First line", "Second line", "Third line"),
-					loader.read(br)
+					loader.read()
 				);
 			verify(br, times(4)).readLine();
 		} catch (Exception e){
@@ -71,7 +71,7 @@ public class PlainTextLoaderTest {
 	@Test
 	public void testReadGridWorks() {
 		try(BufferedReader br = mockBuilder(path + "read-grid.txt")){
-			PlainTextLoader loader = new PlainTextLoader();
+			PlainTextLoader loader = new PlainTextLoader(br);
 			
 			assertEquals(
 					Arrays.asList(
@@ -79,7 +79,7 @@ public class PlainTextLoaderTest {
 							Arrays.asList("second", "mess"),
 							Arrays.asList("grid", "here")
 							),
-					loader.read(br, "-")
+					loader.read("-")
 				);
 			verify(br, times(4)).readLine();
 		} catch (Exception e){
