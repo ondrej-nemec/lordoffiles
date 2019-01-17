@@ -13,19 +13,25 @@ public class AudioLoader {
 		void write(byte[] data, int off, int len) throws IOException;		
 	}
 
+	private final AudioInputStream stream;
+	
 	protected final int BUFFER_SIZE = 128000;
 
-	public void load(AudioInputStream stream, Consumer<byte[]> consumer) throws IOException {
+	public AudioLoader(final AudioInputStream stream) {
+		this.stream = stream;
+	}
+	
+	public void load(final Consumer<byte[]> consumer) throws IOException {
 		load(stream, (data, off, len)->{consumer.accept(data);});
 	}
 	
-	public ByteArrayInputStream load(AudioInputStream stream) throws IOException {
+	public ByteArrayInputStream load() throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		load(stream, (data, off, len)->{out.write(data, off, len);});
 		return new ByteArrayInputStream(out.toByteArray());
 	}
 	
-	protected void load(AudioInputStream stream, Writer writer) throws IOException {
+	protected void load(final AudioInputStream stream, final Writer writer) throws IOException {
 		byte[] data = new byte[BUFFER_SIZE];
 		int nBytesRead = 0;
 		

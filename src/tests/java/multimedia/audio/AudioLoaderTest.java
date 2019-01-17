@@ -22,7 +22,7 @@ public class AudioLoaderTest {
 	
 	public AudioLoaderTest() {
 		this.stream = mock(AudioInputStream.class);
-		this.loader = new AudioLoader();
+		this.loader = new AudioLoader(stream);
 	}
 	
 	@Test
@@ -38,7 +38,8 @@ public class AudioLoaderTest {
 	public void testLoadWithByteArrayEndToEnd() throws UnsupportedAudioFileException, IOException {
 		AudioInputStream stream = AudioInputStreamFactory.getStream("src/tests/res/multimedia/sound-input.wav");
 		
-		ByteArrayInputStream data = loader.load(stream);
+		AudioLoader loader = new AudioLoader(stream);
+		ByteArrayInputStream data = loader.load();
 		byte[] b = new byte[40];
 		data.read(b);
 		assertArrayEquals(
