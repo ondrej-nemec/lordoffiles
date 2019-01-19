@@ -14,7 +14,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import exceptions.FileCouldNotBeClosedException;
+import exceptions.StreamCouldNotBeClosedException;
 import text.BufferedReaderFactory;
 import text.xml.structures.XmlObject;
 
@@ -26,7 +26,7 @@ public class XmlLoader extends BufferedReaderFactory{
 		this.br = br;
 	}
 	
-	public boolean read(final Consumer<XMLStreamReader> consumer) throws XMLStreamException, FileCouldNotBeClosedException{
+	public boolean read(final Consumer<XMLStreamReader> consumer) throws XMLStreamException, StreamCouldNotBeClosedException{
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader in = null;
 		try {
@@ -39,13 +39,13 @@ public class XmlLoader extends BufferedReaderFactory{
 			try {
 				in.close();
 			} catch (Exception e) {
-				throw new FileCouldNotBeClosedException();
+				throw new StreamCouldNotBeClosedException();
 			}
 		}
 		return true;
 	}	
 		
-	public XmlObject read() throws FileCouldNotBeClosedException, XMLStreamException{
+	public XmlObject read() throws StreamCouldNotBeClosedException, XMLStreamException{
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader in = null;
 		try {
@@ -56,7 +56,7 @@ public class XmlLoader extends BufferedReaderFactory{
 			try {
 				in.close();
 			} catch (Exception e) {
-				throw new FileCouldNotBeClosedException();
+				throw new StreamCouldNotBeClosedException();
 			}
 		}
 	}

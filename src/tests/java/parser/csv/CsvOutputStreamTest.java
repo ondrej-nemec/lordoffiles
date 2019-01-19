@@ -85,7 +85,7 @@ public class CsvOutputStreamTest {
 			format.writeValue("text,with,colons");
 			format.writeNewLine();
 			format.writeValue("\\\"");
-			format.writeValue("\"quotes\""); //TODO
+			format.writeValue("\"quotes\"");
 			format.writeValue("new" + newLine + "line");
 			format.writeValue("");
 			format.writeValue("10000");

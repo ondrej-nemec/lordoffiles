@@ -11,7 +11,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 
-import exceptions.FileCouldNotBeClosedException;
+import exceptions.StreamCouldNotBeClosedException;
 import text.xml.structures.XmlObject;
 
 public class XmlCreator {
@@ -22,12 +22,12 @@ public class XmlCreator {
 		this.bw = bw;
 	}
 	
-	public boolean write(final Consumer<XMLStreamWriter> consumer) throws XMLStreamException, FileCouldNotBeClosedException{
+	public boolean write(final Consumer<XMLStreamWriter> consumer) throws XMLStreamException, StreamCouldNotBeClosedException{
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		return write(factory.createXMLStreamWriter(bw), consumer);
 	}
 	
-	protected boolean write(final XMLStreamWriter out, Consumer<XMLStreamWriter> consumer) throws XMLStreamException, FileCouldNotBeClosedException{
+	protected boolean write(final XMLStreamWriter out, Consumer<XMLStreamWriter> consumer) throws XMLStreamException, StreamCouldNotBeClosedException{
 		try {
 			out.writeStartDocument();
 			consumer.accept(out);
@@ -38,20 +38,20 @@ public class XmlCreator {
 				if(out != null)
 					out.close();
 			} catch (Exception e) {
-				throw new FileCouldNotBeClosedException(); // TODO create besser solution
+				throw new StreamCouldNotBeClosedException();
 			}
 		}
 		return true;
 	}
 
 	public boolean write(final XmlObject object)
-			throws XMLStreamException, FileCouldNotBeClosedException{
+			throws XMLStreamException, StreamCouldNotBeClosedException{
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		return write(factory.createXMLStreamWriter(bw), object);
 	}
 	
 	protected boolean write(final XMLStreamWriter out, final XmlObject object)
-			throws XMLStreamException, FileCouldNotBeClosedException{
+			throws XMLStreamException, StreamCouldNotBeClosedException{
 		try {
 			out.writeStartDocument();
 			writeLevel(out, object);
@@ -62,7 +62,7 @@ public class XmlCreator {
 				if(out != null)
 					out.close();
 			} catch (Exception e) {
-				throw new FileCouldNotBeClosedException();
+				throw new StreamCouldNotBeClosedException();
 			}
 		}
 		return true;

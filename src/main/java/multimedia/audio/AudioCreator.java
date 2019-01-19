@@ -20,7 +20,7 @@ public class AudioCreator {
 		this.os = destination;
 	}
 	
-	public void save(AudioFormat format, AudioFileFormat.Type type, ByteArrayOutputStream data) throws IOException {
+	public void save(final AudioFormat format, final AudioFileFormat.Type type, final ByteArrayOutputStream data) throws IOException {
 		byte[] audioData = data.toByteArray();
         AudioInputStream audioInputStream = new AudioInputStream(
         		new ByteArrayInputStream(audioData),
