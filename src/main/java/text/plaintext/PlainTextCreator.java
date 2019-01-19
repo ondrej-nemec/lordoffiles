@@ -12,14 +12,14 @@ public class PlainTextCreator {
 		this.bw = bw;
 	}
 	
-	public boolean write(final String data) throws IOException{
+	public boolean write(final String data) throws IOException {
 		bw.write(data);
 		bw.newLine();
 		bw.flush();
 		return true;
 	}
 	
-	public boolean write(final List<String> data) throws IOException{
+	public boolean write(final List<String> data) throws IOException {
 		for(int i=0; i<data.size();i++){
 			bw.write(data.get(i));
 			bw.newLine();
@@ -28,7 +28,7 @@ public class PlainTextCreator {
 		return true;
 	}
 	
-	public boolean write(final List<List<String>> data, final String split) throws IOException{
+	public boolean write(final List<List<String>> data, final String split) throws IOException {
 		for(int i = 0;i<data.size();i++){
 			if(data.get(i) != null){
 				String line = data.get(i).get(0);

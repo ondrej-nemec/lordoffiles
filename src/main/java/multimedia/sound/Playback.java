@@ -36,15 +36,16 @@ public class Playback {
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
 		else
 			clip.loop(count);
-	}	
-	public void foward(long microSeconds) {
+	}
+	
+	public void foward(final long microSeconds) {
 		if (getMicroSecondPosition() + microSeconds > getDuration())
 			clip.setMicrosecondPosition(getDuration());
 		else
 			clip.setMicrosecondPosition(getMicroSecondPosition() + microSeconds);
 	}
 	
-	public void back(long microSeconds) {
+	public void back(final long microSeconds) {
 		if (getMicroSecondPosition() - microSeconds < 0)
 			clip.setMicrosecondPosition(0);
 		else
