@@ -1,7 +1,5 @@
 package text.binary;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -12,24 +10,24 @@ public class BinaryLoader {
 	
 	private int defaultBufferSize = 32;
 	
-	public InputStream stream(String name) throws FileNotFoundException {
-		return new FileInputStream(name);
+	private final InputStream stream;
+	
+	public BinaryLoader(final InputStream stream) {
+		this.stream = stream;
 	}
 
-	public boolean read(final InputStream stream, final Consumer<byte[]> consumer) throws IOException {
-		read(stream, consumer, defaultBufferSize);
-		return true;
+	public void read(final Consumer<byte[]> consumer) throws IOException {
+		read(consumer, defaultBufferSize);
 	}
 
-	public boolean read(final InputStream stream, final Consumer<byte[]> consumer, final int bufferSize) throws IOException {
+	public void read(final Consumer<byte[]> consumer, final int bufferSize) throws IOException {
 		byte[] bytes = new byte[bufferSize];
 		while(stream.read(bytes) != -1) {
 			consumer.accept(bytes);
 		}
-		return true;
 	}
 	
-	public byte[] read(final InputStream stream) throws IOException {
+	public byte[] read() throws IOException {
 		List<Byte> a = new LinkedList<>();
 		
 		int readed;

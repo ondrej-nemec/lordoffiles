@@ -4,27 +4,29 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.List;
 
-import text.OutputTextBuffer;
+public class PlainTextCreator {
 
-public class PlainTextCreator extends OutputTextBuffer{
-
-	public boolean write(final BufferedWriter bw, final String data) throws IOException{
+	private final BufferedWriter bw;
+	
+	public PlainTextCreator(final BufferedWriter bw) {
+		this.bw = bw;
+	}
+	
+	public void write(final String data) throws IOException {
 		bw.write(data);
 		bw.newLine();
 		bw.flush();
-		return true;
 	}
 	
-	public boolean write(final BufferedWriter bw, final List<String> data) throws IOException{
+	public void write(final List<String> data) throws IOException {
 		for(int i=0; i<data.size();i++){
 			bw.write(data.get(i));
 			bw.newLine();
 		}
 		bw.flush();
-		return true;
 	}
 	
-	public boolean write(final BufferedWriter bw, final List<List<String>> data, final String split) throws IOException{
+	public void write(final List<List<String>> data, final String split) throws IOException {
 		for(int i = 0;i<data.size();i++){
 			if(data.get(i) != null){
 				String line = data.get(i).get(0);
@@ -36,6 +38,5 @@ public class PlainTextCreator extends OutputTextBuffer{
 			}
 		}
 		bw.flush();
-		return true;
 	}
 }

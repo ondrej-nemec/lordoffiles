@@ -43,7 +43,7 @@ public class XmlLoaderTest {
 	public void testReadConsumerWorks(){
 		try(BufferedReader br = new BufferedReader(
 				new FileReader(path))){
-			XmlLoader loader = new XmlLoader();
+			XmlLoader loader = new XmlLoader(br);
 			Consumer<XMLStreamReader> consumer = (in)->{
 				if(in.getEventType() == XMLStreamConstants.START_ELEMENT){
 					for(int i = 0; i<in.getAttributeCount(); i++){
@@ -51,7 +51,7 @@ public class XmlLoaderTest {
 					}
 				}
 			};
-			loader.read(br, consumer);
+			loader.read(consumer);
 			assertEquals(consumerExpected, consumerActual);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -69,8 +69,8 @@ public class XmlLoaderTest {
 	public void testReadXmlObjectWorks(){
 		try(BufferedReader br = new BufferedReader(
 				new FileReader(path))){
-			XmlLoader loader = new XmlLoader();
-			assertEquals(xmlObject, loader.read(br));
+			XmlLoader loader = new XmlLoader(br);
+			assertEquals(xmlObject, loader.read());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			fail("FileNotFoundException");

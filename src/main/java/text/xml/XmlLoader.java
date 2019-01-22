@@ -14,23 +14,19 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import exceptions.FileCouldNotBeClosedException;
-import text.InputTextBuffer;
+import exceptions.StreamCouldNotBeClosedException;
+import text.BufferedReaderFactory;
 import text.xml.structures.XmlObject;
 
+public class XmlLoader extends BufferedReaderFactory{
 
-public class XmlLoader extends InputTextBuffer{
-
+	private final BufferedReader br;
 	
-	/**
-	 * read xml step by step
-	 * @param br
-	 * @param consumer
-	 * @throws XMLStreamException
-	 * @throws FileCouldNotBeClosedException
-	 */
-	public boolean read(final BufferedReader br, Consumer<XMLStreamReader> consumer) 
-			throws XMLStreamException, FileCouldNotBeClosedException{
+	public XmlLoader(final BufferedReader br) {
+		this.br = br;
+	}
+	
+	public void read(final Consumer<XMLStreamReader> consumer) throws XMLStreamException, StreamCouldNotBeClosedException {
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader in = null;
 		try {
@@ -43,22 +39,12 @@ public class XmlLoader extends InputTextBuffer{
 			try {
 				in.close();
 			} catch (Exception e) {
-				throw new FileCouldNotBeClosedException();
+				throw new StreamCouldNotBeClosedException();
 			}
 		}
-		return true;
-	}
-	
+	}	
 		
-	/**
-	 * load whole xml file to java object
-	 * @param br
-	 * @return object reprezentation of file
-	 * @throws FileCouldNotBeClosedException
-	 * @throws XMLStreamException
-	 */
-	public XmlObject read(final BufferedReader br) 
-			throws FileCouldNotBeClosedException, XMLStreamException{
+	public XmlObject read() throws StreamCouldNotBeClosedException, XMLStreamException {
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader in = null;
 		try {
@@ -69,18 +55,12 @@ public class XmlLoader extends InputTextBuffer{
 			try {
 				in.close();
 			} catch (Exception e) {
-				throw new FileCouldNotBeClosedException();
+				throw new StreamCouldNotBeClosedException();
 			}
 		}
 	}
 	
-	/**
-	 * read one level of file
-	 * @param in
-	 * @return
-	 * @throws XMLStreamException
-	 */
-	private XmlObject readLevel(XMLStreamReader in) throws XMLStreamException{
+	private XmlObject readLevel(final XMLStreamReader in) throws XMLStreamException {
 		String name = in.getName().getLocalPart();
 		Map<String, String> attributes = readAttributes(in);
 		String value = "";
@@ -101,13 +81,7 @@ public class XmlLoader extends InputTextBuffer{
 		return new XmlObject(name, value, attributes, references);
 	}
 	
-	
-	/**
-	 * read all attributes of element
-	 * @param in
-	 * @return
-	 */
-	private Map<String, String> readAttributes(XMLStreamReader in){
+	private Map<String, String> readAttributes(final XMLStreamReader in) {
 		if(in.getAttributeCount() == 0)
 			return new HashMap<>();
 		Map<String, String> aux = new HashMap<>();
@@ -120,14 +94,7 @@ public class XmlLoader extends InputTextBuffer{
 		return aux;
 	}
 	
-	/**
-	 * read all subelements
-	 * @param in
-	 * @param name
-	 * @return
-	 * @throws XMLStreamException 
-	 */
-	private List<XmlObject> readReferences(XMLStreamReader in, String name) throws XMLStreamException {
+	private List<XmlObject> readReferences(final XMLStreamReader in, String name) throws XMLStreamException {
 		List<XmlObject> result = new ArrayList<>();
 		while(in.getEventType() != XMLStreamConstants.END_ELEMENT || in.getName().getLocalPart() != name){
 			if(in.getEventType() == XMLStreamConstants.START_ELEMENT ){
@@ -137,7 +104,5 @@ public class XmlLoader extends InputTextBuffer{
 			}
 		}
 		return result;
-	}
-
-	
+	}	
 }

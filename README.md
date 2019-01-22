@@ -6,11 +6,10 @@
 * [Description](#description)
 * [Get library](#how-to-install)
 * [Usage](#usage)
-	* [Text files](#text-files)
-		* [Plain text](#plain-text)
-		* [XML](#xml)
-		* [Binary files](#binary-files)
-	* [Concurrent processing](#concurrent-processing)
+	* [Multimedia](#multimedia)
+	* [Parsers](#parser)
+	* [Texts](#text)
+	
 
 ## Description
 Package provide simply way how to read from file or write to file.
@@ -18,7 +17,7 @@ Package provide simply way how to read from file or write to file.
 ## How to install
 ### Download:
 
-<a href="https://ondrej-nemec.github.io/download/lof-1.3.jar" target=_blank>Download jar</a>
+<a href="https://ondrej-nemec.github.io/download/lof-2.0.jar" target=_blank>Download jar</a>
 
 ### Maven:
 After `build` tag:
@@ -35,176 +34,205 @@ And to `dependencies`:
 <dependency>
   <groupId>com.github.ondrej-nemec</groupId>
   <artifactId>lordoffiles</artifactId>
-  <version>v1.3-alpha</version>
+  <version>v2.0-alpha</version>
 </dependency>
 ```
 
 ## Usage
-### Text files
-Each text-reading-class extends `InputTextBuffer` which is factory for `BufferReader`. Use `buffer` method (is not static):
+**From version 3.0 LOF is going to be modular.**
+### Multimedia
+### Multimedia.audio
+For work with audio binary files. Allow save binary data or load data.
+#### Saving 
+With `AudioCreator`:
 ```java
-public BufferedReader buffer(final String path) throws FileNotFoundException;	
-	
-public BufferedReader buffer(final String path, final String charset) throws UnsupportedEncodingException, FileNotFoundException;
-	
-public BufferedReader buffer(final InputStream inputStream);
-	
-public BufferedReader buffer(final InputStream inputStream, final String charset) throws UnsupportedEncodingException;
-	
-public BufferedReader buffer(final URL url) throws IOException;
-	
-public BufferedReader buffer(final URL url, final String charset);
+// constructor
+public AudioCreator(final OutputStream destination);
+// save data
+public void save(final AudioFormat format, final AudioFileFormat.Type type, final ByteArrayOutputStream data) throws IOException;
 ```
-Similar text-writing-classes extends `OutputTextBuffer`, which is factory for `BufferWriter`. Call `buffer`:
+#### Loading
+With `AudioLoader`:
 ```java
-public BufferedWriter buffer(final String path, boolean append) throws IOException;
-	
-public BufferedWriter buffer(final String path, final String charset, boolean append) throws UnsupportedEncodingException, FileNotFoundException;
-	
-public BufferedWriter buffer(final OutputStream outputStream);
-	
-public BufferedWriter buffer(final OutputStream outputStream, final String charset) throws UnsupportedEncodingException;
+// constructor
+public AudioLoader(final AudioInputStream stream);
+// load data - first way
+public void load(final Consumer<byte[]> consumer) throws IOException;
+// load data - second way
+public ByteArrayInputStream load() throws IOException;
 ```
-**Remember: each Buffer need to be closed after finishing work. Best practice is call buffer method in try-with-resources block**
-#### Plain text
-##### Reading
-`PlainTextLoader` class is for reading plain text from file:
-```java
-//read content of file by lines
-//always read line, apply consumer, discart line and read new line
-//at the end return true
-public boolean read(final BufferedReader br, final Consumer<String> consumer) throws IOException
+For `AudioInputStream` you can use `AudioInputStreamFactory` and `getStream(...)` method.
 
-//read content of file as one string		
-public String readAsOneString(final BufferedReader br) throws IOException
+### Multimedia.sound
+Way how to capture or play audio binary files. Classes in this package use `DataLine`. It could be getted by `DataLineFactory` and `getClip(...)`, `getSourceLine(...)` and `getTargetLine(...)` methods.
+#### Capturing
+It provides `Microphone` class:
+```java
+// constructor
+public Microphone(final TargetDataLine line);
+// capture - first way
+public void capture(final AudioFormat format, final Consumer<byte[]> consumer) throws LineUnavailableException;
+// capture - second way
+public ByteArrayInputStream capture(final AudioFormat format) throws LineUnavailableException;
+```
+Be careful, `Microphone.capture(...)` is blocking. Playing in thread you must manage yourself. If you want to stop capturing, set public attribute `boolean Microphone.capture` to false.
+#### Playing
+You could use two ways. `Playback` and `Reproductor` class.
 
-//read content of file as list of lines
-public List<String> read(final BufferedReader br) throws IOException
+`Playback` class:
+```java
+// constructor
+public Playback(final AudioInputStream stream, final Clip clip);
+// start playing or continue in playing if pause() was called
+public void play() throws LineUnavailableException, IOException;
+// pause playing 
+public void pause();
+// stop playing, set position on start
+public void stop();
+// set loop, if count < 0 then loop is infinity, zero count stop looping
+public void setLoop(final int count);
+// set playing position on (actual + microSecond) or on end
+public void foward(final long microSeconds);
+// set playing position on (actual - microSecond) or on start
+public void back(final long microSeconds);
+// get duration of sound
+public long getDuration();
+// get actual position
+public long getMicroSecondPosition();
+```
+This solution run in its own threads.
 
-//read content of file as list of lines and split each line with given 'split'
-//data.get(r).get(c) are r x c matrix, r - row, c - column
-public List<List<String>> read(final BufferedReader br, final String split) throws IOException;
-```
-##### Writing
-For writing plain text is `PlainTextCreator` class. Has three method:
+`Reproductor` class:
 ```java
-//write or append string to file and write new line
-public boolean write(final BufferedWriter bw, final String data) throws IOException;
-	
-//write or append string by string from list to file and write new line
-public boolean write(final BufferedWriter bw, final List<String> data) throws IOException;
+// constructor
+public Reproductor(final SourceDataLine line);
+// playing
+public void play(final AudioFormat format, final ByteArrayOutputStream data) throws IOException, LineUnavailableException;
+```
+Be careful, `Reproductor.play(...)` is blocking. Playing in thread you must manage yourself. If you want to stop playing, set public attribute `boolean Reproductor.play` to false.
 
-//write or append grid to file and write new line
-//data.get(r).get(c) are r x c matrix, r - row, c - column
-//strings in row are splited with 'split' string
-public boolean write(final BufferedWriter bw, final List<List<String>> data, final String split) throws IOException;
-```
-Theses methods return true after finishing writing.
-#### XML
-##### Reading
-To read xml file use `XmlLoader` (unexpectedly). You can use two ways. First allow you to manage reading, return true at the finish:
+### Parser
+LOF provide some parsers. Work with each parser is similar to work with SAX.
+**NOTE for reading:** Class, which provide reading - usually *Format*InputStream, is data object, too. So, after creating new instance of InputStream, you call in while cyklus `next()` method (return false if you are on end of file). Then in InputStream instance are saved data until next `next()` method  is called.
+
+### Parser.csv
+#### Saving
+Use `CsvOutputStream`
 ```java
-//this method starts reading, calls next on stream and closes stream
-public boolean read(final BufferedReader br, Consumer<XMLStreamReader> consumer) 
-			throws XMLStreamException, FileCouldNotBeClosedException;
+// first constructor
+public CsvOutputStream(final OutputStream stream, final char separator);
+// second constructor, default separator is `,`
+public CsvOutputStream(final OutputStream stream);
+// write one 'cell'
+public void writeValue(final String value) throws IOException;
+// finish writing line and start new line
+public void writeNewLine() throws IOException;
 ```
-The second method reads whole xml to XmlObject. [More about XmlObject](#xmlobject)
+#### Loading
+Use `CsvInputStream`
 ```java
-public XmlObject read(final BufferedReader br) 
-			throws FileCouldNotBeClosedException, XMLStreamException;
-```
-##### Writing
-`XmlCreator` allow write data to xml file. There are two ways too. Both return true after writing is finished. First:
-```java
-//this method starts reading, calls next on stream and closes stream
-public boolean write(final BufferedWriter bw, Consumer<XMLStreamWriter> consumer)
-			throws XMLStreamException, FileCouldNotBeClosedException;
-```
-And second write given XmlObject:
-```java
-public boolean write(final BufferedWriter bw, final XmlObject object)
-			throws XMLStreamException, FileCouldNotBeClosedException
-```
-##### XmlObject
-`XmlObject` is data object.
-```java
-public String getName();
-	
+// first constructor
+public CsvInputStream(final InputStream stream, final char separator);
+//second constructor - default separator is ','
+public CsvInputStream(final InputStream stream);
+// return value between two separators
 public String getValue();
-	
-public Map<String, String> getAttributes();
-	
-public List<XmlObject> getReferences();
-
-public void setName(final String name);
-	
-public void setValue(final String value);
-	
-public void setAttributes(final Map<String, String> atributes);
-	
-public void setReferences(final List<XmlObject> references);
+// return number of line
+public int getLine();
 ```
-As you can see from getters and setters, this object has four attributes. First is 'name' which is name of tag. 'Value' is value between start and end tag. 'Attributes' is hash map where key is class name and value is class value. And 'references' are subelements. See example:
-```xml
-<name className="classValue" class2Name="class2Name">
-	Value
-	<sublementName>...
-	</subelementName>
-</name>
-```
-If some of attributes don't exists in xml or tag is empty `<emptyTag />`, every attributes of `XmlObject` have default values **not null** except 'name' which is required.
 
-#### Binary files
-Work with binary files is very simply.
-##### Reading
-For reading use `BinaryCreator` class. This class allow set byte array size, which is used in reading with consumer 
+### Parser.env
+#### Saving
+Implemented by `EnvOutputStream`
 ```java
-public int getDefaultBufferSize();
-
-public void setDefaultBufferSize(int defaultBufferSize);
+// constructor
+public EnvOutputStream(final OutputStream stream);
+// write one line, "key=value" will be written (of course without "")
+public void writeTwins(final String key, final String value) throws IOException;
 ```
-Methods:
+#### Loading
+Implemented by `EnvInputStream`
 ```java
-// InputStream factory
-public InputStream stream(String name) throws FileNotFoundException;
-
-// read byte array with default size and for each array apply consumer
-public void read(final InputStream stream, final Consumer<byte[]> consumer) throws IOException;
-
-// read byte array with given size and for each array apply consumer
-public void read(final InputStream stream, final Consumer<byte[]> consumer, final int bufferSize) throws IOException;
-
-// read whole content of stream
-public byte[] read(final InputStream stream) throws IOException;
-```
-##### Writing
-For wring is `BinaryLoader` class. 
-```java
-// OutputStream factory
-public OutputStream stream(String name) throws FileNotFoundException;
-
-// write given data to stream
-public boolean write(final OutputStream stream, final byte[] data) throws IOException
+// constructor
+public EnvInputStream(final InputStream stream);
+// return value before '='
+public String getKey();
+// return value after '='
+public String getValue();
 ```
 
-### Other structured formats
-<a href="https://www.baeldung.com/java-snake-yaml" target=_blank>YAML jar</a>
+### Text
+For easy work with classes below, LOF provide `BufferReaderFactory`, `BufferWriterFactory` and `FileStreamFactory`.
 
-<a href="https://github.com/stleary/JSON-java" target=_blank>JSON</a>
-
-### Concurrent processing
-Each class has "double", which provide concurrent processing. Name convention is *original-class-name*Async. Calling methods looks same as in originals classes. The return types are: Future<*original-return-type*>. [More about Future](https://www.baeldung.com/java-future). What is different is constructor. This classes require `ExecutorService` (more about in mentioned article) and optionally original class.
-Example for `PlainTextLoader`:
+### Text.binary files
+Useful for writing or reading arrays of bytes.
+#### Saving
+With `BinaryCreator`
 ```java
-ExecutorService executor = ...;
-BufferedReader br = ...;
-PlainTextLoaderAsync loader = new PlainTextLoaderAsync(executor);
-Future<String> result = loader.readAsOneString(br);
-// or
-ExecutorService executor = ...;
-BufferedReader br = ...;
-PlainTextLoader load = new PlainTextLoader();
-//work with load...
-PlainTextLoaderAsync loader = new PlainTextLoaderAsync(executor, load);
-Future<String> result = loader.readAsOneString(br);
+// constructor
+public BinaryCreator(final OutputStream stream);
+// writing array of bytes
+public void write(final byte[] data) throws IOException;
+```
+#### Loading
+With `BinaryLoader`
+```java
+// constructor
+public BinaryLoader(final InputStream stream);
+// reading full array of bytes
+public byte[] read() throws IOException;
+// or you can use
+public void read(final Consumer<byte[]> consumer);
+```
+
+### Text.plaintext files
+#### Saving
+`PlainTextCreator` class
+```java
+// constructor
+public PlainTextCreator(final BufferedWriter bw);
+// write string
+public void write(final String data) throws IOException;
+// write list of string - one item of list, one line
+public void write(final List<String> data) throws IOException;
+// write grid (simply csv), first lists are rows, lists in lists are columns
+public void write(final List<List<String>> data, final String split) throws IOException;
+```
+#### Loading
+`PlainTextLoader` class
+```java
+// constructor
+public PlainTextLoader(final BufferedReader br);
+// for reading long files, read line, apply consumer and crash line
+public void read(final Consumer<String> consumer) throws IOException
+// read whole content as one string
+public String readAsOneString() throws IOException;
+// read content as list of lines
+public List<String> read() throws IOException;
+// read content as grid, lists are rows, lists in lists are columns
+public Collection<List<String>> read(final String split) throws IOException;
+```
+
+### Text.XML files
+**XmlObject**
+`XmlObject` serve for read or write whole xml. So this object is data-object. Has four attributes: `String name` which is required and represent name of element (default value is empty String), `String value` which is string value between start element (default value is empty Map) and end element, `Map<String, String> attributes` that are 'classes' in start element and finally `List<XmlObject> references` - all sub-elements (default value is empty List).
+#### Saving
+Use `XmlCreator`
+```java
+// constructor
+public XmlCreator(final BufferedWriter bw);
+// call writeStartDocument and after consumer, writeEndElement
+public void write(final Consumer<XMLStreamWriter> consumer) throws XMLStreamException, StreamCouldNotBeClosedException;
+// write XmlObject
+public void write(final XmlObject object) throws XMLStreamException, StreamCouldNotBeClosedException;
+```
+#### Loading
+Use `XmlLoader`
+```java
+// constructor
+public XmlLoader(final BufferedReader br);
+// in while cyklus is called consumer.accept(...)
+public void read(final Consumer<XMLStreamReader> consumer) throws XMLStreamException, StreamCouldNotBeClosedException;
+// read whole xml file to XmlObject
+public XmlObject read() throws StreamCouldNotBeClosedException, XMLStreamException;
 ```

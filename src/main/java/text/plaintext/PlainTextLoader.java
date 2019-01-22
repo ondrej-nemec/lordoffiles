@@ -7,22 +7,23 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import text.InputTextBuffer;
+public class PlainTextLoader {
 
-
-public class PlainTextLoader extends InputTextBuffer{
-
-	public boolean read(final BufferedReader br, final Consumer<String> consumer) throws IOException{
+	private final BufferedReader br;
+	
+	public PlainTextLoader(final BufferedReader br) {
+		this.br = br;
+	}
+	
+	public void read(final Consumer<String> consumer) throws IOException {
 		String line = br.readLine();
-		while(line!=null){
+		while(line != null){
 			consumer.accept(line);
 			line = br.readLine();
 		}
-		return true;
 	}
-	
-	
-	public String readAsOneString(final BufferedReader br) throws IOException{
+
+	public String readAsOneString() throws IOException {
 		String result = "";
 		String line = br.readLine();
 		if(line != null){
@@ -36,7 +37,7 @@ public class PlainTextLoader extends InputTextBuffer{
 		return result;
 	}
 	
-	public List<String> read(final BufferedReader br) throws IOException{
+	public List<String> read() throws IOException {
 		List<String> result = new ArrayList<>();
 		String line = br.readLine();
 		while(line!=null){
@@ -46,7 +47,7 @@ public class PlainTextLoader extends InputTextBuffer{
 		return result;
 	}
 	
-	public Collection<List<String>> read(final BufferedReader br, final String split) throws IOException{
+	public Collection<List<String>> read(final String split) throws IOException {
 		List<List<String>> result = new ArrayList<>();
 		String line = br.readLine();
 		while(line != null){

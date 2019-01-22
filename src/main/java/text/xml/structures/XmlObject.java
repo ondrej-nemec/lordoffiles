@@ -19,7 +19,8 @@ public class XmlObject implements Serializable {
 	
 	private List<XmlObject> references;
 
-	/*************************************/
+	/*** SEPARATOR ***/
+	
 	public XmlObject(final String name) {
 		this.name = name;
 		this.value = "";
@@ -69,7 +70,8 @@ public class XmlObject implements Serializable {
 		this.references = references;
 	}
 	
-	/**************************************/
+	/*** SEPARATOR ***/
+	
 	public String getName() {
 		return name;
 	}
@@ -85,7 +87,9 @@ public class XmlObject implements Serializable {
 	public List<XmlObject> getReferences() {
 		return references;
 	}
-	/*********************************/
+	
+	/*** SEPARATOR ***/
+	
 	public void setName(final String name){
 		this.name = name;
 	}
@@ -102,7 +106,7 @@ public class XmlObject implements Serializable {
 		this.references = references;
 	}
 	
-	/****************************/
+	/*** SEPARATOR ***/
 	
 	@Override
 	public String toString() {

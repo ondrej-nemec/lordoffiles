@@ -20,12 +20,12 @@ public class PlainTextCreatorTest{
 	
 	@Test
 	public void testWriteStringWorks() {
-		PlainTextCreator creator = new PlainTextCreator();
 		String data = "This is test data\nNew line\tafter tab";
 		
 		try(BufferedWriter bw = mockBuffer(writeString)){
+		PlainTextCreator creator = new PlainTextCreator(bw);
 			clearRepository(writeString);
-			creator.write(bw, data);
+			creator.write(data);
 			
 			verify(bw, times(1)).write(data);
 			verify(bw, times(1)).newLine();
@@ -38,12 +38,12 @@ public class PlainTextCreatorTest{
 	
 	@Test
 	public void testWriteLinesWorks() {
-		PlainTextCreator creator = new PlainTextCreator();
 		List<String> data = Arrays.asList("First line","Second line","Third line");
 		
 		try(BufferedWriter bw = mockBuffer(writeLines)){
+			PlainTextCreator creator = new PlainTextCreator(bw);
 			clearRepository(writeLines);
-			creator.write(bw, data);
+			creator.write(data);
 			
 			for(String line : data){
 				verify(bw).write(line);
@@ -59,7 +59,6 @@ public class PlainTextCreatorTest{
 	
 	@Test
 	public void testWriteGridWorks() {
-		PlainTextCreator creator = new PlainTextCreator();
 		List<List<String>> data = Arrays.asList(
 					Arrays.asList("a-a", "a-b", "a-c"),
 					Arrays.asList("b-a", "b-b", "b-c"),
@@ -67,8 +66,9 @@ public class PlainTextCreatorTest{
 					);
 		
 		try(BufferedWriter bw = mockBuffer(writeGrid)){
+			PlainTextCreator creator = new PlainTextCreator(bw);
 			clearRepository(writeGrid);
-			creator.write(bw, data, ";");
+			creator.write(data, ";");
 			
 			for(List<String> line : data){
 				verify(bw).write(line.get(0) + ";" + line.get(1) + ";" + line.get(2));
