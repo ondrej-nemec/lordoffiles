@@ -74,6 +74,7 @@ public ByteArrayInputStream capture(final AudioFormat format) throws LineUnavail
 Be careful, `Microphone.capture(...)` is blocking. Playing in thread you must manage yourself. If you want to stop capturing, set public attribute `boolean Microphone.capture` to false.
 #### Playing
 You could use two ways. `Playback` and `Reproductor` class.
+
 `Playback` class:
 ```java
 // constructor
@@ -96,6 +97,7 @@ public long getDuration();
 public long getMicroSecondPosition();
 ```
 This solution run in its own threads.
+
 `Reproductor` class:
 ```java
 // constructor
