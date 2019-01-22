@@ -36,17 +36,19 @@ And to `dependencies`:
 ```
 
 ## Usage
-
+**From version 3.0 LOF is going to be modular.**
 ### Multimedia.audio
 For work with audio binary files. Allow save binary data or load data.
-**Saving** with `AudioCreator`:
+#### Saving 
+With `AudioCreator`:
 ```java
 // constructor
 public AudioCreator(final OutputStream destination);
 // save data
 public void save(final AudioFormat format, final AudioFileFormat.Type type, final ByteArrayOutputStream data) throws IOException;
 ```
-**Loading** with `AudioLoader`:
+#### Loading
+With `AudioLoader`:
 ```java
 // constructor
 public AudioLoader(final AudioInputStream stream);
@@ -59,7 +61,8 @@ For `AudioInputStream` you can use `AudioInputStreamFactory` and `getStream(...)
 
 ### Multimedia.sound
 Way how to capture or play audio binary files. Classes in this package use `DataLine`. It could be getted by `DataLineFactory` and `getClip(...)`, `getSourceLine(...)` and `getTargetLine(...)` methods.
-**Capturing** provides `Microphone` class:
+#### Capturing
+It provides `Microphone` class:
 ```java
 // constructor
 public Microphone(final TargetDataLine line);
@@ -69,8 +72,9 @@ public void capture(final AudioFormat format, final Consumer<byte[]> consumer) t
 public ByteArrayInputStream capture(final AudioFormat format) throws LineUnavailableException;
 ```
 Be careful, `Microphone.capture(...)` is blocking. Playing in thread you must manage yourself. If you want to stop capturing, set public attribute `boolean Microphone.capture` to false.
-For **Playing** you could use two ways. `Playback` and `Reproductor` class.
-**Playback** class:
+#### Playing
+You could use two ways. `Playback` and `Reproductor` class.
+`Playback` class:
 ```java
 // constructor
 public Playback(final AudioInputStream stream, final Clip clip);
@@ -92,7 +96,7 @@ public long getDuration();
 public long getMicroSecondPosition();
 ```
 This solution run in its own threads.
-**Reproductor** class:
+`Reproductor` class:
 ```java
 // constructor
 public Reproductor(final SourceDataLine line);
@@ -106,7 +110,8 @@ LOF provide some parsers. Work with each parser is similar to work with SAX.
 **NOTE for reading:** Class, which provide reading - usually *Format*InputStream, is data object, too. So, after creating new instance of InputStream, you call in while cyklus `next()` method (return false if you are on end of file). Then in InputStream instance are saved data until next `next()` method  is called.
 
 ### Parser.csv
-**Saving**
+#### Saving
+Use `CsvOutputStream`
 ```java
 // first constructor
 public CsvOutputStream(final OutputStream stream, final char separator);
@@ -117,7 +122,8 @@ public void writeValue(final String value) throws IOException;
 // finish writing line and start new line
 public void writeNewLine() throws IOException;
 ```
-**Loading**
+#### Loading
+Use `CsvInputStream`
 ```java
 // first constructor
 public CsvInputStream(final InputStream stream, final char separator);
@@ -130,14 +136,16 @@ public int getLine();
 ```
 
 ### Parser.env
-**Saving**
+#### Saving
+Implemented by `EnvOutputStream`
 ```java
 // constructor
 public EnvOutputStream(final OutputStream stream);
 // write one line, "key=value" will be written (of course without "")
 public void writeTwins(final String key, final String value) throws IOException;
 ```
-**Loading**
+#### Loading
+Implemented by `EnvInputStream`
 ```java
 // constructor
 public EnvInputStream(final InputStream stream);
@@ -152,14 +160,16 @@ For easy work with classes below, LOF provide `BufferReaderFactory`, `BufferWrit
 
 ### Text.binary files
 Useful for writing or reading arrays of bytes.
-**Saving**
+#### Saving
+With `BinaryCreator`
 ```java
 // constructor
 public BinaryCreator(final OutputStream stream);
 // writing array of bytes
 public void write(final byte[] data) throws IOException;
 ```
-**Loading**
+#### Loading
+With `BinaryLoader`
 ```java
 // constructor
 public BinaryLoader(final InputStream stream);
@@ -170,7 +180,8 @@ public void read(final Consumer<byte[]> consumer);
 ```
 
 ### Text.plaintext files
-**Saving**
+#### Saving
+`PlainTextCreator` class
 ```java
 // constructor
 public PlainTextCreator(final BufferedWriter bw);
@@ -181,7 +192,8 @@ public void write(final List<String> data) throws IOException;
 // write grid (simply csv), first lists are rows, lists in lists are columns
 public void write(final List<List<String>> data, final String split) throws IOException;
 ```
-**Loading**
+#### Loading
+`PlainTextLoader` class
 ```java
 // constructor
 public PlainTextLoader(final BufferedReader br);
@@ -198,7 +210,8 @@ public Collection<List<String>> read(final String split) throws IOException;
 ### Text.XML files
 **XmlObject**
 `XmlObject` serve for read or write whole xml. So this object is data-object. Has four attributes: `String name` which is required and represent name of element (default value is empty String), `String value` which is string value between start element (default value is empty Map) and end element, `Map<String, String> attributes` that are 'classes' in start element and finally `List<XmlObject> references` - all sub-elements (default value is empty List).
-**Saving**
+#### Saving
+Use `XmlCreator`
 ```java
 // constructor
 public XmlCreator(final BufferedWriter bw);
@@ -207,7 +220,8 @@ public void write(final Consumer<XMLStreamWriter> consumer) throws XMLStreamExce
 // write XmlObject
 public void write(final XmlObject object) throws XMLStreamException, StreamCouldNotBeClosedException;
 ```
-**Loading**
+#### Loading
+Use `XmlLoader`
 ```java
 // constructor
 public XmlLoader(final BufferedReader br);
