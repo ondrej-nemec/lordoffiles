@@ -22,12 +22,12 @@ public class XmlCreator {
 		this.bw = bw;
 	}
 	
-	public boolean write(final Consumer<XMLStreamWriter> consumer) throws XMLStreamException, StreamCouldNotBeClosedException{
+	public void write(final Consumer<XMLStreamWriter> consumer) throws XMLStreamException, StreamCouldNotBeClosedException {
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
-		return write(factory.createXMLStreamWriter(bw), consumer);
+		write(factory.createXMLStreamWriter(bw), consumer);
 	}
 	
-	protected boolean write(final XMLStreamWriter out, Consumer<XMLStreamWriter> consumer) throws XMLStreamException, StreamCouldNotBeClosedException{
+	protected void write(final XMLStreamWriter out, Consumer<XMLStreamWriter> consumer) throws XMLStreamException, StreamCouldNotBeClosedException {
 		try {
 			out.writeStartDocument();
 			consumer.accept(out);
@@ -41,17 +41,14 @@ public class XmlCreator {
 				throw new StreamCouldNotBeClosedException();
 			}
 		}
-		return true;
 	}
 
-	public boolean write(final XmlObject object)
-			throws XMLStreamException, StreamCouldNotBeClosedException{
+	public boolean write(final XmlObject object) throws XMLStreamException, StreamCouldNotBeClosedException {
 		XMLOutputFactory factory = XMLOutputFactory.newInstance();
 		return write(factory.createXMLStreamWriter(bw), object);
 	}
 	
-	protected boolean write(final XMLStreamWriter out, final XmlObject object)
-			throws XMLStreamException, StreamCouldNotBeClosedException{
+	protected boolean write(final XMLStreamWriter out, final XmlObject object) throws XMLStreamException, StreamCouldNotBeClosedException {
 		try {
 			out.writeStartDocument();
 			writeLevel(out, object);
@@ -68,7 +65,7 @@ public class XmlCreator {
 		return true;
 	}
 	
-	private void writeLevel(final XMLStreamWriter out, final XmlObject object) throws XMLStreamException{
+	private void writeLevel(final XMLStreamWriter out, final XmlObject object) throws XMLStreamException {
 		out.writeStartElement(object.getName());
 		writeAtribute(out, object.getAttributes());
 		writeValue(out, object.getValue());
@@ -76,12 +73,12 @@ public class XmlCreator {
 		out.writeEndElement();
 	}
 	
-	private void writeValue(final XMLStreamWriter out, String value) throws XMLStreamException{
+	private void writeValue(final XMLStreamWriter out, String value) throws XMLStreamException {
 		if(value != null)
 			out.writeCharacters(value);
 	}
 	
-	private void writeAtribute(final XMLStreamWriter out, final Map<String, String> attributes) throws XMLStreamException{
+	private void writeAtribute(final XMLStreamWriter out, final Map<String, String> attributes) throws XMLStreamException {
 		if(attributes != null){
 			Set<String> set = attributes.keySet();
 			for (String key : set) {
@@ -90,7 +87,7 @@ public class XmlCreator {
 		}
 	}
 	
-	private void writeReferences(XMLStreamWriter out, List<XmlObject> references) throws XMLStreamException{
+	private void writeReferences(XMLStreamWriter out, List<XmlObject> references) throws XMLStreamException {
 		if(references != null)
 			for(int i = 0; i<references.size();i++){
 				writeLevel(out, references.get(i));

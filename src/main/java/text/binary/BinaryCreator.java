@@ -11,9 +11,8 @@ public class BinaryCreator{
 		this.stream = stream;
 	}
 
-	public boolean write(final byte[] data) throws IOException {
+	public void write(final byte[] data) throws IOException {
 		stream.write(data);
-		return true;
 	}
 	
 }

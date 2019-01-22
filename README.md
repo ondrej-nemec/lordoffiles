@@ -157,7 +157,7 @@ Useful for writing or reading arrays of bytes.
 // constructor
 public BinaryCreator(final OutputStream stream);
 // writing array of bytes
-public boolean write(final byte[] data) throws IOException;
+public void write(final byte[] data) throws IOException;
 ```
 **Loading**
 ```java
@@ -166,7 +166,7 @@ public BinaryLoader(final InputStream stream);
 // reading full array of bytes
 public byte[] read() throws IOException;
 // or you can use
-public boolean read(final Consumer<byte[]> consumer);
+public void read(final Consumer<byte[]> consumer);
 ```
 
 ### Text.plaintext files
@@ -175,18 +175,18 @@ public boolean read(final Consumer<byte[]> consumer);
 // constructor
 public PlainTextCreator(final BufferedWriter bw);
 // write string
-public boolean write(final String data) throws IOException;
+public void write(final String data) throws IOException;
 // write list of string - one item of list, one line
-public boolean write(final List<String> data) throws IOException;
+public void write(final List<String> data) throws IOException;
 // write grid (simply csv), first lists are rows, lists in lists are columns
-public boolean write(final List<List<String>> data, final String split) throws IOException;
+public void write(final List<List<String>> data, final String split) throws IOException;
 ```
 **Loading**
 ```java
 // constructor
 public PlainTextLoader(final BufferedReader br);
-// for reading long files, read line, aplly consumer and crash line
-public boolean read(final Consumer<String> consumer) throws IOException
+// for reading long files, read line, apply consumer and crash line
+public void read(final Consumer<String> consumer) throws IOException
 // read whole content as one string
 public String readAsOneString() throws IOException;
 // read content as list of lines
@@ -203,16 +203,16 @@ public Collection<List<String>> read(final String split) throws IOException;
 // constructor
 public XmlCreator(final BufferedWriter bw);
 // call writeStartDocument and after consumer, writeEndElement
-public boolean write(final Consumer<XMLStreamWriter> consumer) throws XMLStreamException, StreamCouldNotBeClosedException;
+public void write(final Consumer<XMLStreamWriter> consumer) throws XMLStreamException, StreamCouldNotBeClosedException;
 // write XmlObject
-public boolean write(final XmlObject object) throws XMLStreamException, StreamCouldNotBeClosedException;
+public void write(final XmlObject object) throws XMLStreamException, StreamCouldNotBeClosedException;
 ```
 **Loading**
 ```java
 // constructor
 public XmlLoader(final BufferedReader br);
 // in while cyklus is called consumer.accept(...)
-public boolean read(final Consumer<XMLStreamReader> consumer) throws XMLStreamException, StreamCouldNotBeClosedException;
+public void read(final Consumer<XMLStreamReader> consumer) throws XMLStreamException, StreamCouldNotBeClosedException;
 // read whole xml file to XmlObject
 public XmlObject read() throws StreamCouldNotBeClosedException, XMLStreamException;
 ```

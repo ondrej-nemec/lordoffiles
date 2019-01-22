@@ -15,13 +15,12 @@ public class PlainTextLoader {
 		this.br = br;
 	}
 	
-	public boolean read(final Consumer<String> consumer) throws IOException {
+	public void read(final Consumer<String> consumer) throws IOException {
 		String line = br.readLine();
 		while(line != null){
 			consumer.accept(line);
 			line = br.readLine();
 		}
-		return true;
 	}
 
 	public String readAsOneString() throws IOException {

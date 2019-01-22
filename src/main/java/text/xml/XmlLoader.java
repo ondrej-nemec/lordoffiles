@@ -26,7 +26,7 @@ public class XmlLoader extends BufferedReaderFactory{
 		this.br = br;
 	}
 	
-	public boolean read(final Consumer<XMLStreamReader> consumer) throws XMLStreamException, StreamCouldNotBeClosedException{
+	public void read(final Consumer<XMLStreamReader> consumer) throws XMLStreamException, StreamCouldNotBeClosedException {
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader in = null;
 		try {
@@ -42,10 +42,9 @@ public class XmlLoader extends BufferedReaderFactory{
 				throw new StreamCouldNotBeClosedException();
 			}
 		}
-		return true;
 	}	
 		
-	public XmlObject read() throws StreamCouldNotBeClosedException, XMLStreamException{
+	public XmlObject read() throws StreamCouldNotBeClosedException, XMLStreamException {
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		XMLStreamReader in = null;
 		try {
@@ -61,7 +60,7 @@ public class XmlLoader extends BufferedReaderFactory{
 		}
 	}
 	
-	private XmlObject readLevel(final XMLStreamReader in) throws XMLStreamException{
+	private XmlObject readLevel(final XMLStreamReader in) throws XMLStreamException {
 		String name = in.getName().getLocalPart();
 		Map<String, String> attributes = readAttributes(in);
 		String value = "";
@@ -82,7 +81,7 @@ public class XmlLoader extends BufferedReaderFactory{
 		return new XmlObject(name, value, attributes, references);
 	}
 	
-	private Map<String, String> readAttributes(final XMLStreamReader in){
+	private Map<String, String> readAttributes(final XMLStreamReader in) {
 		if(in.getAttributeCount() == 0)
 			return new HashMap<>();
 		Map<String, String> aux = new HashMap<>();
