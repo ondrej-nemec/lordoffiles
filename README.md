@@ -6,6 +6,9 @@
 * [Description](#description)
 * [Get library](#how-to-install)
 * [Usage](#usage)
+	* [Multimedia](#multimedia)
+	* [Parsers](#parser)
+	* [Texts](#text)
 	
 
 ## Description
@@ -37,6 +40,7 @@ And to `dependencies`:
 
 ## Usage
 **From version 3.0 LOF is going to be modular.**
+### Multimedia
 ### Multimedia.audio
 For work with audio binary files. Allow save binary data or load data.
 #### Saving 
