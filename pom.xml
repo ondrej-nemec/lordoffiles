@@ -1,18 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.github.ondrej-nemec</groupId>
+  <groupId>com.github.ondrej-nemec.lordoffiles</groupId>
   <artifactId>lordoffiles</artifactId>
-  <version>2</version>
+  <version>3.0</version>
+  <packaging>pom</packaging>
   <build>
-    <testSourceDirectory>src/tests/java</testSourceDirectory>
-    <testResources>
-      <testResource>
-        <directory>src/tests/res</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </testResource>
-    </testResources>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -43,4 +35,7 @@
 		  <scope>test</scope>
 	</dependency>
   </dependencies>
+  <modules>
+  	<module>lof-modules</module>
+  </modules>
 </project>
