@@ -22,8 +22,8 @@ import text.xml.structures.XmlObject;
 
 public class XmlCreatorTest {
 
-	private String pathConsumer = "src/tests/res/text/xml/write-consumer.xml";
-	private String pathObject = "src/tests/res/text/xml/write-xmlobject.xml";
+	private String pathConsumer = "text/src/test/resource/text/xml/write-consumer.xml";
+	private String pathObject = "text/src/test/resource/text/xml/write-xmlobject.xml";
 	
 	@Test
 	public void testWriteConsumerWorks(){	

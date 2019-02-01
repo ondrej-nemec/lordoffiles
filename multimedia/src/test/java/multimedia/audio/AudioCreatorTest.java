@@ -43,7 +43,7 @@ public class AudioCreatorTest {
 	
 	@Test
 	public void testSaveWithByteArrayEndToEnd() throws IOException {
-		try (OutputStream os = new FileOutputStream("src/tests/res/multimedia/sound-output.wav")) {
+		try (OutputStream os = new FileOutputStream("multimedia/src/test/resource/multimedia/sound-output.wav")) {
 			AudioFormat format = new AudioFormat(8000.0f, 16, 1, true, true);
 			AudioCreator cr = new AudioCreator(os);
 			

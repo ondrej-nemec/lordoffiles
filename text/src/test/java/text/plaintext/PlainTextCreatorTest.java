@@ -14,9 +14,9 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 public class PlainTextCreatorTest{
-	private String writeString = "src/tests/res/text/plaintext/write-string.txt";
-	private String writeLines = "src/tests/res/text/plaintext/write-lines.txt";
-	private String writeGrid = "src/tests/res/text/plaintext/write-grid.txt";
+	private String writeString = "text/src/test/resource/text/plaintext/write-string.txt";
+	private String writeLines = "text/src/test/resource/text/plaintext/write-lines.txt";
+	private String writeGrid = "text/src/test/resource/text/plaintext/write-grid.txt";
 	
 	@Test
 	public void testWriteStringWorks() {

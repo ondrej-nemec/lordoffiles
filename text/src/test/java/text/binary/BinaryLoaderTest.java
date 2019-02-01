@@ -2,6 +2,7 @@ package text.binary;
 
 import static org.junit.Assert.*;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.function.Consumer;
@@ -10,7 +11,7 @@ import org.junit.Test;
 
 public class BinaryLoaderTest {
 
-	private String file = "text/binary/input.txt";
+	private String file = "text/src/test/resource/text/binary/input.txt";
 	
 	private int index = 0;
 	
@@ -18,8 +19,7 @@ public class BinaryLoaderTest {
 	
 	@Test
 	public void testReadWithConsumer() throws IOException {
-		System.out.println(getClass().getResource(file).getPath());
-		try(InputStream is = getClass().getResourceAsStream(file)) {
+		try(InputStream is = new FileInputStream(file)) {
 			BinaryLoader l = new BinaryLoader(is);
 			Consumer<byte[]> consumer = (a)->{
 				add(a[0]);
@@ -40,7 +40,7 @@ public class BinaryLoaderTest {
 	
 	@Test
 	public void testReadWholeContent() throws IOException {
-		try(InputStream is = getClass().getResourceAsStream(file)) {
+		try(InputStream is = new FileInputStream(file)) {
 			BinaryLoader l = new BinaryLoader(is);
 			
 			assertArrayEquals(

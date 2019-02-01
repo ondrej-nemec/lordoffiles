@@ -195,7 +195,7 @@ public class EnvInputStreamTest {
 	
 	@Test
 	public void endToEndTest() {
-		try (InputStream is = new FileInputStream("src/tests/res/parser/env-input.env")) {
+		try (InputStream is = new FileInputStream("parsers/src/test/resource/parser/env-input.env")) {
 			EnvInputStream parser = new EnvInputStream(is);
 			
 			int i = 1;

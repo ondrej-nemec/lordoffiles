@@ -76,7 +76,7 @@ public class CsvInputStreamTest {
 	
 	@Test
 	public void endToEndTest() {
-		try (InputStream is = new FileInputStream("src/tests/res/parser/csv-input.csv")) {
+		try (InputStream is = new FileInputStream("parsers/src/test/resource/parser/csv-input.csv")) {
 			CsvInputStream parser = new CsvInputStream(is);
 			
 			int i = 1;

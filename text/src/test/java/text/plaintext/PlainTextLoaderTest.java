@@ -14,7 +14,7 @@ public class PlainTextLoaderTest {
 	
 	private String stringFromConsumer = "";
 	
-	private String path = "src/tests/res/text/plaintext/";
+	private String path = "text/src/test/resource/text/plaintext/";
 	
 	@Test
 	public void testReadWithConsumerWorks() {

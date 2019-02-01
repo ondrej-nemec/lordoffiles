@@ -99,13 +99,13 @@ public class XmlLoaderTest {
 		
 		return Arrays.asList(
 				new Object[]{
-						"src/tests/res/text/xml/read-xmlobject.xml",
+						"text/src/test/resource/text/xml/read-xmlobject.xml",
 						xmlObjec1,
 						"class: class1\n"
 						+ "class: class2\n"
 						+ "target: blank\n"},
 				new Object[]{
-						"src/tests/res/text/xml/read-special.xml",
+						"text/src/test/resource/text/xml/read-special.xml",
 						new XmlObject("element", 
 								Arrays.asList(new XmlObject("element", "Value")
 										)),
