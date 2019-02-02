@@ -36,7 +36,9 @@ public class AudioLoaderTest {
 		
 	@Test
 	public void testLoadWithByteArrayEndToEnd() throws UnsupportedAudioFileException, IOException {
-		AudioInputStream stream = AudioInputStreamFactory.getStream("multimedia/src/test/resource/multimedia/sound-input.wav");
+		AudioInputStream stream = AudioInputStreamFactory.getStream(
+				getClass().getResourceAsStream("/multimedia/sound-input.wav")
+		);
 		
 		AudioLoader loader = new AudioLoader(stream);
 		ByteArrayInputStream data = loader.load();

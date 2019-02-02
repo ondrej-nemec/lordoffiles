@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
@@ -76,7 +75,7 @@ public class CsvInputStreamTest {
 	
 	@Test
 	public void endToEndTest() {
-		try (InputStream is = new FileInputStream("parsers/src/test/resource/parser/csv-input.csv")) {
+		try (InputStream is = getClass().getResourceAsStream("/parser/csv-input.csv")) {
 			CsvInputStream parser = new CsvInputStream(is);
 			
 			int i = 1;

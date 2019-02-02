@@ -4,12 +4,12 @@ import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -19,30 +19,23 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
+import text.BufferedReaderFactory;
 import text.xml.structures.XmlObject;
 
-@RunWith(Parameterized.class)
+@RunWith(JUnitParamsRunner.class)
 public class XmlLoaderTest {
 	
-	private String path;
-	private XmlObject xmlObject;
-	private String consumerExpected;
 	private String consumerActual = "";
-	
-	public XmlLoaderTest(String path, XmlObject data, String consumerData) {
-		super();
-		this.path = path;
-		this.xmlObject = data;
-		this.consumerExpected = consumerData;
-	}
+	private String file = "/text/xml/read-xmlobject.xml";
+	private String specialFile = "/text/xml/read-special.xml";
 
 	@Test
-	public void testReadConsumerWorks(){
-		try(BufferedReader br = new BufferedReader(
-				new FileReader(path))){
+	@Parameters
+	public void testReadConsumerWorks(String path, String expected) throws FileNotFoundException, IOException, XMLStreamException {
+		try(BufferedReader br = BufferedReaderFactory.buffer(getClass().getResourceAsStream(path))){
 			XmlLoader loader = new XmlLoader(br);
 			Consumer<XMLStreamReader> consumer = (in)->{
 				if(in.getEventType() == XMLStreamConstants.START_ELEMENT){
@@ -52,39 +45,42 @@ public class XmlLoaderTest {
 				}
 			};
 			loader.read(consumer);
-			assertEquals(consumerExpected, consumerActual);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			fail("FileNotFoundException");
-		} catch (IOException e) {
-			e.printStackTrace();
-			fail("IOException");
-		} catch (XMLStreamException e) {
-			e.printStackTrace();
-			fail("XMLStreamException");
-		}
-	}
-
-	@Test
-	public void testReadXmlObjectWorks(){
-		try(BufferedReader br = new BufferedReader(
-				new FileReader(path))){
-			XmlLoader loader = new XmlLoader(br);
-			assertEquals(xmlObject, loader.read());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			fail("FileNotFoundException");
-		} catch (IOException e) {
-			e.printStackTrace();
-			fail("IOException");
-		} catch (XMLStreamException e) {
-			e.printStackTrace();
-			fail("XMLStreamException");
+			assertEquals(expected, consumerActual);
 		}
 	}
 	
+	public Collection<List<Object>> parametersForTestReadConsumerWorks() {
+		return Arrays.asList(
+				Arrays.asList(
+					file,
+					"class: class1\n"
+					+ "class: class2\n"
+					+ "target: blank\n"
+				),
+				Arrays.asList(specialFile, "")
+			);
+	}
+
+	@Test
 	@Parameters
-	public static Collection<Object[]> dataSet(){
+	public void testReadXmlObjectWorks(String path, XmlObject expected) throws XMLStreamException, FileNotFoundException, IOException {
+		try(BufferedReader br = BufferedReaderFactory.buffer(getClass().getResourceAsStream(path))){
+			XmlLoader loader = new XmlLoader(br);
+			assertEquals(expected, loader.read());
+		}
+	}
+	
+	public Collection<List<Object>> parametersForTestReadXmlObjectWorks() {
+		return Arrays.asList(
+					Arrays.asList(file, getXmlObject()),
+					Arrays.asList(
+						specialFile,
+						new XmlObject("element", Arrays.asList(new XmlObject("element", "Value")))
+					)
+				);
+	}
+	
+	public XmlObject getXmlObject(){
 		Map<String, String> firstAttributes = new HashMap<>();
 		firstAttributes.put("class", "class1");
 		XmlObject first = new XmlObject("first", "Value of element", firstAttributes, new ArrayList<>());
@@ -95,22 +91,7 @@ public class XmlLoaderTest {
 		XmlObject second = new XmlObject("second", Arrays.asList(new XmlObject("subelement", "Sub-element")));
 		second.setAttributes(secondAttributes);
 		
-		XmlObject xmlObjec1 = new XmlObject("element", Arrays.asList(first, second));
-		
-		return Arrays.asList(
-				new Object[]{
-						"text/src/test/resource/text/xml/read-xmlobject.xml",
-						xmlObjec1,
-						"class: class1\n"
-						+ "class: class2\n"
-						+ "target: blank\n"},
-				new Object[]{
-						"text/src/test/resource/text/xml/read-special.xml",
-						new XmlObject("element", 
-								Arrays.asList(new XmlObject("element", "Value")
-										)),
-						""}
-				);
+		return new XmlObject("element", Arrays.asList(first, second));
 	}
 	
 	private void setConsumerActual(String add){

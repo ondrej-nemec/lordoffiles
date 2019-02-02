@@ -3,7 +3,6 @@ package parser.env;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
@@ -195,7 +194,7 @@ public class EnvInputStreamTest {
 	
 	@Test
 	public void endToEndTest() {
-		try (InputStream is = new FileInputStream("parsers/src/test/resource/parser/env-input.env")) {
+		try (InputStream is = getClass().getResourceAsStream("/parser/env-input.env")) {
 			EnvInputStream parser = new EnvInputStream(is);
 			
 			int i = 1;

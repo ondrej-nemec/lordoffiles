@@ -76,7 +76,8 @@ public class CsvOutputStreamTest {
 	
 	@Test
 	public void endToEndTest() {
-		try (OutputStream os = new FileOutputStream("parsers/src/test/resource/parser/csv-output.csv")) {
+		String file = getClass().getResource("/parser/csv-output.csv").getFile();
+		try (OutputStream os = new FileOutputStream(file)) {
 			CsvOutputStream format = new CsvOutputStream(os);
 			String newLine = File.separator == "/" ? "\n" : "\r\n";
 						

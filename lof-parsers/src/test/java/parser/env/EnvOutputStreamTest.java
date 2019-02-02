@@ -90,7 +90,8 @@ public class EnvOutputStreamTest {
 	
 	@Test
 	public void endToEndTest() {
-		try (OutputStream os = new FileOutputStream("parsers/src/test/resource/parser/env-output.env")) {
+		String file = getClass().getResource("/parser/env-output.env").getFile();
+		try (OutputStream os = new FileOutputStream(file)) {
 			EnvOutputStream env = new EnvOutputStream(os);
 						
 			env.writeTwins("key", "value");

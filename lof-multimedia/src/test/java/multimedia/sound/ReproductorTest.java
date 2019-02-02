@@ -55,7 +55,9 @@ public class ReproductorTest {
 	@Test
 	public void testPlayWithByteArrayEndToEnd() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
 		AudioFormat format = new AudioFormat(8000.0f, 16, 1, true, true);
-		AudioInputStream stream = AudioInputStreamFactory.getStream("multimedia/src/test/resource/multimedia/sound-input.wav");
+		AudioInputStream stream = AudioInputStreamFactory.getStream(
+				getClass().getResourceAsStream("/multimedia/sound-input.wav")
+		);
 		SourceDataLine line = DataLineFactory.getSourceLine(stream);
 		
 		ByteArrayInputStream data = new ByteArrayInputStream(new byte[] {
