@@ -15,10 +15,6 @@
 Package provide simply way how to read from file or write to file.
 
 ## How to install
-### Download:
-
-<a href="https://ondrej-nemec.github.io/download/lof-2.0.jar" target=_blank>Download jar</a>
-
 ### Maven:
 After `build` tag:
 ```xml
@@ -30,16 +26,49 @@ After `build` tag:
 </repositories>
 ```
 And to `dependencies`:
+
+#### Whole project 
+
 ```xml
-<dependency>
-  <groupId>com.github.ondrej-nemec</groupId>
-  <artifactId>lordoffiles</artifactId>
-  <version>v2.0-alpha</version>
-</dependency>
+	<dependency>
+	    <groupId>com.github.ondrej-nemec.lordoffiles</groupId>
+	    <artifactId>lordoffiles</artifactId>
+	    <version>v3.1</version>
+	</dependency>
 ```
 
+#### Module Text
+
+```xml
+	<dependency>
+	    <groupId>com.github.ondrej-nemec.lordoffiles</groupId>
+	    <artifactId>lof-text</artifactId>
+	    <version>v3.1</version>
+	</dependency>
+```
+
+#### Module Parsers 
+
+```xml
+	<dependency>
+	    <groupId>com.github.ondrej-nemec.lordoffiles</groupId>
+	    <artifactId>lof-parsers</artifactId>
+	    <version>v3.1</version>
+	</dependency>
+```
+
+#### Module Multimedia
+
+```xml
+	<dependency>
+	    <groupId>com.github.ondrej-nemec.lordoffiles</groupId>
+	    <artifactId>lof-multimedia</artifactId>
+	    <version>v3.1</version>
+	</dependency>
+```
+
+
 ## Usage
-**From version 3.0 LOF is going to be modular.**
 ### Multimedia
 ### Multimedia.audio
 For work with audio binary files. Allow save binary data or load data.
